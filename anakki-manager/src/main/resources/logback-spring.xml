@@ -1,0 +1,114 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--日志配置-->
+<configuration>
+    <property name="CONSOLE_LOG_PATTERN"
+              value="${CONSOLE_LOG_PATTERN:-%clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr([requestId-%X{requestId}]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+    <property name="FILE_LOG_PATTERN"
+              value="${FILE_LOG_PATTERN:-%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN:-%5p} [requestId-%X{requestId}] %-40.40logger{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <!--直接定义属性-->
+    <property name="logPath" value="log"/>
+    <!-- 单个日志文件大小 -->
+    <property name="maxFileSize" value="3MB"/>
+    <!--通过配置文件定义属性-->
+    <springProperty scope="context" name="applicationName" source="spring.application.name"/>
+
+    <!--控制台日志-->
+    <!-- appender类似于一个日志格式化模板，描述了日志的格式、规则、输出形式等 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!-- %d代表日期，%thread代表线程名，%-5level表示级别从左显示 5 个字符宽度，
+            %logger{50}表示 Logger 名字最长 50 个字符，[%file:%line]表示哪个类文件和第几行，
+            %msg代表日志消息，%n代表换行-->
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+
+    <!--滚动文件日志-->
+    <appender name="server-console" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <!--日志输出格式-->
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${logPath}/server-console/catalina.out-%d{yyyy-MM-dd}.%i.${applicationName}.log</fileNamePattern>
+            <maxFileSize>${maxFileSize}</maxFileSize>
+            <!--只保留最近30天的日志-->
+            <maxHistory>30</maxHistory>
+            <!--用来指定日志文件的上限大小，那么到了这个值，就会删除旧的日志-->
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="server-warn" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <!--日志输出格式-->
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${logPath}/server-warn/warn-%d{yyyy-MM-dd}.%i.${applicationName}.log</fileNamePattern>
+            <maxFileSize>${maxFileSize}</maxFileSize>
+            <!--只保留最近30天的日志-->
+            <maxHistory>30</maxHistory>
+            <!--用来指定日志文件的上限大小，那么到了这个值，就会删除旧的日志-->
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="server-error" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <!--日志输出格式-->
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${logPath}/server-error/error-%d{yyyy-MM-dd}.%i.${applicationName}.log</fileNamePattern>
+            <maxFileSize>${maxFileSize}</maxFileSize>
+            <!--只保留最近30天的日志-->
+            <maxHistory>30</maxHistory>
+            <!--用来指定日志文件的上限大小，那么到了这个值，就会删除旧的日志-->
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <!--创建一个具体的日志输出-->
+    <springProfile name="dev">
+        <root level="WARN">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+        <logger name="com.anakki.data.dao" level="WARN"/>
+    </springProfile>
+
+    <springProfile name="uat">
+        <logger name="com.anakki.data.dao" level="DEBUG"/>
+        <logger name="com.anakki.data" level="INFO">
+            <appender-ref ref="server-console"/>
+            <appender-ref ref="server-warn"/>
+            <appender-ref ref="server-error"/>
+        </logger>
+    </springProfile>
+
+    <springProfile name="prod">
+        <logger name="com.anakki.data.dao" level="DEBUG"/>
+        <logger name="com.anakki.data" level="INFO">
+            <appender-ref ref="server-console"/>
+            <appender-ref ref="server-warn"/>
+            <appender-ref ref="server-error"/>
+        </logger>
+    </springProfile>
+
+</configuration>

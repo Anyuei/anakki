@@ -1,0 +1,52 @@
+spring:
+  datasource:
+    druid:
+      name: druid-default-datasource
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://49.232.11.30:3306/anakki?autoReconnect=true&useServerPreparedStmts=false&rewriteBatchedStatements=true&characterEncoding=UTF-8&useSSL=false&allowMultiQueries=true&serverTimezone=UTC
+      username: root
+      password: FengXiang_123
+      initial-size: 5
+      max-active: 30
+      min-idle: 5
+      filter:
+        stat:
+          enabled: true
+          log-slow-sql: true
+          merge-sql: true
+          slow-sql-millis: 30000 #单位毫秒
+          connection-stack-trace-enable: true
+        config:
+          enabled: true
+        slf4j:
+          enabled: true
+      query-timeout: 1800
+      max-wait: 60000
+      validation-query: select 1 from dual
+      pool-prepared-statements: true #mysql5.5以上或者oracle建议开启
+      testWhileIdle: true
+      filters: stat,wall,config,slf4j
+      break-after-acquire-failure: true
+      time-between-eviction-runs-millis: 300000
+      connection-error-retry-attempts: 3
+#      stat-view-servlet:
+#        enabled: true #默认为true,可以不显示设置
+#        url-pattern: /druid/*
+#        reset-enable: false
+#        login-username: admin
+#        login-password: 123
+#        deny: 192.168.0.191
+      web-stat-filter:
+        enabled: true #默认为true,可以不显示设置
+        url-pattern: /*
+        exclusions: '*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*'
+        session-stat-enable: 'true'
+        profile-enable: 'true'
+        #-1标识采用数据库默认事务隔离级别
+      default-transaction-isolation: 2
+
+dynamicDataSource.default:
+  driverClassName: com.mysql.cj.jdbc.Driver
+  url: jdbc:mysql://49.232.11.30:3306/anakki?autoReconnect=true&useServerPreparedStmts=false&rewriteBatchedStatements=true&characterEncoding=UTF-8&useSSL=false&allowMultiQueries=true&serverTimezone=UTC
+  username: root
+  password: FengXiang_123
