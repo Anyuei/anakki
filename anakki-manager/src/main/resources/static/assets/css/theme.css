@@ -8908,6 +8908,10 @@ a.bg-tertiary:hover, a.bg-tertiary:focus, button.bg-tertiary:hover, button.bg-te
         padding-top: 8rem !important
     }
 
+    .pt-10, .py-10 {
+        padding-top: 10rem !important
+    }
+
     .pr-xl-xl, .px-xl-xl {
         padding-right: 8rem !important
     }
@@ -8915,7 +8919,9 @@ a.bg-tertiary:hover, a.bg-tertiary:focus, button.bg-tertiary:hover, button.bg-te
     .pb-xl-xl, .py-xl-xl {
         padding-bottom: 8rem !important
     }
-
+    .pb-20, .py-20 {
+        padding-bottom: 20rem !important
+    }
     .pl-xl-xl, .px-xl-xl {
         padding-left: 8rem !important
     }
@@ -12190,6 +12196,10 @@ textarea[resize="horizontal"] {
 
 .table .table.align-items-center th, .table .table.align-items-center td, .table.align-items-center th, .table.align-items-center td {
     vertical-align: middle
+}
+
+.table .table.align-items-top th, .table .table.align-items-top td, .table.align-items-top th, .table.align-items-top td {
+    vertical-align: top;
 }
 
 .table-hover tr {
