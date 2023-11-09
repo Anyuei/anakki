@@ -21,16 +21,16 @@
             };
             xhr.send();
 
-            var xhr2 = new XMLHttpRequest();
-            xhr2.open("GET", "/homePage/yuhua-image", true);
-            xhr2.onreadystatechange = function () {
-                if (xhr2.readyState === 4 && xhr2.status === 200) {
-                    var response = JSON.parse(xhr2.responseText);
+            var yuhuaImage = new XMLHttpRequest();
+            yuhuaImage.open("GET", "/homePage/yuhua-image", true);
+            yuhuaImage.onreadystatechange = function () {
+                if (yuhuaImage.readyState === 4 && yuhuaImage.status === 200) {
+                    var response = JSON.parse(yuhuaImage.responseText);
                     // Populate the frontend with the data
                     document.getElementById("yuhua-image").src = response.data;
                 }
             };
-            xhr2.send();
+            yuhuaImage.send();
         };
     </script>
     <!-- Fonts -->

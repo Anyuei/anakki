@@ -7,6 +7,7 @@
           content="Probably the most complete UI kit out there. Multiple functionalities and controls added,  extended color palette and beautiful typography, designed as its own extended version of Bootstrap at  the highest level of quality.                             ">
     <meta name="author" content="Webpixels">
     <title>Anakki-World</title>
+
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,800|Roboto:400,500,700" rel="stylesheet">
     <!-- Theme CSS -->
@@ -19,12 +20,11 @@
 <style>
     .modal {
         display: none;
-        position: fixed;
+        width: auto\9;
+        height: auto;
+        max-width: 100%;
+        vertical-align: middle;
         z-index: 9999;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
         background-color: rgba(0, 0, 0, 0.8);
     }
 
@@ -65,12 +65,12 @@
                 <li class="nav-item">
                     <a class="nav-link" href="docs/life.html">漫长的一生</a>
                 </li>
-<!--                <li class="nav-item">-->
-<!--                    <a href="https://github.com/webpixels/boomerang-ui-kit/archive/master.zip" target="_blank"-->
-<!--                       class="nav-link d-lg-none">Download Free</a>-->
-<!--                    <a href="https://github.com/webpixels/boomerang-ui-kit/archive/master.zip" target="_blank"-->
-<!--                       class="btn btn-sm bg-white d-none d-lg-inline-flex">Download Free</a>-->
-<!--                </li>-->
+                <!--                <li class="nav-item">-->
+                <!--                    <a href="https://github.com/webpixels/boomerang-ui-kit/archive/master.zip" target="_blank"-->
+                <!--                       class="nav-link d-lg-none">Download Free</a>-->
+                <!--                    <a href="https://github.com/webpixels/boomerang-ui-kit/archive/master.zip" target="_blank"-->
+                <!--                       class="btn btn-sm bg-white d-none d-lg-inline-flex">Download Free</a>-->
+                <!--                </li>-->
                 <div class="dropdown-divider d-lg-none my-4"></div>
                 <h6 class="dropdown-header font-weight-600 d-lg-none px-0">Social Media</h6>
                 <li class="nav-item">
@@ -129,35 +129,16 @@
                 <div class="col-lg-10">
                     <!-- Typography -->
                     <div class="row align-items-center mb-5">
-                        <div class="col-8">
+                        <div class="col-6">
                             <h2 class="heading h3 mb-0">川藏线骑行</h2>
                         </div>
+                        <div class="col-6  text-right">
+                            <h2 class="heading h3 mb-0">2022年</h2>
+                        </div>
                     </div>
-                    <div class="row typeface-palette cols-xs-space cols-sm-space cols-md-space">
-                        <div class="col-lg-6">
-                            <figure class="figure">
-                                <img src="https://securex-1258150206.cos.ap-beijing.myqcloud.com/backend/DSC06473.jpg"
-                                     class="figure-img img-fluid rounded" alt="..." onclick="showModal(this)">
-                                <figcaption class="figure-caption">
-                                    四川甘孜州
-                                </figcaption>
-                                <figcaption class="figure-caption">
-                                    2022年8月26日
-                                </figcaption>
-                            </figure>
-                        </div>
-                        <div class="col-sm-6">
-                            <figure class="figure">
-                                <img src="https://securex-1258150206.cos.ap-beijing.myqcloud.com/backend/DSC07382_1.jpg"
-                                     class="figure-img img-fluid rounded" alt="..." onclick="showModal(this)">
-                                <figcaption class="figure-caption">
-                                    禾尼乡
-                                </figcaption>
-                                <figcaption class="figure-caption">
-                                    2022年8月29日
-                                </figcaption>
-                            </figure>
-                        </div>
+                    <div class="row typeface-palette cols-xs-space cols-sm-space cols-md-space" id="mainFlow">
+                        <!--主要图文-->
+
                     </div>
                     <!-- Color palette -->
                     <div class="row align-items-center mb-4 mt-lg">
@@ -2391,8 +2372,8 @@
             </ul>
         </div>
     </div>
-    <div id="modal" class="modal" onclick="hideModal()">
-        <img id="modal-image" class="modal-image">
+    <div id="modal" class="modal align-items-center" onclick="hideModal()">
+
     </div>
 </footer>
 <!-- Core -->
@@ -2411,11 +2392,81 @@
 <!-- Theme JS -->
 <script src="assets/js/theme.js"></script>
 <script>
+    window.onload = function () {
+        var mainPageImageFlow = new XMLHttpRequest();
+        mainPageImageFlow.open("GET", "/api/anakki/record/flow?imageType=mainPageFlow", true);
+        mainPageImageFlow.onreadystatechange = function () {
+            if (mainPageImageFlow.readyState === 4 && mainPageImageFlow.status === 200) {
+                var html = "";
+                var response = JSON.parse(mainPageImageFlow.responseText);
+                var itemList = response.data.data;
+                for (let i = 0; i < itemList.length; i++) {
+                    var item = itemList[i];
+
+                    var dateTime = new Date(item.createTime);
+                    var year = dateTime.getFullYear();
+                    var month = dateTime.getMonth() + 1; // Months are zero-based, so we add 1
+                    var day = dateTime.getDate();
+                    var formattedDate = year + "-" + month + "-" + day;
+
+                    html = html + "<div class='col-lg-4'>" +
+                        "<figure class='figure'>" +
+                        "<img src='" + item.imgUrl + "'  class=\"figure-img img-fluid rounded\" alt=\"" + item.id + "\" onclick=\"showModal(this)\">" +
+                        "<figcaption class='figure-caption'>" +
+                        "<strong>" +
+                        item.title + " - " + item.location +
+                        "</strong> " +
+                        "</figcaption>" +
+                        " <figcaption class='figure-caption'>" +
+                        formattedDate +
+                        " </figcaption>" +
+                        " </figure>" +
+                        " </div>";
+                }
+                document.getElementById("mainFlow").innerHTML = html;
+            }
+        };
+        mainPageImageFlow.send();
+    };
+
     function showModal(image) {
         var modal = document.getElementById("modal");
         var modalImage = document.getElementById("modal-image");
         modal.style.display = "block";
-        modalImage.src = image.src;
+
+        var get = new XMLHttpRequest();
+        get.open("GET", "/api/anakki/record/flowById?id="+image.alt, true);
+        get.onreadystatechange = function () {
+            if (get.readyState === 4 && get.status === 200) {
+                var response = JSON.parse(get.responseText);
+                var item = response.data;
+
+                var dateTime = new Date(item.createTime);
+                var year = dateTime.getFullYear();
+                var month = dateTime.getMonth() + 1; // Months are zero-based, so we add 1
+                var day = dateTime.getDate();
+                var formattedDate = year + "-" + month + "-" + day;
+
+                var html =
+                    "<div class=\"card\">\n" +
+                    "  <img src=\"" + item.imgUrl + "\" class=\"card-img-bottom\" alt=\"...\">\n" +
+                    "  <div class=\"card-body\">\n" +
+                    "    <h5 class=\"card-title\">" +
+                    item.title +
+                    "</h5>\n" +
+                    "<p class=\"card-text\">" +
+                    item.description +
+                    "    <p class=\"card-text\"><small class=\"text-muted\">" +
+                    formattedDate +
+                    "</small></p>\n" +
+                    "  </div>\n" +
+
+                    "</div>";
+                modal.innerHTML = html;
+                modalImage.src = image.src;
+            }
+        };
+        get.send();
     }
 
     function hideModal() {
