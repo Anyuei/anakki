@@ -20,12 +20,14 @@
 <style>
     .modal {
         display: none;
-        width: auto\9;
         height: auto;
-        max-width: 100%;
+        top:0px;
+        position:fixed;
+        right:0px;
+        width:100%;
         vertical-align: middle;
         z-index: 9999;
-        background-color: rgba(0, 0, 0, 0.8);
+        background-color: rgba(0, 0, 0, 0);
     }
 
     .modal-image {
@@ -34,6 +36,20 @@
         max-height: 90%;
         margin: auto;
         margin-top: 5%;
+    }
+
+    .windows-bottom {
+        position:fixed;
+        right:0px;
+        bottom:0px;
+        background:#000;
+        color:#fff;
+        display:block;
+        width:100%;
+        text-align:right;
+        filter:alpha(opacity=70);       /* IE */
+        opacity: .7;           /* 支持CSS3的浏览器（FF 1.5也支持）*/
+        font-weight:bold;
     }
 </style>
 <body>
@@ -2435,7 +2451,7 @@
         modal.style.display = "block";
 
         var get = new XMLHttpRequest();
-        get.open("GET", "/api/anakki/record/flowById?id="+image.alt, true);
+        get.open("GET", "/api/anakki/record/flowById?id=" + image.alt, true);
         get.onreadystatechange = function () {
             if (get.readyState === 4 && get.status === 200) {
                 var response = JSON.parse(get.responseText);
@@ -2448,20 +2464,22 @@
                 var formattedDate = year + "-" + month + "-" + day;
 
                 var html =
-                    "<div class=\"card\">\n" +
+                    "<div class=\"\">\n" +
                     "  <img src=\"" + item.imgUrl + "\" class=\"card-img-bottom\" alt=\"...\">\n" +
-                    "  <div class=\"card-body\">\n" +
-                    "    <h5 class=\"card-title\">" +
-                    item.title +
-                    "</h5>\n" +
-                    "<p class=\"card-text\">" +
-                    item.description +
-                    "    <p class=\"card-text\"><small class=\"text-muted\">" +
-                    formattedDate +
-                    "</small></p>\n" +
-                    "  </div>\n" +
 
-                    "</div>";
+                    "</div>"+
+                "  <div class=\"card-body windows-bottom\">\n" +
+                "    <h5 class=\"card-title\">" +
+                item.title +
+                "</h5>\n" +
+                "<p class=\"card-text\">" +
+                item.description +
+                "    <p class=\"card-text\"><small class=\"text-muted\">" +
+                formattedDate +
+                "</small></p>\n" +
+                "  </div>\n"
+
+                ;
                 modal.innerHTML = html;
                 modalImage.src = image.src;
             }

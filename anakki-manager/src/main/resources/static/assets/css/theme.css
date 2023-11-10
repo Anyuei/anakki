@@ -9061,6 +9061,10 @@ a.bg-tertiary:hover, a.bg-tertiary:focus, button.bg-tertiary:hover, button.bg-te
     color: #fff !important
 }
 
+.text-grey {
+    color: #888888 !important
+}
+
 .text-primary {
     color: #288cff !important
 }

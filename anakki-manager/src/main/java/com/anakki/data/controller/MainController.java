@@ -19,15 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(value = "根访问", tags = {"根访问"})
 @RequestMapping("/")
 public class MainController {
-
-
     @ApiOperation(value = "健康检查")
     @RequestMapping("/checkHeath")
     public ResponseDTO<Boolean> checkHeath() {
         return ResponseDTO.succData(true);
     }
-
-
-
-
 }
