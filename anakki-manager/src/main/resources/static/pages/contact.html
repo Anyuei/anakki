@@ -13,12 +13,27 @@
     <link type="text/css" href="../assets/css/theme.css" rel="stylesheet">
     <!-- Demo CSS - No need to use these in your project -->
     <link type="text/css" href="../assets/css/demo.css" rel="stylesheet">
-  <style>
-    body {
-      color: #495751b8;
-      background-color: #035e0082;
-    }
-  </style>
+    <style>
+        body {
+            color: #495751b8;
+            background-color: #035e0082;
+        }
+
+        .card {
+            border: .0625rem solid rgba(0, 0, 0, 0.05);
+            border-radius: 0.7rem;
+        }
+
+        .time-margin {
+            margin-right: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-body {
+            flex: 1 1 auto;
+            padding: 1.1rem;
+        }
+    </style>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-transparent navbar-dark bg-dark py-4">
@@ -99,7 +114,7 @@
             <div class="row align-items-center cols-xs-space cols-sm-space cols-md-space">
                 <div class="col-lg-6">
                     <h3 class="heading h3 mb-4">留言板</h3>
-                    <form>
+                    <form id="commentForm">
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group">
@@ -142,9 +157,103 @@
             </div>
         </div>
     </section>
+    <section class="slice slice-lg">
+        <div class="container">
+            <div class="row align-items-center cols-xs-space cols-sm-space cols-md-space">
+                <div class="col-lg-8">
+                    <h3 class="heading h3 mb-4">好友留言</h3>
+                    <div class="row">
+                        <div id="friend-comment" class="list-group">
+                            <!--留言填充-->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 ml-lg-auto">
+                    <h3 class="heading heading-3 strong-300">
+                        善于结良缘，恶言伤人心
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </section>
 </main>
 <!-- 页面底部 -->
-<iframe src="./footer.html"></iframe>
+<footer class="pt-5 pb-3 footer  footer-dark bg-tertiary">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-4">
+                <div class="pr-lg-5">
+                    <h1 class="heading h6 text-uppercase font-weight-700 mb-3"><strong>ANAKKI</strong> X</h1>
+                    <p>个人网站建于2023年11月1日</p>
+
+                    <p id="time-container"></p>
+                </div>
+            </div>
+
+            <div class="col-6 col-md">
+                <h5 class="heading h6 text-uppercase font-weight-700 mb-3">技术栈</h5>
+                <ul class="list-unstyled text-small">
+                    <li><a class="text-muted" href="#">SpringBoot</a></li>
+                    <li><a class="text-muted" href="#">MySQL</a></li>
+                    <li><a class="text-muted" href="#">Redis</a></li>
+                    <li><a class="text-muted" href="#">Nginx</a></li>
+                    <li><a class="text-muted" href="#">Bootstrap5</a></li>
+                </ul>
+            </div>
+            <div class="col-6 col-md">
+                <h5 class="heading h6 text-uppercase font-weight-700 mb-3">合作伙伴</h5>
+                <ul class="list-unstyled text-small">
+                    <li><a class="text-muted" href="#">Business</a></li>
+                    <li><a class="text-muted" href="#">Education</a></li>
+                    <li><a class="text-muted" href="#">Government</a></li>
+                    <li><a class="text-muted" href="#">Gaming</a></li>
+                </ul>
+            </div>
+            <div class="col-6 col-md">
+                <h5 class="heading h6 text-uppercase font-weight-700 mb-3">联系方式</h5>
+                <ul class="list-unstyled text-small">
+                    <li><a class="text-muted" href="#">微信: anakki</a></li>
+                    <li><a class="text-muted" href="#">电话: 13228340278</a></li>
+                    <li><a class="text-muted" href="#">邮箱: ayp199645aabb@qq.com</a></li>
+                    <li><a class="text-muted" href="#">抖音: 不告诉你_(:з」∠)_</a></li>
+                </ul>
+            </div>
+            <div class="col-8 col-md">
+                <h5 class="heading h6 text-uppercase font-weight-700 mb-3">打赏</h5>
+                <ul class="list-unstyled text-small">
+                    <li><img style="width: 60px;" src="../assets/images/alipay-person.jpg"
+                             alt="">
+                        <img style="width: 60px;" src="../assets/images/wechatpay-person.png"
+                             alt=""></li>
+                </ul>
+            </div>
+        </div>
+        <hr>
+        <div class="d-flex align-items-center">
+          <span class="">
+            &copy; 2023 <a href="https://webpixels.io/" class="footer-link" target="_blank">ANAKKI</a> X All rights reserved.
+          </span>
+            <ul class="nav ml-lg-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="https://instagram.com/webpixelsofficial" target="_blank"><i
+                            class="fab fa-instagram"></i></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://facebook.com/webpixels" target="_blank"><i
+                            class="fab fa-facebook"></i></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://github.com/webpixels" target="_blank"><i
+                            class="fab fa-github"></i></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://dribbble.com/webpixels" target="_blank"><i
+                            class="fab fa-dribbble"></i></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</footer>
 <!-- Core -->
 <script src="../assets/vendor/jquery/jquery.min.js"></script>
 <script src="../assets/vendor/popper/popper.min.js"></script>
@@ -159,5 +268,92 @@
 <script src="../assets/vendor/textarea-autosize/textarea-autosize.min.js"></script>
 <!-- Theme JS -->
 <script src="../assets/js/theme.js"></script>
+
+<script>
+    window.onload = function () {
+        const mainPageImageFlow = new XMLHttpRequest();
+        mainPageImageFlow.open("GET", "/api/anakki/friends-comment/list-comments", true);
+        mainPageImageFlow.onreadystatechange = function () {
+            if (mainPageImageFlow.readyState === 4 && mainPageImageFlow.status === 200) {
+                let html = "";
+                const response = JSON.parse(mainPageImageFlow.responseText);
+                const itemList = response.data.data;
+                for (let i = 0; i < itemList.length; i++) {
+                    const item = itemList[i];
+                    let time = item.createTime;
+                    const formattedDateTime = time.replace("T", " ");
+                    //计算距离现在时间
+                    const targetDate = new Date(time);
+                    const currentDate = new Date();
+                    // Calculate the difference in milliseconds
+                    const timeDiff = currentDate.getTime() - targetDate.getTime();
+                    // Convert milliseconds to days
+                    const daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+                    let daysBefore = "";
+                    if (0 === daysDiff) {
+                        daysBefore = "今天";
+                    } else {
+                        daysBefore = daysDiff + "天以前";
+                    }
+                    // html = html + "<div class=\"list-group-item list-group-item-action\">" +
+                    //     "<div class=\"d-flex w-100 justify-content-between\">" +
+                    //     "<h5 class=\"mb-1\">" + item.nickname + "</h5>" +
+                    //     "<small>" + daysBefore + "</small>" +
+                    //     "</div>" +
+                    //     "<p class=\"mb-1\">" + item.comment + "</p>" +
+                    //     "<small>" + formattedDateTime + "</small>" +
+                    //     "</div>";
+
+                    html = html +
+                        "<div class=\"card mb-3 \" style=\"max-width: 1000px;\">\n" +
+                            "<div class=\"row g-0\">\n" +
+                                "<div class=\"col-md-4\">\n" +
+                                    "<div class=\"card-body\">\n" +
+                                         "<img src=\"" + item.avatar + "\" class=\"img-fluid rounded-start\" alt=\"avatar\">\n" +
+                                    "</div>\n" +
+                                "</div>\n" +
+                                "<div class=\"col-md-8\">\n" +
+                                     "<div class=\"card-body\">\n" +
+                                        "<div class=\"row\">\n" +
+                                            "<h5 class=\"card-title\">" + item.nickname + "</h5>\n" +
+                                            "<p class=\"card-text\" style=\"padding-right: 1.0rem;\">" + item.comment + "</p>\n" +
+                                        "</div>" +
+                                    "</div>\n" +
+                                "</div>\n" +
+                            "</div>\n" +
+                            "<div class=\"row align-self-end\">\n" +
+                                "<div class=\"col\">\n" +
+                                    "<p class=\"card-text\" style=\"padding: 0.5rem 1.5rem; margin: 0.2rem;\"><small class=\"text-body-secondary\">" + formattedDateTime + "</small></p>\n" +
+                                "</div>\n" +
+                            "</div>\n" +
+                        "</div>";
+                    ;
+                }
+                document.getElementById("friend-comment").innerHTML = html;
+            }
+        };
+        mainPageImageFlow.send();
+    };
+
+    $(document).ready(function() {
+        $('#commentForm').submit(function(e) {
+            e.preventDefault(); // Prevent form submission
+            var formData = $(this).serialize(); // Serialize form data
+            $.ajax({
+                url: 'your-server-url', // Replace with your server URL
+                type: 'POST',
+                data: formData,
+                success: function(response) {
+                    // Handle success response
+                    console.log(response);
+                },
+                error: function(xhr, status, error) {
+                    // Handle error response
+                    console.log(error);
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>
