@@ -1,4 +1,4 @@
-package com.anakki.data.controller.manage;
+package com.anakki.data.controller.base;
 
 import com.anakki.data.bean.common.ResponseDTO;
 import com.anakki.data.entity.request.SendMailRequest;
@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
  * @since 2023-11-14
  */
 @RestController
-@RequestMapping("/system/")
+@RequestMapping("/base/system/")
 public class SystemController {
 
     @Autowired

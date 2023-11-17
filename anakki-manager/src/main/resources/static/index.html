@@ -14,7 +14,8 @@
     <!-- Demo CSS - No need to use these in your project -->
     <link type="text/css" href="assets/css/demo.css" rel="stylesheet">
     <!--    icon-->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+<!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">-->
+    <link rel="stylesheet" href="https://cdn.staticfile.org/bootstrap-icons/1.10.0/bootstrap-icons.min.css">
 </head>
 <style>
     .modal {
@@ -2354,7 +2355,7 @@
         $('#header').load("../pages/header.html");
         $('#footer').load("../pages/footer.html");
         var mainPageImageFlow = new XMLHttpRequest();
-        mainPageImageFlow.open("GET", "/api/anakki/record/flow?imageType=mainPageFlow", true);
+        mainPageImageFlow.open("GET", "/base/anakki/record/flow?imageType=mainPageFlow", true);
         mainPageImageFlow.onreadystatechange = function () {
             if (mainPageImageFlow.readyState === 4 && mainPageImageFlow.status === 200) {
                 var html = "";
@@ -2395,7 +2396,7 @@
         modal.style.display = "block";
 
         var get = new XMLHttpRequest();
-        get.open("GET", "/api/anakki/record/flowById?id=" + image.alt, true);
+        get.open("GET", "/base/anakki/record/flowById?id=" + image.alt, true);
         get.onreadystatechange = function () {
             if (get.readyState === 4 && get.status === 200) {
                 var response = JSON.parse(get.responseText);

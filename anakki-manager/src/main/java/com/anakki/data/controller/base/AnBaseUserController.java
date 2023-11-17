@@ -1,7 +1,6 @@
-package com.anakki.data.controller;
+package com.anakki.data.controller.base;
 
 import com.anakki.data.bean.common.ResponseDTO;
-import com.anakki.data.entity.request.SendMailRequest;
 import com.anakki.data.entity.request.UserLoginRequest;
 import com.anakki.data.entity.request.UserRegisterRequest;
 import com.anakki.data.service.AnUserService;
@@ -27,17 +26,17 @@ import java.security.NoSuchAlgorithmException;
  * @since 2023-11-14
  */
 @RestController
-@RequestMapping("/api/anakki/user")
-public class AnUserController {
+@RequestMapping("/base/anakki/user")
+public class AnBaseUserController {
 
     @Autowired
     private AnUserService anUserService;
 
     @ApiOperation(value = "登录")
     @PostMapping("/login")
-    public ResponseDTO<Boolean> login(@RequestBody UserLoginRequest userLoginRequest) {
-        anUserService.login(userLoginRequest);
-        return ResponseDTO.succData(true);
+    public ResponseDTO<String> login(UserLoginRequest userLoginRequest) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+        String token = anUserService.login(userLoginRequest);
+        return ResponseDTO.succData(token);
     }
 
     @ApiOperation(value = "注册")
@@ -49,6 +48,4 @@ public class AnUserController {
         }
         return ResponseDTO.succData(anUserService.register(userRegisterRequest));
     }
-
-
 }

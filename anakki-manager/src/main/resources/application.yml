@@ -70,6 +70,13 @@ dynamicDataSource.default:
     idle-timeout: 60000
     connection-init-sql: SET NAMES utf8mb4
   driverClassName: com.mysql.cj.jdbc.Driver
-  url: jdbc:mysql://49.232.11.30:3306/anakki?autoReconnect=true&useServerPreparedStmts=false&rewriteBatchedStatements=true&characterEncoding=UTF-8&useSSL=false&allowMultiQueries=true&serverTimezone=UTC
+  url: jdbc:mysql://119.45.1.61:3306/anakki?autoReconnect=true&useServerPreparedStmts=false&rewriteBatchedStatements=true&characterEncoding=UTF-8&useSSL=false&allowMultiQueries=true&serverTimezone=UTC
   username: root
-  password: FengXiang_123
+  password: ayp43520!@#
+jwt:
+  header: "Authorization"     # token 返回头部
+  tokenPrefix: "Bearer "      # token 前缀
+  secret: "qwertyuiop1214156" # 私钥
+  managerSecret: "qwertyuiop1214156" # 私钥
+  expireTime: 3600000 # token 的有效时间，单位是毫秒
+  expireManagerTime: 259200000 # token 的有效时间，单位是毫秒

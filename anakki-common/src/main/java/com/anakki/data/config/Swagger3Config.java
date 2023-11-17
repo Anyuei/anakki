@@ -27,7 +27,6 @@ public class Swagger3Config {
     /**
      *   application中还配置了mvc，因为springboot2.6.1与swagger3不兼容
      */
-
     public Docket createRestApi() {
         return new Docket(DocumentationType.OAS_30)
                 .apiInfo(apiInfo())

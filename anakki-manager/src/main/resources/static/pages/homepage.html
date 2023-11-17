@@ -665,7 +665,7 @@
         $('#header').load("../pages/header.html");
         $('#footer').load("../pages/footer.html");
         const xhr = new XMLHttpRequest();
-        xhr.open("GET", "/homePage/yuhua-sentences", true);
+        xhr.open("GET", "/base/homePage/yuhua-sentences", true);
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4 && xhr.status === 200) {
                 const response = JSON.parse(xhr.responseText);
@@ -677,7 +677,7 @@
         xhr.send();
 
         const yuhuaImage = new XMLHttpRequest();
-        yuhuaImage.open("GET", "/homePage/yuhua-image", true);
+        yuhuaImage.open("GET", "/base/homePage/yuhua-image", true);
         yuhuaImage.onreadystatechange = function () {
             if (yuhuaImage.readyState === 4 && yuhuaImage.status === 200) {
                 var response = JSON.parse(yuhuaImage.responseText);

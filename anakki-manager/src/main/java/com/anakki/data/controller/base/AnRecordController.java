@@ -1,4 +1,4 @@
-package com.anakki.data.controller;
+package com.anakki.data.controller.base;
 
 import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.bean.common.ResponseDTO;
@@ -28,7 +28,7 @@ import java.util.Random;
  * @since 2023-11-08
  */
 @RestController
-@RequestMapping("/api/anakki/record")
+@RequestMapping("/base/anakki/record")
 public class AnRecordController {
 
 

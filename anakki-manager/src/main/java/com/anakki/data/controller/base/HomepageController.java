@@ -1,4 +1,4 @@
-package com.anakki.data.controller;
+package com.anakki.data.controller.base;
 
 import com.anakki.data.bean.common.ResponseDTO;
 import io.swagger.annotations.Api;
@@ -20,7 +20,7 @@ import java.util.Random;
 @Slf4j
 @RestController
 @Api(value = "Homepage", tags = {"Homepage"})
-@RequestMapping("/homePage")
+@RequestMapping("/base/homePage")
 public class HomepageController {
     @ApiOperation(value = "获取余华名言")
     @RequestMapping("/yuhua-sentences")

@@ -65,25 +65,28 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="你的昵称" type="text">
+                                    <input class="form-control" placeholder="你的昵称" type="text" id="nicknameInput" style="display: none;">
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="邮箱" type="email">
+                                    <input class="form-control" placeholder="邮箱" type="email" id="emailInput" style="display: none;">
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group">
-                                    <textarea class="form-control" rows="5" placeholder="留言内容"></textarea>
+                                    <textarea class="form-control" rows="5" placeholder="留言内容" name="comment"></textarea>
                                 </div>
                             </div>
                         </div>
                         <div class="mt-4">
+                            <button type="button" class="btn btn-primary px-4" id="anonymousButton" onclick="toggleAnonymousFields()">
+                                匿名留言
+                            </button>
                             <button type="submit" class="btn btn-primary px-4">
                                 飞鸽传书
                             </button>
@@ -117,7 +120,7 @@
                 </div>
                 <div class="col-lg-4 ml-lg-auto">
                     <h3 class="heading heading-3 strong-300">
-                        善于结良缘，恶言伤人心
+                        善语结良缘，恶言伤人心
                     </h3>
                 </div>
             </div>
@@ -148,7 +151,7 @@
         $('#header').load("../pages/header.html");
         $('#footer').load("../pages/footer.html");
         const mainPageImageFlow = new XMLHttpRequest();
-        mainPageImageFlow.open("GET", "/api/anakki/friends-comment/list-comments", true);
+        mainPageImageFlow.open("GET", "/base/anakki/friends-comment/list-comments", true);
         mainPageImageFlow.onreadystatechange = function () {
             if (mainPageImageFlow.readyState === 4 && mainPageImageFlow.status === 200) {
                 let html = "";
@@ -185,7 +188,7 @@
                             "<div class=\"row g-0\">\n" +
                                 "<div class=\"col-md-4\">\n" +
                                     "<div class=\"card-body\">\n" +
-                                         "<img src=\"" + item.avatar + "\" class=\"img-fluid rounded-start\" alt=\"avatar\">\n" +
+                                        "<img src=\"" + (item.avatar ? item.avatar : "default-avatar.jpg") + "\" class=\"img-fluid rounded-start\" alt=\"avatar\">\n" +
                                     "</div>\n" +
                                 "</div>\n" +
                                 "<div class=\"col-md-8\">\n" +
@@ -215,13 +218,19 @@
         $('#commentForm').submit(function(e) {
             e.preventDefault(); // Prevent form submission
             var formData = $(this).serialize(); // Serialize form data
+            const auth = localStorage.getItem('user-token');
+
             $.ajax({
-                url: 'your-server-url', // Replace with your server URL
+                url: '/api/anakki/friends-comment/create-comment', // Replace with your server URL
                 type: 'POST',
                 data: formData,
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader('authorization', auth); // Include the token in the Authorization header
+                },
                 success: function(response) {
                     // Handle success response
                     console.log(response);
+                    location.reload(); // Reload the page
                 },
                 error: function(xhr, status, error) {
                     // Handle error response
@@ -230,6 +239,45 @@
             });
         });
     });
+
+
+    function toggleAnonymousFields() {
+        var nicknameInput = document.getElementById("nicknameInput");
+        var emailInput = document.getElementById("emailInput");
+        var submitButton = document.querySelector("#commentForm button[type='submit']");
+        var anonymousButton = document.getElementById("anonymousButton");
+        if (nicknameInput.style.display === "none") {
+            nicknameInput.style.display = "block";
+            emailInput.style.display = "block";
+            anonymousButton.textContent = "取消匿名";
+        } else {
+            nicknameInput.style.display = "none";
+            emailInput.style.display = "none";
+            anonymousButton.textContent = "匿名留言";
+        }
+    }
+
+    const generateDefaultAvatar = () => {
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        const size = 200; // 头像尺寸
+        // 设置画布尺寸
+        canvas.width = size;
+        canvas.height = size;
+        // 绘制默认头像
+        context.fillStyle = '#e0e0e0'; // 头像背景颜色
+        context.fillRect(0, 0, size, size);
+        context.fillStyle = '#bdbdbd'; // 头像图案颜色
+        context.beginPath();
+        context.arc(size / 2, size / 2, size / 2 - 5, 0, 2 * Math.PI);
+        context.fill();
+        // 获取Base64编码的头像图片
+        const base64Image = canvas.toDataURL('image/png');
+        return base64Image;
+    };
+    // 使用示例
+    const defaultAvatar = generateDefaultAvatar();
+
 </script>
 </body>
 </html>

@@ -2,6 +2,25 @@
 
 $(window).on("load", function() {
 
+
+
+    $.ajax({
+        url: "/api/anakki/user/detail",
+        type: "GET",
+        success: function(response) {
+            // Extract the profile picture and nickname from the response
+            var profilePicture = response.data.profilePicture;
+            var nickname = response.data.nickname;
+            // Update the auth link with the profile picture and nickname
+            authLink.innerHTML = `
+      <img src="${profilePicture}" alt="Profile Picture" class="profile-picture">
+      ${nickname}
+    `;
+        },
+        error: function(xhr, status, error) {
+            console.error(error);
+        }
+    });
 }), 
 
 $(window).on('load resize', function() {
@@ -219,6 +238,10 @@ function delCookie(name){
     setCookie(name,null,-1);
 };
 
+function logout() {
+    localStorage.removeItem('jwtToken'); // Remove the JWT token from local storage
+}
+
 function listMenu() {
     const get = new XMLHttpRequest();
     get.open("GET", "/manage/menu/list", true);
@@ -252,5 +275,27 @@ function listMenu() {
             document.getElementById("menu-list").innerHTML = html;
         }
     };
+    const token = localStorage.getItem('jwtToken'); // Get the JWT token from localStorage
+    get.setRequestHeader('authorization',token); // Include the token in the Authorization header
     get.send();
 }
+
+
+// Get the current page URL
+var currentPage = window.location.href;
+// Get the auth link element
+var authLink = document.getElementById("auth-link");
+// Check if the current page is login or register
+if (currentPage.includes("sign-in.html")) {
+    // Set the auth link text to "注册"
+    authLink.innerText = "注册";
+    // Set the auth link href to the register page URL
+    authLink.href = "../pages/sign-up.html";
+} else if (currentPage.includes("sign-up.html")) {
+    // Set the auth link text to "登录"
+    authLink.innerText = "登录";
+    // Set the auth link href to the login page URL
+    authLink.href = "../pages/sign-in.html";
+}
+
+

@@ -1,23 +1,18 @@
-package com.anakki.data.controller;
+package com.anakki.data.controller.api;
 
+import com.anakki.data.bean.common.BaseContext;
 import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.bean.common.ResponseDTO;
 import com.anakki.data.entity.AnFriendsComment;
-import com.anakki.data.entity.AnRecord;
-import com.anakki.data.entity.request.GetContentRequest;
+import com.anakki.data.entity.request.CreateCommentsRequest;
 import com.anakki.data.entity.request.ListCommentsRequest;
 import com.anakki.data.service.AnFriendsCommentService;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * <p>
@@ -33,10 +28,11 @@ public class AnFriendsCommentController {
 
     @Autowired
     private AnFriendsCommentService anFriendsCommentService;
-    @ApiOperation(value = "获取评论")
-    @GetMapping("/list-comments")
-    public ResponseDTO<BasePageResult<AnFriendsComment>> listComments(ListCommentsRequest listCommentsRequest) {
-        BasePageResult<AnFriendsComment> anFriendsCommentBasePageResult = anFriendsCommentService.listComments(listCommentsRequest);
-        return ResponseDTO.succData(anFriendsCommentBasePageResult);
+    @ApiOperation(value = "评论")
+    @PostMapping("/create-comment")
+    public ResponseDTO<Boolean> createComment(CreateCommentsRequest createCommentsRequest) {
+        String currentNickname = BaseContext.getCurrentNickname();
+        Boolean comment = anFriendsCommentService.createComment(currentNickname, createCommentsRequest);
+        return ResponseDTO.succData(comment);
     }
 }

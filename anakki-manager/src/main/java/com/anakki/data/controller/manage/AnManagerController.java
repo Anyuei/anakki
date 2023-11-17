@@ -2,23 +2,13 @@ package com.anakki.data.controller.manage;
 
 import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.bean.common.ResponseDTO;
-import com.anakki.data.entity.AnManager;
-import com.anakki.data.entity.AnMenu;
-import com.anakki.data.entity.AnRecord;
 import com.anakki.data.entity.request.*;
+import com.anakki.data.entity.response.ListManagerResponse;
 import com.anakki.data.service.AnManagerService;
-import com.anakki.data.service.AnMenuService;
-import com.anakki.data.utils.common.BeanUtils;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * <p>
