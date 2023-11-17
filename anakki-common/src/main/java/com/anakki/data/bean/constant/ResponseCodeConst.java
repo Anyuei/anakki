@@ -16,7 +16,7 @@ public class ResponseCodeConst {
 
     }
 
-    public static final ResponseCodeConst SUCCESS = new ResponseCodeConst(1, "操作成功!", true);
+    public static final ResponseCodeConst SUCCESS = new ResponseCodeConst(200, "操作成功!", true);
 
     public static final ResponseCodeConst ERROR_PARAM = new ResponseCodeConst(101, "参数异常！");
 

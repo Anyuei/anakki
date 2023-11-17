@@ -20,6 +20,22 @@ spring:
         core-size: 8
         keep-alive: 3s
         queue-capacity: 1000
+
+# 配置 smtp 服务器地址
+  mail:
+    port: 587
+    username: ayp199645aabb@qq.com
+    password: afmyfpdbcnykbbbd
+    from: ayp199645aabb@qq.com
+    protocol: smtp
+    host: smtp.qq.com
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          socketFactoryClass: javax.net.ssl.SSLSocketFactory
+        debug: true
+
   # redis 配置
   redis:
     # 地址
@@ -57,4 +73,3 @@ dynamicDataSource.default:
   url: jdbc:mysql://49.232.11.30:3306/anakki?autoReconnect=true&useServerPreparedStmts=false&rewriteBatchedStatements=true&characterEncoding=UTF-8&useSSL=false&allowMultiQueries=true&serverTimezone=UTC
   username: root
   password: FengXiang_123
-

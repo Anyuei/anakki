@@ -43,6 +43,10 @@ public class AnFriendsComment extends BaseEntity implements Serializable {
     @TableField("nickname")
     private String nickname;
 
+    @ApiModelProperty("姓名")
+    @TableField("user_name")
+    private String userName;
+
     @ApiModelProperty("评论")
     @TableField("comment")
     private String comment;

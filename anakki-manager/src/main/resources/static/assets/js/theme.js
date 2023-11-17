@@ -196,3 +196,61 @@ $(document).ready(function() {
         }
     })
 });
+
+
+//设置cookie
+function setCookie(name,value,day){
+    const date = new Date();
+    date.setDate(date.getDate() + day);
+    document.cookie = name + '=' + value + ';expires='+ date;
+};
+//获取cookie
+function getCookie(name){
+    const reg = RegExp(name + '=([^;]+)');
+    const arr = document.cookie.match(reg);
+    if(arr){
+        return arr[1];
+    }else{
+        return '';
+    }
+};
+//删除cookie
+function delCookie(name){
+    setCookie(name,null,-1);
+};
+
+function listMenu() {
+    const get = new XMLHttpRequest();
+    get.open("GET", "/manage/menu/list", true);
+    get.onreadystatechange = function () {
+        if (get.readyState === 4 && get.status === 200) {
+            let html = "";
+            const response = JSON.parse(get.responseText);
+
+            const itemList = response.data;
+
+            for (let i = 0; i < itemList.length; i++) {
+                const item = itemList[i];
+                //获取路径后缀
+                const path = item.path;
+                const pathArray = path.split("/");
+                const lastPath = pathArray[pathArray.length - 1];
+
+                //获取当前路径后缀
+                const localPath = window.location.pathname
+                const localPathArray = localPath.split("/");
+                const localPathLastPath = localPathArray[localPathArray.length - 1];
+
+
+                const menuName = item.menuName;
+                const isActive = localPathLastPath === lastPath;
+                // Add active class if the paths match
+                const activeClass = isActive ? "active" : "";
+                html = html +
+                    "<a href=\"" + path + "\" class=\"list-group-item list-group-item-action " + activeClass + "\" aria-current=\"false\" id=\"" + menuName + "\">" + menuName + "</a>\n"
+            }
+            document.getElementById("menu-list").innerHTML = html;
+        }
+    };
+    get.send();
+}

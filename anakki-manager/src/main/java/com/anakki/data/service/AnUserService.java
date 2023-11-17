@@ -1,7 +1,12 @@
 package com.anakki.data.service;
 
+import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.entity.AnUser;
+import com.anakki.data.entity.request.*;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * <p>
@@ -13,4 +18,16 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface AnUserService extends IService<AnUser> {
 
+    String login(UserLoginRequest userLoginRequest);
+
+
+    Boolean register(UserRegisterRequest userRegisterRequest) throws UnsupportedEncodingException, NoSuchAlgorithmException;
+
+    Boolean nicknameExist(String nickname);
+
+    BasePageResult<ListUserResponse> listUser(ListUserRequest listUserRequest);
+
+    Boolean createUser(CreateUserRequest createUserRequest);
+
+    Boolean updateUser(UpdateUserRequest updateUserRequest);
 }

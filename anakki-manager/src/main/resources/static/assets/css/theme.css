@@ -1487,7 +1487,6 @@ pre code {
 .table {
     width: 100%;
     max-width: 100%;
-    margin-bottom: 1rem;
     background-color: transparent
 }
 
@@ -4010,7 +4009,7 @@ tbody.collapse.show {
     flex-direction: column;
     min-width: 0;
     word-wrap: break-word;
-    background-color: #fff;
+    background-color: #ffffff91;
     background-clip: border-box;
     border: .0625rem solid rgba(0, 0, 0, 0.05);
     border-radius: .375rem
@@ -11070,7 +11069,7 @@ a.btn-icon-only {
 
 .footer {
     background: #fff;
-    color: #6c757d
+    color: #6c757d;
 }
 
 .footer .nav .nav-item .nav-link, .footer .footer-link {
@@ -13217,4 +13216,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 .input-slider-value-output.right:after {
     right: 10px;
     left: auto
+}
+.captcha-img{
+    margin-top: 1rem;
 }
