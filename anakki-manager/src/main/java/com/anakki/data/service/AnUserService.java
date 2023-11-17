@@ -35,6 +35,6 @@ public interface AnUserService extends IService<AnUser> {
 
     Boolean updateUser(UpdateUserRequest updateUserRequest);
 
-    UserDetailResponse detail(UserDetailRequest userLoginRequest);
+    UserDetailResponse detail();
 
 }

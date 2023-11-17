@@ -148,7 +148,9 @@
 <script>
 
     window.onload = function () {
-        $('#header').load("../pages/header.html");
+        $('#header').load("../pages/header.html", function() {
+            loadPersonDetail()
+        });
         $('#footer').load("../pages/footer.html");
         const mainPageImageFlow = new XMLHttpRequest();
         mainPageImageFlow.open("GET", "/base/anakki/friends-comment/list-comments", true);
@@ -218,14 +220,13 @@
         $('#commentForm').submit(function(e) {
             e.preventDefault(); // Prevent form submission
             var formData = $(this).serialize(); // Serialize form data
-            const auth = localStorage.getItem('user-token');
 
             $.ajax({
                 url: '/api/anakki/friends-comment/create-comment', // Replace with your server URL
                 type: 'POST',
                 data: formData,
                 beforeSend: function(xhr) {
-                    xhr.setRequestHeader('authorization', auth); // Include the token in the Authorization header
+                    xhr.setRequestHeader('authorization', localStorage.getItem('user-token')); // Include the token in the Authorization header
                 },
                 success: function(response) {
                     // Handle success response

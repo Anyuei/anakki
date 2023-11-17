@@ -9,10 +9,7 @@ import com.anakki.data.service.AnUserService;
 import com.ramostear.captcha.HappyCaptcha;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
@@ -34,10 +31,9 @@ public class AnUserController {
     private AnUserService anUserService;
 
     @ApiOperation(value = "个人信息")
-    @PostMapping("/detail")
-    public ResponseDTO<UserDetailResponse> detail(@RequestBody UserDetailRequest userLoginRequest){
-        UserDetailResponse detail = anUserService.detail(userLoginRequest);
+    @GetMapping("/detail")
+    public ResponseDTO<UserDetailResponse> detail(){
+        UserDetailResponse detail = anUserService.detail();
         return ResponseDTO.succData(detail);
     }
-
 }

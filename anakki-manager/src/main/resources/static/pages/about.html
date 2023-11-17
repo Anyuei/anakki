@@ -327,7 +327,9 @@
 
 <script>
     window.onload = function () {
-        $('#header').load("../pages/header.html");
+        $('#header').load("../pages/header.html", function() {
+            loadPersonDetail()
+        });
         $('#footer').load("../pages/footer.html");
     }
 </script>

@@ -123,7 +123,7 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
     }
 
     @Override
-    public UserDetailResponse detail(UserDetailRequest userLoginRequest) {
+    public UserDetailResponse detail() {
         String currentNickname = BaseContext.getCurrentNickname();
         AnUser byNickname = getByNickname(currentNickname);
         UserDetailResponse userDetailResponse = new UserDetailResponse();
