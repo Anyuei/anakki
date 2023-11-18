@@ -24,7 +24,7 @@ public class UserLoginInterceptor implements HandlerInterceptor {
         }
         // 验证 token, JwtUtil 是自己定义的类，里面有个方法验证 token 
         UserToken sub = JwtUtil.validateToken(token);
-        if (sub == null || sub.getNickname().isEmpty()) {
+        if (sub == null || null==sub.getNickname()) {
             return false;
         }
         // 更新 token 有效时间 

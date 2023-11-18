@@ -9,6 +9,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.Verification;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 @ConfigurationProperties(prefix = "jwt")
+@Slf4j
 public class JwtUtil {
 
     /**
@@ -126,13 +128,10 @@ public class JwtUtil {
             String noPrefixToken = token.replace(tokenPrefix, "");
             DecodedJWT decodedJwt = jwtVerifier.verify(noPrefixToken);
             return JSONObject.parseObject(decodedJwt.getSubject(), UserToken.class);
-        } catch (TokenExpiredException e){
-            e.printStackTrace();
         } catch (Exception e){
-            e.printStackTrace();
+            log.info("token过期："+e.getMessage());
             return new UserToken();
         }
-        return new UserToken();
     }
 
     /**
@@ -148,13 +147,11 @@ public class JwtUtil {
             String noPrefixToken = token.replace(tokenPrefix, "");
             DecodedJWT decodedJwt = jwtVerifier.verify(noPrefixToken);
             return JSONObject.parseObject(decodedJwt.getSubject(), ManagerToken.class);
-        } catch (TokenExpiredException e){
-            e.printStackTrace();
         } catch (Exception e){
-            e.printStackTrace();
+            log.info("token过期："+e.getMessage());
             return new ManagerToken();
         }
-        return new ManagerToken();
+
     }
 
     /**

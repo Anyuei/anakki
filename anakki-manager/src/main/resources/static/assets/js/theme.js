@@ -319,3 +319,12 @@ function loadPersonDetail(){
     });
 }
 
+
+function insertCreateTime(){
+    const startDate = new Date("2023-11-01");
+    const currentDate = new Date();
+    const timeElapsed = currentDate - startDate;
+    const daysElapsed = Math.floor(timeElapsed / (1000 * 60 * 60 * 24));
+    document.getElementById("time-container").innerHTML = "距离今天已经有 " + daysElapsed + " 天。";
+}
+

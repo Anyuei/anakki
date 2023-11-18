@@ -1757,7 +1757,7 @@ pre code {
 .form-control {
     display: block;
     width: 100%;
-    padding: .75rem 1rem;
+    padding: .65rem 1rem;
     font-size: .875rem;
     line-height: 1.6;
     color: #495057;
@@ -4012,7 +4012,8 @@ tbody.collapse.show {
     background-color: #ffffff91;
     background-clip: border-box;
     border: .0625rem solid rgba(0, 0, 0, 0.05);
-    border-radius: .375rem
+    border-radius: 1.4rem;
+    box-shadow: 0 0 24px #00000054;
 }
 
 .card > hr {
@@ -13219,4 +13220,35 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 }
 .captcha-img{
     margin-top: 1rem;
+}
+.r-8kz0gk {
+    height: 1.5rem;
+}
+.r-1nao33i {
+    color: rgb(231, 233, 234);
+}
+.r-lrsllp {
+    width: 24px;
+}
+.r-16y2uox {
+    -moz-box-flex: 1;
+    flex-grow: 1;
+}
+.r-lrvibr {
+    user-select: none;
+}
+.r-1plcrui {
+    vertical-align: text-bottom;
+}
+.r-bnwqim {
+    position: relative;
+}
+.r-dnmrzs {
+    max-width: 100%;
+}
+.r-yyyyoo {
+    fill: currentcolor;
+}
+.r-4qtqp9 {
+    display: inline-block;
 }

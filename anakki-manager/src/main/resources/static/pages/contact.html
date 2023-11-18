@@ -148,10 +148,8 @@
 <script>
 
     window.onload = function () {
-        $('#header').load("../pages/header.html", function() {
-            loadPersonDetail()
-        });
-        $('#footer').load("../pages/footer.html");
+        $('#header').load("../pages/header.html", loadPersonDetail);
+        $('#footer').load("../pages/footer.html",insertCreateTime);
         const mainPageImageFlow = new XMLHttpRequest();
         mainPageImageFlow.open("GET", "/base/anakki/friends-comment/list-comments", true);
         mainPageImageFlow.onreadystatechange = function () {
