@@ -3,9 +3,11 @@ package com.anakki.data.service;
 import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.entity.AnRecord;
 import com.anakki.data.entity.request.ListRecordRequest;
+import com.anakki.data.entity.request.UploadRecordRequest;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.apache.ibatis.annotations.Select;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -21,4 +23,6 @@ public interface AnRecordService extends IService<AnRecord> {
     List<String> getRecordTypes();
 
     BasePageResult<AnRecord> listRecordRequest(ListRecordRequest listRecordRequest);
+
+    Boolean uploadRecord(UploadRecordRequest uploadRecordRequest);
 }

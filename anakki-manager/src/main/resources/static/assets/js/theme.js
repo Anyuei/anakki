@@ -223,9 +223,11 @@ function delCookie(name) {
 };
 
 function logout() {
-    localStorage.removeItem('jwtToken'); // Remove the JWT token from local storage
+    localStorage.removeItem('jwtManageToken'); // Remove the JWT token from local storage
 }
-
+function userLogout() {
+    localStorage.removeItem('user-token'); // Remove the JWT token from local storage
+}
 function listMenu() {
     const get = new XMLHttpRequest();
     get.open("GET", "/manage/menu/list", true);
@@ -266,9 +268,9 @@ function listMenu() {
 
 
 // Get the current page URL
-var currentPage = window.location.href;
+const currentPage = window.location.href;
 // Get the auth link element
-var authLink = document.getElementById("auth-link");
+const authLink = document.getElementById("auth-link");
 // Check if the current page is login or register
 if (currentPage.includes("sign-in.html")) {
     // Set the auth link text to "注册"
@@ -293,14 +295,12 @@ function loadPersonDetail(){
             xhr.setRequestHeader('authorization', localStorage.getItem('user-token')); // Include the token in the Authorization header
         },
         success: function (response) {
-            // Extract the profile picture and nickname from the response
             const user = response.data;
             const avatar = user.avatar;
             const nickname = user.nickname;
             const exp = user.exp;
             const loginDays =  user.loginDays;
             const state = user.state;
-            // Update the auth link with the profile picture and nickname
             userDetail.innerHTML = `
                     <a class="nav-link dropdown-toggle" href="#" id="navbar_main_dropdown_1" role="button"
                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${nickname}</a>
@@ -309,6 +309,7 @@ function loadPersonDetail(){
                         <a class="dropdown-item">经验值:${exp}</a>
                         <a class="dropdown-item">累计登录${loginDays}天</a>
                         <a class="dropdown-item">${state}</a>
+                        <a class="dropdown-item" href="/pages/sign-in.html" onclick="userLogout()">登出</a>
                     </div>
     `;
             userAvatar.innerHTML=`<img src="${avatar}" alt="" style="width: 3rem;">`;

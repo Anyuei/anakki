@@ -50,7 +50,7 @@
                         <label for="images-type" class="col-sm-2 col-form-label">模块</label>
                         <div class="col-md-10">
                             <select class="selectpicker" title="模块选择" data-live-search="true"
-                                    data-live-search-placeholder="搜素" id="images-type">
+                                    data-live-search-placeholder="搜索" id="images-type" required>
                                 <!--模块类型列表-->
                             </select>
                         </div>
@@ -67,6 +67,13 @@
                         <div class="col-sm-10">
                             <input type="text" class="form-control" id="images-location"
                                    placeholder="请输入图片拍摄地点">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="images-location" class="col-sm-2 col-form-label">拍摄时间</label>
+                        <div class="col-sm-10">
+                            <input type="datetime-local" class="form-control" id="images-create-time"
+                                   placeholder="请输入图片拍摄时间">
                         </div>
                     </div>
                     <div class="mb-3 row">
@@ -95,7 +102,7 @@
                         <label class="col-sm-2 col-form-label">立即发布</label>
                         <div class="col-sm-10 d-flex align-items-center">
                             <label class="toggle-switch">
-                                <input type="checkbox">
+                                <input type="checkbox" id="images-published">
                                 <span class="toggle-switch-slider"></span>
                             </label>
                         </div>
@@ -110,6 +117,13 @@
                                 <span>上传图片 (推荐20MB以下)</span>
                             </label>
                         </div>
+                    </div>
+                    <div class="mb-3 row">
+
+                        <div class="col-sm-2">
+                            <button type="submit" class="btn btn-primary" onclick="submitForm()">提交</button>
+                        </div>
+                        <div class="col-sm-10"></div>
                     </div>
                 </div>
             </div>
@@ -231,7 +245,7 @@
                 $('.selectpicker').selectpicker('refresh');
             }
         };
-        const token = localStorage.getItem('jwtToken'); // Get the JWT token from localStorage
+        const token = localStorage.getItem('jwtManageToken'); // Get the JWT token from localStorage
         get.setRequestHeader('authorization', token); // Include the token in the Authorization header
         get.send();
     }
@@ -317,7 +331,7 @@
                 initPage(current, pageSize, totalPages);
             }
         };
-        const token = localStorage.getItem('jwtToken'); // Get the JWT token from localStorage
+        const token = localStorage.getItem('jwtManageToken'); // Get the JWT token from localStorage
         get.setRequestHeader('authorization', token); // Include the token in the Authorization header
         get.send();
     }
@@ -337,6 +351,50 @@
     //         }
     //     });
     // });
+
+    // 获取表单数据并发送到后端接口
+    function submitForm() {
+        // 获取表单元素的值
+        const module = document.getElementById("images-type").value;
+        const title = document.getElementById("images-title").value;
+        const location = document.getElementById("images-location").value;
+        const photographer = document.getElementById("images-photographer").value;
+        const size = document.getElementById("images-size").value;
+        const content = document.getElementById("images-content").value;
+        const isPublished = document.getElementById("images-published").checked;
+        const fileInput = document.getElementById("file-1");
+        const photoTime = document.getElementById("images-create-time").value+":00";
+
+        const files = fileInput.files;
+        // 创建FormData对象并添加表单数据
+        const formData = new FormData();
+        formData.append("type", module);
+        formData.append("title", title);
+        formData.append("location", location);
+        formData.append("photoBy", photographer);
+        formData.append("imageSize", size);
+        formData.append("description", content);
+        formData.append("status", isPublished?"COMMON":"INVALID");
+        formData.append("photoTime", photoTime);
+
+        for (let i = 0; i < files.length; i++) {
+            formData.append("file", files[i]);
+        }
+
+        const get = new XMLHttpRequest();
+
+        get.open("POST", "/manage/record/upload");
+        get.onreadystatechange = function () {
+            if (get.readyState === 4 && get.status === 200) {
+                // 处理成功响应
+                alert("上传成功");
+                listRecord(1, 10,null)
+            }
+        };
+        const token = localStorage.getItem('jwtManageToken'); // Get the JWT token from localStorage
+        get.setRequestHeader('authorization', token); // Include the token in the Authorization header
+        get.send(formData);
+    }
 </script>
 </body>
 </html>

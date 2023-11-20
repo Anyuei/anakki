@@ -25,7 +25,7 @@
 
 @media (min-width: 576px) and (max-width: 1199px) {
     .content:not(.content--boxed):not(.content--full) {
-        padding: 102px 30px 0
+        padding: 35px 30px 0;
     }
 }
 

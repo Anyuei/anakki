@@ -46,6 +46,8 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
         if (!MD5SaltUtil.validData(password,user.getPassword())) {
             throw new RuntimeException("用户不存在或密码错误");
         }
+        user.setLoginDays(user.getLoginDays() + 1);
+        updateById(user);
         UserToken userToken = new UserToken();
         userToken.setNickname(username);
         return JwtUtil.createToken(userToken);

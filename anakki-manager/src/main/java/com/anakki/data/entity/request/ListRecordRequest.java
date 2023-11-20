@@ -43,4 +43,7 @@ public class ListRecordRequest extends Pagination {
 
     @ApiModelProperty("图片上传时间-结束")
     private LocalDateTime createTimeEnd;
+
+    @ApiModelProperty("摄影师")
+    private String photoBy;
 }

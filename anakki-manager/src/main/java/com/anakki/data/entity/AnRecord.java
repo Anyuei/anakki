@@ -49,4 +49,15 @@ public class AnRecord extends BaseEntity implements Serializable {
     @TableField(value = "photo_time")
     private LocalDateTime photoTime;
 
+    @ApiModelProperty("摄影师")
+    @TableField("photo_by")
+    private String photoBy;
+
+    @ApiModelProperty("图片尺寸")
+    @TableField("image_size")
+    private String imageSize;
+
+    @ApiModelProperty("图片状态")
+    @TableField("status")
+    private String status;
 }

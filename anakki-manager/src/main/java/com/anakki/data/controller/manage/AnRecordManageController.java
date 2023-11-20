@@ -5,6 +5,7 @@ import com.anakki.data.bean.common.ResponseDTO;
 import com.anakki.data.entity.AnRecord;
 import com.anakki.data.entity.request.GetContentRequest;
 import com.anakki.data.entity.request.ListRecordRequest;
+import com.anakki.data.entity.request.UploadRecordRequest;
 import com.anakki.data.service.AnRecordService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -12,9 +13,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -40,5 +43,10 @@ public class AnRecordManageController {
         return ResponseDTO.succData(anRecordBasePageResult);
     }
 
-
+    @ApiOperation(value = "上传图文")
+    @PostMapping("/upload")
+    public ResponseDTO<Boolean> upload(UploadRecordRequest uploadRecordRequest) {
+        Boolean status=anRecordService.uploadRecord(uploadRecordRequest);
+        return ResponseDTO.succData(status);
+    }
 }

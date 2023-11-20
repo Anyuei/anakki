@@ -193,7 +193,7 @@
                 initPage(current, pageSize, totalPages);
             }
         };
-        const token = localStorage.getItem('jwtToken'); // Get the JWT token from localStorage
+        const token = localStorage.getItem('jwtManageToken'); // Get the JWT token from localStorage
         get.setRequestHeader('authorization',token); // Include the token in the Authorization header
         get.send();
     }
