@@ -1,10 +1,8 @@
 package com.anakki.data.entity;
 
 import com.anakki.data.entity.common.BaseEntity;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import io.swagger.annotations.ApiModel;
@@ -27,7 +25,9 @@ import lombok.Setter;
 public class AnRecord extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
+    @ApiModelProperty("图片模块类型")
+    @TableField("type")
+    private String type;
 
     @ApiModelProperty("图片标题")
     @TableField("title")
@@ -44,5 +44,9 @@ public class AnRecord extends BaseEntity implements Serializable {
     @ApiModelProperty("图片地址")
     @TableField("img_url")
     private String imgUrl;
+
+    @ApiModelProperty("图片拍摄时间")
+    @TableField(value = "photo_time")
+    private LocalDateTime photoTime;
 
 }

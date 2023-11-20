@@ -72,8 +72,7 @@
     align-items: center;
     top: 0;
     left: 0;
-    background: #FFF;
-    border-bottom: 1px solid #e9ecef
+    background: #3a3a3a;
 }
 
 @media (max-width: 1199px) {
@@ -196,8 +195,7 @@
     height: 100%;
     overflow: hidden;
     z-index: 1050;
-    background-color: #fff;
-    border-right: 1px solid #e9ecef
+    background: #3a3a3a;
 }
 
 @media (max-width: 1199px) {
@@ -230,7 +228,7 @@
 }
 
 .sidebar-brand > h1 > a {
-    color: #343a40
+    color: #ff5353;
 }
 
 .sidebar .scrollbar-inner > .scroll-element {

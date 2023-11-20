@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description"
+          content="Probably the most complete UI kit out there. Multiple functionalities and controls added,  extended color palette and beautiful typography, designed as its own extended version of Bootstrap at  the highest level of quality.                             ">
+    <meta name="author" content="Webpixels">
+    <title>Anakki-World</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,800|Roboto:400,500,700" rel="stylesheet">
+    <!-- Plugins -->
+    <link rel="stylesheet" href="../assets/vendor/animate/animate.min.css" type="text/css">
+    <!-- Theme CSS -->
+    <link type="text/css" href="../assets/css/theme.css" rel="stylesheet">
+    <!-- Demo CSS - No need to use these in your project -->
+    <link rel="stylesheet" href="../assets/vendor/jquery-scrollbar/css/jquery-scrollbar.css">
+    <link type="text/css" href="../assets/vendor/highlight/css/highlight.min.css" rel="stylesheet">
+    <link type="text/css" href="../assets/css/demo.css" rel="stylesheet">
+</head>
+<style>
+    .golden-ratio-image {
+        width: 100px; /* 设置图片的宽度 */
+        height: calc(100px / 1.618); /* 根据黄金比例计算图片的高度 */
+    }
+    .vertical-span {
+        display: block;
+        margin-left: 1.4rem;
+        margin-bottom: 0.2rem;
+        font-size: 0.7rem;
+    }
+    .btn{
+        line-height: 0.7;
+    }
+</style>
+<body>
+
+<main class="main">
+    <div id="sidebar"></div>
+    <section class="content">
+        <div class="header" id="manage-header">
+            <!--管理系统 头部-->
+        </div>
+    </section>
+    <section class="content">
+        <div class="content-inner content-docs">
+            <div class="container">
+                <div class="form-group">
+                    <div class="mb-3 row">
+                        <label for="images-type" class="col-sm-2 col-form-label">模块</label>
+                        <div class="col-md-10">
+                            <select class="selectpicker" title="模块选择" data-live-search="true"
+                                    data-live-search-placeholder="搜素" id="images-type">
+                                <!--模块类型列表-->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="images-title" class="col-sm-2 col-form-label">图片标题</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="images-title"
+                                   placeholder="请输入图片标题">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="images-location" class="col-sm-2 col-form-label">拍摄地点</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="images-location"
+                                   placeholder="请输入图片拍摄地点">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="images-photographer" class="col-sm-2 col-form-label">摄影师</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="images-photographer"
+                                   placeholder="请输入图片拍摄者">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="images-size" class="col-sm-2 col-form-label">分辨率</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="images-size"
+                                   placeholder="请输入图片分辨率">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="images-content" class="col-sm-2 col-form-label">描述</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control textarea-autosize"
+                                      placeholder="描述" rows="1" id="images-content"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label class="col-sm-2 col-form-label">立即发布</label>
+                        <div class="col-sm-10 d-flex align-items-center">
+                            <label class="toggle-switch">
+                                <input type="checkbox">
+                                <span class="toggle-switch-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <div>
+                            <input type="file" name="file-1[]" id="file-1"
+                                   class="custom-input-file custom-input-file--2"
+                                   data-multiple-caption="{count} files selected" multiple/>
+                            <label for="file-1">
+                                <i class="fa fa-upload"></i>
+                                <span>上传图片 (推荐20MB以下)</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content">
+        <div class="row" id="selectRecord">
+            <div class="col-lg-2">
+                <div class="input-group mb-2">
+                    <input type="text" class="form-control" placeholder="模块类型查询" aria-label="模块类型查询" id="search-input1">
+                    <!-- 添加更多搜索条件输入框 -->
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="input-group mb-2">
+                    <input type="text" class="form-control" placeholder="模块类型查询" aria-label="模块类型查询" id="search-input1">
+                    <!-- 添加更多搜索条件输入框 -->
+                </div>
+
+            </div>
+            <div class="col-lg-2">
+                <div class="input-group mb-2">
+                    <input type="text" class="form-control" placeholder="模块类型查询" aria-label="模块类型查询" id="search-input1">
+                    <!-- 添加更多搜索条件输入框 -->
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" id="search-button">搜索</button>
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <table class="table table-hover align-items-center" data-resizable="true">
+                    <thead>
+                    <tr class="bg-white" scope="row">
+                        <th scope="col">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="th_checkbox"/>
+                                <label class="custom-control-label" for="th_checkbox"></label>
+                            </div>
+                        </th>
+                        <th scope="col">id</th>
+                        <th scope="col">模块类型</th>
+                        <th scope="col">标题</th>
+                        <th scope="col">拍摄地点</th>
+                        <th scope="col">图片描述</th>
+                        <th scope="col">图片</th>
+                    </tr>
+                    </thead>
+                    <tbody id="record-list">
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <footer class="footer bg-white " style="width: 100%;">
+            <div class="container">
+                <div class="row justify-content-end">
+                    <div class="col-4">
+                        <ul class="pagination footer " style="margin-top: 1rem" id="page-module">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </section>
+</main>
+<!-- Core -->
+<script src="../assets/vendor/jquery/jquery.min.js"></script>
+<script src="../assets/vendor/popper/popper.min.js"></script>
+<script src="../assets/js/bootstrap/bootstrap.min.js"></script>
+<!-- FontAwesome 5 -->
+<script src="../assets/vendor/fontawesome/js/fontawesome-all.min.js" defer></script>
+<!-- Scripts used only for this demo only - Remove these in your project -->
+<script src="../assets/vendor/jquery-scrollbar/js/jquery-scrollbar.min.js"></script>
+<script src="../assets/vendor/jquery-scrollLock/jquery-scrollLock.min.js"></script>
+<script src="../assets/vendor/sticky-kit/sticky-kit.min.js"></script>
+<script src="../assets/vendor/highlight/js/highlight.min.js"></script>
+<script src="../assets/vendor/clipboard-js/clipboard.min.js"></script>
+<script src="../assets/vendor/holderjs/holder.min.js"></script>
+<script src="../assets/js/demo.js"></script>
+<script src="../assets/vendor/bootstrap-select/js/bootstrap-select.min.js"></script>
+<script src="../assets/vendor/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>
+<script src="../assets/vendor/input-mask/input-mask.min.js"></script>
+<script src="../assets/vendor/nouislider/js/nouislider.min.js"></script>
+<script src="../assets/vendor/textarea-autosize/textarea-autosize.min.js"></script>
+<!-- Theme JS -->
+<script src="../assets/js/theme.js"></script>
+
+<script>
+    window.onload = function () {
+        $('#manage-header').load("../manage/base/manage-header.html");
+        $('#sidebar').load("../manage/base/sidebar.html");
+        listMenu();
+        listRecordType();
+        listRecord(1,10,"");
+    };
+
+    function listRecordType() {
+        const get = new XMLHttpRequest();
+        get.open("GET", "/base/system/record-type", true);
+        get.onreadystatechange = function () {
+            if (get.readyState === 4 && get.status === 200) {
+                let html = "";
+                const response = JSON.parse(get.responseText);
+                const typeList = response.data;
+                for (let i = 0; i < typeList.length; i++) {
+                    html +=
+                        `
+                             <option>${typeList[i]}</option>
+                            `
+                }
+                // html += "</select>";
+                document.getElementById("images-type").innerHTML = html;
+                $('.selectpicker').selectpicker('refresh');
+            }
+        };
+        const token = localStorage.getItem('jwtToken'); // Get the JWT token from localStorage
+        get.setRequestHeader('authorization', token); // Include the token in the Authorization header
+        get.send();
+    }
+    function initPage(currentPage, pageSize, totalPages) {
+        const paginationContainer = document.getElementById("page-module");
+        let html = "";
+        // Previous page button
+        if (currentPage > 1) {
+            let number = currentPage - 1;
+            html += `<li class="page-item"><a class="page-link" href="#" onclick="listRecord(${number}, '${pageSize}')">上一页</a></li>`;
+        } else {
+            html += `<li class="page-item disabled"><a class="page-link" href="#">上一页</a></li>`;
+        }
+        // Page numbers
+        for (let i = 1; i <= totalPages; i++) {
+            if (i === currentPage) {
+                html += `<li class="page-item active"><a class="page-link" href="#">${i}</a></li>`;
+            } else {
+                html += `<li class="page-item"><a class="page-link" href="#" onclick="listRecord(${i}, '${pageSize}')">${i}</a></li>`;
+            }
+        }
+        // Next page button
+        if (currentPage < totalPages) {
+            let number = currentPage + 1;
+            html += `<li class="page-item"><a class="page-link" href="#" onclick="listRecord(${number}, '${pageSize}')">下一页</a></li>`;
+        } else {
+            html += `<li class="page-item disabled"><a class="page-link" href="#">下一页</a></li>`;
+        }
+        paginationContainer.innerHTML = html;
+    }
+    document.getElementById("search-button").addEventListener("click", function() {
+        const searchInput = document.getElementById("search-input").value;
+        listRecord(1, 10, searchInput);
+    });
+    function listRecord(current, pageSize,searchInput) {
+        const get = new XMLHttpRequest();
+        get.open("GET", "/manage/record/list?current=" + current + "&size=" + pageSize, true);
+        get.onreadystatechange = function () {
+            if (get.readyState === 4 && get.status === 200) {
+                let html = "";
+                const response = JSON.parse(get.responseText);
+
+                const itemList = response.data.data;
+                const totalNum = response.data.totalNum;
+
+                for (let i = 0; i < itemList.length; i++) {
+                    const item = itemList[i];
+                    const id = item.id;
+                    const type = item.type;
+                    const title = item.title;
+                    const location = item.location;
+                    const description = item.description;
+                    const imgUrl = item.imgUrl;
+                    const photoTime = item.photoTime;
+                    const createTime = item.createTime;
+                    const updateTime = item.updateTime;
+                    html = html + "                           <tr>\n" +
+                        "                                    <td>\n" +
+                        "                                        <div class=\"custom-control custom-checkbox\">\n" +
+                        "                                            <input type=\"checkbox\" class=\"custom-control-input\" id=\"td_checkbox_" + id + "\"/>\n" +
+                        "                                            <label class=\"custom-control-label\" for=\"td_checkbox_" + id + "\"></label>\n" +
+                        "                                        </div>\n" +
+                        "                                    </td>\n" +
+                        "                                    <td>" + id + "</td>\n" +
+                        "                                    <td>" + type + "</td>\n" +
+                        "                                    <td>" + title + "</td>\n" +
+                        "                                    <td>" + location + "</td>\n" +
+                        "                                    <td>" + description + "</td>\n" +
+                        "                                    <td>\n" +
+                        "                                        <div class=\"media align-items-center\">\n" +
+                        "                                            <img src=\"" + imgUrl + "\" class=\"golden-ratio-image\">" +
+                        "                                            <div class=\"media-body\">\n" +
+                        "                                                <span class=\"vertical-span\">拍摄时间：" + photoTime.replace("T", " ") + "</span>\n" +
+                        "                                                <span class=\"vertical-span\">上传时间：" + createTime.replace("T", " ") + "</span>\n" +
+                        "                                                <span class=\"vertical-span\">修改时间：" + updateTime.replace("T", " ") + "</span>\n" +
+                        "                                            </div>\n" +
+                        "                                        </div>\n" +
+                        "                                    </td>\n" +
+                        "                                </tr>"
+                }
+                document.getElementById("record-list").innerHTML = html;
+                let totalPages = Math.ceil(totalNum / pageSize);
+                initPage(current, pageSize, totalPages);
+            }
+        };
+        const token = localStorage.getItem('jwtToken'); // Get the JWT token from localStorage
+        get.setRequestHeader('authorization', token); // Include the token in the Authorization header
+        get.send();
+    }
+    // $(function() {
+    //     $(".resizable-column th").resizable({
+    //         handles: "e",
+    //         minWidth: 40,
+    //         maxWidth: 500,
+    //         resize: function(event, ui) {
+    //             var table = $(this).closest("table");
+    //             var columnIndex = $(this).index() + 1;
+    //             table.find("tr").each(function() {
+    //                 $(this)
+    //                     .find("th:nth-child(" + columnIndex + "), td:nth-child(" + columnIndex + ")")
+    //                     .width(ui.size.width);
+    //             });
+    //         }
+    //     });
+    // });
+</script>
+</body>
+</html>

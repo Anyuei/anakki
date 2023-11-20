@@ -2,6 +2,7 @@ package com.anakki.data.controller.base;
 
 import com.anakki.data.bean.common.ResponseDTO;
 import com.anakki.data.entity.request.SendMailRequest;
+import com.anakki.data.service.AnRecordService;
 import com.anakki.data.utils.common.EmailUtil;
 import com.ramostear.captcha.HappyCaptcha;
 import com.ramostear.captcha.support.CaptchaStyle;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * <p>
@@ -27,6 +29,9 @@ public class SystemController {
     @Autowired
     private EmailUtil emailUtil;
 
+
+    @Autowired
+    private AnRecordService anRecordService;
     @ApiOperation(value = "发送邮件")
     @PostMapping("/send-mail")
     public ResponseDTO<Boolean> sendMail(@RequestBody SendMailRequest sendMailRequest) {
@@ -68,5 +73,12 @@ public class SystemController {
 //                .height(80)							//设置动画高度为80
 //                .font(Fonts.getInstance().zhFont())	//设置汉字的字体
 //                .build().finish();
+    }
+
+    @ApiOperation(value = "获取图文类型")
+    @GetMapping("/record-type")
+    public ResponseDTO<List<String>> recordType() {
+        List<String> recordTypes = anRecordService.getRecordTypes();
+        return ResponseDTO.succData(recordTypes);
     }
 }

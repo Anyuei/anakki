@@ -215,7 +215,6 @@ th {
 
 label {
     display: inline-block;
-    margin-bottom: .5rem
 }
 
 button {
@@ -1491,14 +1490,13 @@ pre code {
 }
 
 .table th, .table td {
-    padding: .75rem;
+    padding: 0.4rem;
     vertical-align: top;
-    border-top: .0625rem solid #dee2e6
+    border-top: .125rem solid #dee2e6;
 }
 
 .table thead th {
     vertical-align: bottom;
-    border-bottom: .125rem solid #dee2e6
 }
 
 .table tbody + tbody {
@@ -4733,7 +4731,7 @@ tbody.collapse.show {
     display: block;
     padding: .75rem 1.25rem;
     margin-bottom: -0.0625rem;
-    background-color: #fff;
+    background-color: #eee;
     border: .0625rem solid rgba(0, 0, 0, 0.125)
 }
 
@@ -11260,12 +11258,15 @@ textarea[resize="horizontal"] {
 }
 
 .list-group-item {
-    padding: 1rem 1rem;
+    padding: 1rem 3rem;
     border: 0;
-    border-bottom: 1px solid #e9ecef;
-    color: #adb5bd;
+    border-bottom-width: 0px;
+    border-bottom-style: none;
+    border-bottom-color: currentcolor;
+    border-bottom: 1px solid #cecece;
+    color: #000;
     font-size: .765625rem;
-    margin-bottom: 0
+    margin-bottom: 0;
 }
 
 .list-group-item-sm {
@@ -12286,7 +12287,7 @@ body {
 }
 
 select.bs-select-hidden, select.selectpicker {
-    display: none !important
+    /*display: none !important*/
 }
 
 .bootstrap-select {

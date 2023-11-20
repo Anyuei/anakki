@@ -55,4 +55,7 @@ public class AnRecordController {
         AnRecord byId = anRecordService.getById(id);
         return ResponseDTO.succData(byId);
     }
+
+
+
 }
