@@ -3,6 +3,7 @@ package com.anakki.data.service.impl;
 import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.entity.AnRecord;
 import com.anakki.data.entity.AnUser;
+import com.anakki.data.entity.request.ChangeRecordRequest;
 import com.anakki.data.entity.request.ListRecordRequest;
 import com.anakki.data.entity.request.UploadRecordRequest;
 import com.anakki.data.entity.response.ListUserResponse;
@@ -29,7 +30,7 @@ import static org.bouncycastle.asn1.iana.IANAObjectIdentifiers.mail;
 
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
  *
  * @author Anakki
@@ -77,10 +78,10 @@ public class AnRecordServiceImpl extends ServiceImpl<AnRecordMapper, AnRecord> i
     }
 
     @Override
-    public Boolean uploadRecord(UploadRecordRequest uploadRecordRequest)  {
+    public Boolean uploadRecord(UploadRecordRequest uploadRecordRequest) {
         for (MultipartFile multipartFile : uploadRecordRequest.getFile()) {
             AnRecord anRecord = new AnRecord();
-            BeanUtils.copyProperties(uploadRecordRequest,anRecord);
+            BeanUtils.copyProperties(uploadRecordRequest, anRecord);
             BasicSessionCredentials sessionCredential = COSUtil.getSessionCredential();
 
             String url = COSUtil.uploadObject(multipartFile, sessionCredential, COSUtil.region, "anakki-1258150206");
@@ -88,5 +89,17 @@ public class AnRecordServiceImpl extends ServiceImpl<AnRecordMapper, AnRecord> i
             save(anRecord);
         }
         return true;
+    }
+
+    @Override
+    public void changeRecordStatus(ChangeRecordRequest changeRecordRequest) {
+        Long id = changeRecordRequest.getId();
+        AnRecord byId = getById(id);
+        if (changeRecordRequest.getIsChecked()) {
+            byId.setStatus("COMMON");
+        } else {
+            byId.setStatus("INVALID");
+        }
+        updateById(byId);
     }
 }

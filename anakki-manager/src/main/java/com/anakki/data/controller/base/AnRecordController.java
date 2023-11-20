@@ -44,6 +44,7 @@ public class AnRecordController {
         String type = getContentRequest.getImageType();
         QueryWrapper<AnRecord> anRecordQueryWrapper = new QueryWrapper<>();
         anRecordQueryWrapper.eq("type",type);
+        anRecordQueryWrapper.eq("status","COMMON");
         IPage<AnRecord> page = anRecordService.page(anRecordIPage, anRecordQueryWrapper);
         List<AnRecord> records = page.getRecords();
         return ResponseDTO.succData(new BasePageResult<>(records, page.getTotal()));

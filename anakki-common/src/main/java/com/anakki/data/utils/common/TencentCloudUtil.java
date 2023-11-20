@@ -9,9 +9,9 @@ package com.anakki.data.utils.common;
  */
 public class TencentCloudUtil {
 
-    public static String SECRET_ID="AKID98rKfQ6ZptnVzFJCrHSO7bolVzFJE0Zu";
+    public static String SECRET_ID="AKIDnU5asz1vuiMtD6sVaZZg2EKoL2lW9RtB";
 
-    public static String SECRET_KEY="Vu74xeImCMJ0RddPwDIAsNgojV3MVQ6Z";
+    public static String SECRET_KEY="DD1d3INOFwRiphXBd2OAk7GCzZ5SejgQ";
 
 
 }

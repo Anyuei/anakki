@@ -13,7 +13,7 @@
     <link type="text/css" href="../assets/css/theme.css" rel="stylesheet">
     <!-- Demo CSS - No need to use these in your project -->
     <link type="text/css" href="../assets/css/demo.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
 </head>
 <style>
     .bg-primary {
@@ -42,31 +42,30 @@
 <!--通用顶部导航-->
 <div id="header"></div>
 <main class="main">
-    <section class="spotlight parallax bg-cover bg-size--cover"  data-spotlight="fullscreen" style="background-image: url('https://securex-1258150206.cos.ap-beijing.myqcloud.com/backend/DSC07382_1.jpg')">
-<!--        <span class="mask bg-primary alpha-6"></span>-->
+    <section class="spotlight parallax bg-cover bg-size--cover" data-spotlight="fullscreen"
+             style="background-image: url('https://securex-1258150206.cos.ap-beijing.myqcloud.com/backend/DSC07382_1.jpg')">
+        <!--        <span class="mask bg-primary alpha-6"></span>-->
         <div class="container d-flex align-items-center no-padding">
             <div class="col">
                 <div class="row justify-content-center">
                     <div class="col-lg-6">
                         <div class="card bg-primary text-white" style="background-color: #3b694d47 !important">
                             <div class="card-body">
-                                <button type="button" class="btn btn-primary btn-nobg btn-zoom--hover mb-5">
-                                    <span class="btn-inner--icon"><i class="fas fa-arrow-left"></i></span>
-                                </button>
+                                <i class="fas fa-arrow-left"></i><a href="sign-up.html">没有账号去注册</a>
                                 <span class="clearfix"></span>
                                 <img src="../assets/images/brand/icon.png" style="width: 50px;">
                                 <h4 class="heading h3 text-white pt-3 pb-5">欢迎回家<br>登录您的账户</h4>
 
 
-<!--                                <&#45;&#45;验证码+提交验证&ndash;&gt;-->
-<!--                                <div>-->
-<!--                                    <form action="/system/verify" method="post">-->
+                                <!--                                <&#45;&#45;验证码+提交验证&ndash;&gt;-->
+                                <!--                                <div>-->
+                                <!--                                    <form action="/system/verify" method="post">-->
 
-<!--                                        <div>-->
-<!--                                            <button class="btn btn-primary" type="submit">提交</button>-->
-<!--                                        </div>-->
-<!--                                    </form>-->
-<!--                                </div>-->
+                                <!--                                        <div>-->
+                                <!--                                            <button class="btn btn-primary" type="submit">提交</button>-->
+                                <!--                                        </div>-->
+                                <!--                                    </form>-->
+                                <!--                                </div>-->
 
                                 <form class="form-primary" id="login-form">
                                     <div class="form-group">
@@ -116,7 +115,7 @@
 <script>
     window.onload = function () {
         $('#header').load("../pages/header.html", loadPersonDetail);
-        $('#footer').load("../pages/footer.html",insertCreateTime);
+        $('#footer').load("../pages/footer.html", insertCreateTime);
     };
 
     function forgot() {
@@ -133,28 +132,29 @@
                 console.error("Failed to copy text: ", error);
             });
     }
-    $(document).ready(function() {
-        $('#login-form').submit(function(e) {
+
+    $(document).ready(function () {
+        $('#login-form').submit(function (e) {
             e.preventDefault(); // Prevent form submission
             var formData = $(this).serialize(); // Serialize form data
             $.ajax({
                 url: '/base/anakki/user/login', // Replace with your server URL
                 type: 'POST',
                 data: formData,
-                success: function(response) {
-                    if (response.code===101){
+                success: function (response) {
+                    if (response.code === 101) {
                         document.getElementById("login-notice").innerHTML = response.data;
 
-                    }else if(response.code===200){
+                    } else if (response.code === 200) {
                         document.getElementById("login-notice").innerHTML = "";
-                        if (response.success===true){
-                            const token=response.data;
+                        if (response.success === true) {
+                            const token = response.data;
                             localStorage.setItem('user-token', token);
                             window.location.href = "../pages/contact.html";
                         }
                     }
                 },
-                error: function(xhr, status, error) {
+                error: function (xhr, status, error) {
                     // Handle error response
                     console.log(error);
                 }

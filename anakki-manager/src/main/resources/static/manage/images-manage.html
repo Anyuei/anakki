@@ -73,7 +73,7 @@
                         <label for="images-location" class="col-sm-2 col-form-label">拍摄时间</label>
                         <div class="col-sm-10">
                             <input type="datetime-local" class="form-control" id="images-create-time"
-                                   placeholder="请输入图片拍摄时间">
+                                   placeholder="请输入图片拍摄时间" >
                         </div>
                     </div>
                     <div class="mb-3 row">
@@ -174,6 +174,9 @@
                         <th scope="col">标题</th>
                         <th scope="col">拍摄地点</th>
                         <th scope="col">图片描述</th>
+                        <th scope="col">拍摄者</th>
+                        <th scope="col">分辨率</th>
+                        <th scope="col">是否展示</th>
                         <th scope="col">图片</th>
                     </tr>
                     </thead>
@@ -300,8 +303,15 @@
                     const description = item.description;
                     const imgUrl = item.imgUrl;
                     const photoTime = item.photoTime;
+                    const photoBy = item.photoBy;
+                    const imageSize = item.imageSize;
+                    const status = item.status;
                     const createTime = item.createTime;
                     const updateTime = item.updateTime;
+                    let statusCheck="";
+                    if (status==="COMMON"){
+                        statusCheck="checked";
+                    }
                     html = html + "                           <tr>\n" +
                         "                                    <td>\n" +
                         "                                        <div class=\"custom-control custom-checkbox\">\n" +
@@ -314,6 +324,14 @@
                         "                                    <td>" + title + "</td>\n" +
                         "                                    <td>" + location + "</td>\n" +
                         "                                    <td>" + description + "</td>\n" +
+                        "                                    <td>" + photoBy + "</td>\n" +
+                        "                                    <td>" + imageSize + "</td>\n" +
+                        "                                   <td> " +
+                        "                                      <label class=\"toggle-switch\">\n" +
+                        "                                      <input type=\"checkbox\" "+statusCheck+" value="+ id +" id=\"changeImageStatus\" onchange=\"updateImageStatus(this)\">\n" +
+                        "                                      <span class=\"toggle-switch-slider\"></span>\n" +
+                        "                                      </label>" +
+                        "                                    </td>" +
                         "                                    <td>\n" +
                         "                                        <div class=\"media align-items-center\">\n" +
                         "                                            <img src=\"" + imgUrl + "\" class=\"golden-ratio-image\">" +
@@ -394,6 +412,31 @@
         const token = localStorage.getItem('jwtManageToken'); // Get the JWT token from localStorage
         get.setRequestHeader('authorization', token); // Include the token in the Authorization header
         get.send(formData);
+    }
+
+
+    function updateImageStatus(checkbox) {
+        const isChecked = checkbox.checked;
+        const id = checkbox.value;
+        const token = localStorage.getItem('jwtManageToken'); // Get the JWT token from localStorage
+        // Send the button state and ID to the backend using AJAX or fetch API
+        // Replace the URL and method with your actual backend endpoint and HTTP method
+        fetch('/manage/record/change-status', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'authorization': token
+            },
+            body: JSON.stringify({ id: id, isChecked: isChecked })
+        })
+            .then(response => {
+                // Handle the response from the backend
+                console.log(response);
+            })
+            .catch(error => {
+                // Handle any errors
+                console.error(error);
+            });
     }
 </script>
 </body>
