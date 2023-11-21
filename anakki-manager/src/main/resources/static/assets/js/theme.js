@@ -4,40 +4,40 @@ $(window).on("load", function () {
 
 
 }),
-function userDetail(){
+    function userDetail() {
 
-}
-    $(window).on('load resize', function () {
+    }
+$(window).on('load resize', function () {
 
-        // Background image holder - Static hero with fullscreen autosize
-        if ($('.spotlight').length) {
-            $('.spotlight').each(function () {
+    // Background image holder - Static hero with fullscreen autosize
+    if ($('.spotlight').length) {
+        $('.spotlight').each(function () {
 
-                var $this = $(this);
-                var holderHeight;
+            var $this = $(this);
+            var holderHeight;
 
-                if ($this.data('spotlight') == 'fullscreen') {
-                    if ($this.data('spotlight-offset')) {
-                        var offsetHeight = $('body').find($this.data('spotlight-offset')).height();
-                        holderHeight = $(window).height() - offsetHeight;
-                    } else {
-                        holderHeight = $(window).height();
-                    }
-
-
-                    if ($(window).width() > 991) {
-                        $this.find('.spotlight-holder').css({
-                            'height': holderHeight + 'px'
-                        });
-                    } else {
-                        $this.find('.spotlight-holder').css({
-                            'height': 'auto'
-                        });
-                    }
+            if ($this.data('spotlight') == 'fullscreen') {
+                if ($this.data('spotlight-offset')) {
+                    var offsetHeight = $('body').find($this.data('spotlight-offset')).height();
+                    holderHeight = $(window).height() - offsetHeight;
+                } else {
+                    holderHeight = $(window).height();
                 }
-            })
-        }
-    }),
+
+
+                if ($(window).width() > 991) {
+                    $this.find('.spotlight-holder').css({
+                        'height': holderHeight + 'px'
+                    });
+                } else {
+                    $this.find('.spotlight-holder').css({
+                        'height': 'auto'
+                    });
+                }
+            }
+        })
+    }
+}),
 
     $(document).ready(function () {
 
@@ -225,9 +225,11 @@ function delCookie(name) {
 function logout() {
     localStorage.removeItem('jwtManageToken'); // Remove the JWT token from local storage
 }
+
 function userLogout() {
     localStorage.removeItem('user-token'); // Remove the JWT token from local storage
 }
+
 function listMenu() {
     const get = new XMLHttpRequest();
     get.open("GET", "/manage/menu/list", true);
@@ -261,7 +263,7 @@ function listMenu() {
             document.getElementById("menu-list").innerHTML = html;
         }
     };
-    const token = localStorage.getItem('jwtToken'); // Get the JWT token from localStorage
+    const token = localStorage.getItem('jwtManageToken'); // Get the JWT token from localStorage
     get.setRequestHeader('authorization', token); // Include the token in the Authorization header
     get.send();
 }
@@ -285,13 +287,13 @@ if (currentPage.includes("sign-in.html")) {
 }
 
 
-function loadPersonDetail(){
+function loadPersonDetail() {
     const userDetail = document.getElementById("user-detail");
     const userAvatar = document.getElementById("user-avatar");
     $.ajax({
         url: "/api/anakki/user/detail",
         type: "GET",
-        beforeSend: function(xhr) {
+        beforeSend: function (xhr) {
             xhr.setRequestHeader('authorization', localStorage.getItem('user-token')); // Include the token in the Authorization header
         },
         success: function (response) {
@@ -299,7 +301,7 @@ function loadPersonDetail(){
             const avatar = user.avatar;
             const nickname = user.nickname;
             const exp = user.exp;
-            const loginDays =  user.loginDays;
+            const loginDays = user.loginDays;
             const state = user.state;
             userDetail.innerHTML = `
                     <a class="nav-link dropdown-toggle" href="#" id="navbar_main_dropdown_1" role="button"
@@ -310,9 +312,8 @@ function loadPersonDetail(){
                         <a class="dropdown-item">累计登录${loginDays}天</a>
                         <a class="dropdown-item">${state}</a>
                         <a class="dropdown-item" href="/pages/sign-in.html" onclick="userLogout()">登出</a>
-                    </div>
-    `;
-            userAvatar.innerHTML=`<img src="${avatar}" alt="" style="width: 3rem;">`;
+                    </div>`;
+            userAvatar.innerHTML = `<img src="${avatar}" alt="" style="width: 3rem; border-radius: 50%;" onclick="showAvatarModal()">`;
         },
         error: function (xhr, status, error) {
             console.error(error);
@@ -320,8 +321,68 @@ function loadPersonDetail(){
     });
 }
 
+function showAvatarModal() {
+    $('#avatarModal').modal('show'); // Show the avatar modal
+}
 
-function insertCreateTime(){
+function saveAvatar() {
+    const avatarInput = document.getElementById("avatarInput");
+    const file = avatarInput.files[0];
+    const formData = new FormData();
+    formData.append("file", file);
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "/api/anakki/user/upload-avatar", true); // Replace with your backend API endpoint
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            const alertDiv = document.createElement("div");
+            alertDiv.classList.add("alert", "alert-warning", "alert-dismissible", "fade", "show", "fixed-top");
+            alertDiv.setAttribute("role", "alert");
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                const response = JSON.parse(xhr.responseText);
+                if (response.success === false) {
+                    const errorMessage = response.data;
+                    const alertDiv = document.createElement("div");
+                    alertDiv.classList.add("alert", "alert-warning", "alert-dismissible", "fade", "show", "fixed-top");
+                    alertDiv.setAttribute("role", "alert");
+                    alertDiv.innerHTML = `
+                <span class="alert-inner--icon"><i class="fas fa-exclamation"></i></span>
+                <span class="alert-inner--text"><strong>错误!</strong> ${errorMessage}</span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            `;
+                    document.body.appendChild(alertDiv);
+                } else {
+                    const alertDiv = document.createElement("div");
+                    alertDiv.classList.add("alert", "alert-success", "alert-dismissible", "fade", "show", "fixed-top");
+                    alertDiv.setAttribute("role", "alert");
+                    alertDiv.innerHTML = `
+                <span class="alert-inner--icon"><i class="fas fa-exclamation"></i></span>
+                <span class="alert-inner--text"><strong>成功!</strong></span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            `;
+                    // Handle success response
+                    console.log(response.data);
+                    loadPersonDetail();
+                }
+            } else {
+                // Handle error response
+                const errorMessage = "Error: " + xhr.status + " " + xhr.statusText;
+                // ...
+            }
+            // Close the modal
+            $('#avatarModal').modal('hide');
+        }
+    };
+    xhr.setRequestHeader('authorization', localStorage.getItem('user-token'));
+    xhr.send(formData);
+    // Close the modal
+    $('#avatarModal').modal('hide');
+}
+
+function insertCreateTime() {
     const startDate = new Date("2023-11-01");
     const currentDate = new Date();
     const timeElapsed = currentDate - startDate;

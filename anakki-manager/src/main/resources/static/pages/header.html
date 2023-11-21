@@ -55,13 +55,38 @@
 
                     </div>
                 </li>
+
+
                 <li class="nav-item dropdown">
                     <div id="user-detail">
-                        <!--                    <a class="nav-link" href="docs/life.html">漫长的一生</a>-->
+
                         <a class="nav-link" id="auth-link" href="../pages/sign-in.html">未登录</a>
                     </div>
                 </li>
+
             </ul>
         </div>
     </div>
 </nav>
+<!-- Avatar Modal -->
+<div class="modal" id="avatarModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">修改头像</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="avatarForm">
+                    <input type="file" id="avatarInput" accept="image/*">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" onclick="saveAvatar()">保存</button>
+            </div>
+        </div>
+    </div>
+</div>

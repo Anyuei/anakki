@@ -20,6 +20,10 @@ spring:
         core-size: 8
         keep-alive: 3s
         queue-capacity: 1000
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
 
 # 配置 smtp 服务器地址
   mail:

@@ -9,15 +9,18 @@ import com.anakki.data.entity.response.ListUserResponse;
 import com.anakki.data.entity.response.UserDetailResponse;
 import com.anakki.data.mapper.AnUserMapper;
 import com.anakki.data.service.AnUserService;
+import com.anakki.data.utils.common.COSUtil;
 import com.anakki.data.utils.common.JwtUtil;
 import com.anakki.data.utils.dealUtils.MD5SaltUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.qcloud.cos.auth.BasicSessionCredentials;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
@@ -131,5 +134,19 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
         UserDetailResponse userDetailResponse = new UserDetailResponse();
         BeanUtils.copyProperties(byNickname,userDetailResponse);
         return userDetailResponse;
+    }
+
+    @Override
+    public void uploadAvatar(MultipartFile file) {
+        long sizeInBytes = file.getSize();
+        long sizeInMB = sizeInBytes / (1024 * 1024);
+        if (sizeInMB>2){
+            throw new RuntimeException("头像不能大于2MB");
+        }
+        String currentNickname = BaseContext.getCurrentNickname();
+        AnUser byNickname = getByNickname(currentNickname);
+        String url = COSUtil.uploadObject(file, COSUtil.region, "anakki-1258150206","avatar/");
+        byNickname.setAvatar(url);
+        updateById(byNickname);
     }
 }
