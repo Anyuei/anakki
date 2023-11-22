@@ -1,52 +1,86 @@
+server:
+  port: 8080
 spring:
-  datasource:
-    druid:
-      name: druid-default-datasource
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://49.232.11.30:3306/anakki?autoReconnect=true&useServerPreparedStmts=false&rewriteBatchedStatements=true&characterEncoding=UTF-8&useSSL=false&allowMultiQueries=true&serverTimezone=UTC
-      username: root
-      password: FengXiang_123
-      initial-size: 5
-      max-active: 30
-      min-idle: 5
-      filter:
-        stat:
-          enabled: true
-          log-slow-sql: true
-          merge-sql: true
-          slow-sql-millis: 30000 #单位毫秒
-          connection-stack-trace-enable: true
-        config:
-          enabled: true
-        slf4j:
-          enabled: true
-      query-timeout: 1800
-      max-wait: 60000
-      validation-query: select 1 from dual
-      pool-prepared-statements: true #mysql5.5以上或者oracle建议开启
-      testWhileIdle: true
-      filters: stat,wall,config,slf4j
-      break-after-acquire-failure: true
-      time-between-eviction-runs-millis: 300000
-      connection-error-retry-attempts: 3
-#      stat-view-servlet:
-#        enabled: true #默认为true,可以不显示设置
-#        url-pattern: /druid/*
-#        reset-enable: false
-#        login-username: admin
-#        login-password: 123
-#        deny: 192.168.0.191
-      web-stat-filter:
-        enabled: true #默认为true,可以不显示设置
-        url-pattern: /*
-        exclusions: '*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*'
-        session-stat-enable: 'true'
-        profile-enable: 'true'
-        #-1标识采用数据库默认事务隔离级别
-      default-transaction-isolation: 2
+  application:
+    name: anakki-manager
+  mvc:
+    #  这个mvc的配置是springboot2.6.1不支持swagger3的折衷配置，后面考虑升级Springboot版本或降级版本
+    pathmatch:
+      matching-strategy: ant_path_matcher
+    view:
+      suffix: .html
+    static-path-pattern: /**
+  web:
+    resources:
+      static-locations: classpath:/templates/,classpath:/static/
+  task:
+    execution:
+      pool:
+        max-size: 12
+        core-size: 8
+        keep-alive: 3s
+        queue-capacity: 1000
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+
+  # 配置 smtp 服务器地址
+  mail:
+    port: 587
+    username: ayp199645aabb@qq.com
+    password: afmyfpdbcnykbbbd
+    from: ayp199645aabb@qq.com
+    protocol: smtp
+    host: smtp.qq.com
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          socketFactoryClass: javax.net.ssl.SSLSocketFactory
+        debug: true
+
+  # redis 配置
+  redis:
+    # 地址
+    host: 49.232.11.30
+    # 端口，默认为6379
+    port: 6479
+    # 密码
+    password: fxkj_123
+    # 连接超时时间
+    timeout: 10s
+    lettuce:
+      pool:
+        max-active: 8   #最大连接数据库连接数,设 0 为没有限制
+        max-idle: 8     #最大等待连接中的数量,设 0 为没有限制
+        max-wait: -1ms  #最大建立连接等待时间。如果超过此时间将接到异常。设为-1表示无限制。
+        min-idle: 0     #最小等待连接中的数量,设 0 为没有限制
+mybatis-plus:
+  configuration:
+    #在映射实体或者属性时，将数据库中表名和字段名中的下划线去掉，按照驼峰命名法映射 address_book ---> addressBook
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    #log-impl: NO_LOGGING
 
 dynamicDataSource.default:
+  hikari:
+    connection-test-query: SELECT 1 FROM DUAL
+    connection-timeout: 600000
+    maximum-pool-size: 500
+    max-lifetime: 1800000
+    minimum-idle: 20
+    validation-timeout: 3000
+    idle-timeout: 60000
+    connection-init-sql: SET NAMES utf8mb4
   driverClassName: com.mysql.cj.jdbc.Driver
-  url: jdbc:mysql://49.232.11.30:3306/anakki?autoReconnect=true&useServerPreparedStmts=false&rewriteBatchedStatements=true&characterEncoding=UTF-8&useSSL=false&allowMultiQueries=true&serverTimezone=UTC
+  url: jdbc:mysql://119.45.1.61:3306/anakki?autoReconnect=true&useServerPreparedStmts=false&rewriteBatchedStatements=true&characterEncoding=UTF-8&useSSL=false&allowMultiQueries=true&serverTimezone=UTC
   username: root
-  password: FengXiang_123
+  password: ayp43520!@#
+jwt:
+  header: "Authorization"     # token 返回头部
+  tokenPrefix: "Bearer "      # token 前缀
+  secret: "qwertyuiop1214156" # 私钥
+  managerSecret: "qwertyuiop1214156" # 私钥
+  expireTime: 3600000 # token 的有效时间，单位是毫秒
+  expireManagerTime: 259200000 # token 的有效时间，单位是毫秒

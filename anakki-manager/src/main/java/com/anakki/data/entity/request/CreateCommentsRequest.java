@@ -16,6 +16,11 @@ import java.time.LocalDateTime;
  */
 @Data
 public class CreateCommentsRequest {
+    @ApiModelProperty("昵称")
+    private String nickname;
+
+    @ApiModelProperty("邮箱")
+    private String email;
 
     @ApiModelProperty("评论模块类型")
     private String type="COMMON";

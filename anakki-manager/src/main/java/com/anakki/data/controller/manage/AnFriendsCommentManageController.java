@@ -5,12 +5,13 @@ import com.anakki.data.bean.common.ResponseDTO;
 import com.anakki.data.entity.AnFriendsComment;
 import com.anakki.data.entity.request.ListCommentsManageRequest;
 import com.anakki.data.entity.request.ListCommentsRequest;
+import com.anakki.data.entity.request.UpdateCommentStateRequest;
 import com.anakki.data.service.AnFriendsCommentService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 /**
  * <p>
@@ -31,5 +32,12 @@ public class AnFriendsCommentManageController {
     public ResponseDTO<BasePageResult<AnFriendsComment>> listComments(ListCommentsManageRequest listCommentsManageRequest) {
         BasePageResult<AnFriendsComment> anFriendsCommentBasePageResult = anFriendsCommentService.listCommentsManage(listCommentsManageRequest);
         return ResponseDTO.succData(anFriendsCommentBasePageResult);
+    }
+
+    @ApiOperation(value = "修改评论状态")
+    @PostMapping("/update-comments-state")
+    public ResponseDTO<Boolean> updateCommentState(@Valid @RequestBody UpdateCommentStateRequest updateCommentStateRequest) {
+        anFriendsCommentService.updateCommentState(updateCommentStateRequest);
+        return ResponseDTO.succData(true);
     }
 }

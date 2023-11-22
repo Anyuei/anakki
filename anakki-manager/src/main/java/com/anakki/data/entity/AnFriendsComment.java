@@ -59,7 +59,7 @@ public class AnFriendsComment extends BaseEntity implements Serializable {
     @TableField("unlike_count")
     private Long unlikeCount;
 
-    @ApiModelProperty("状态（NORMAL，CLOSED）")
-    @TableField("state")
-    private String state;
+    @ApiModelProperty("状态（IN_REVIEW,NORMAL，CLOSED）")
+    @TableField("status")
+    private String status;
 }

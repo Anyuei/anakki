@@ -60,26 +60,26 @@
         <div class="container">
             <div class="row align-items-center cols-xs-space cols-sm-space cols-md-space">
                 <div class="col-lg-6">
-                    <h3 class="heading h3 mb-4">留言板</h3>
+                    <h3 class="heading h3 mb-4">留言板(审核后展示)</h3>
                     <form id="commentForm">
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="你的昵称" type="text" id="nicknameInput" style="display: none;">
+                                    <input class="form-control" placeholder="你的昵称(可不填)" type="text" name="nickname" id="nicknameInput" style="display: none;">
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="邮箱" type="email" id="emailInput" style="display: none;">
+                                    <input class="form-control" placeholder="邮箱(可不填)" type="email" name="email" id="emailInput" style="display: none;">
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group">
-                                    <textarea class="form-control" rows="5" placeholder="留言内容" name="comment"></textarea>
+                                    <textarea class="form-control" rows="5" placeholder="留言内容" name="comment" required></textarea>
                                 </div>
                             </div>
                         </div>
@@ -188,7 +188,7 @@
                             "<div class=\"row g-0\">\n" +
                                 "<div class=\"col-md-4\">\n" +
                                     "<div class=\"card-body\">\n" +
-                                        "<img src=\"" + (item.avatar ? item.avatar : "default-avatar.jpg") + "\" class=\"img-fluid rounded-start\" alt=\"avatar\">\n" +
+                                        "<img src=\"" + (item.avatar ? item.avatar : "../assets/images/default-avatar.jpg") + "\" class=\"img-fluid rounded-start\" alt=\"avatar\">\n" +
                                     "</div>\n" +
                                 "</div>\n" +
                                 "<div class=\"col-md-8\">\n" +
@@ -222,7 +222,7 @@
             var formData = $(this).serialize(); // Serialize form data
 
             $.ajax({
-                url: '/api/anakki/friends-comment/create-comment', // Replace with your server URL
+                url: '/base/anakki/friends-comment/create-comment', // Replace with your server URL
                 type: 'POST',
                 data: formData,
                 beforeSend: function(xhr) {

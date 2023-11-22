@@ -32,6 +32,8 @@ public class ResponseCodeConst {
 
     public static ResponseCodeConst JSON_FORMAT_ERROR = new ResponseCodeConst(115, "JSON格式错误");
 
+    public static ResponseCodeConst TOKEN_EXPIRED = new ResponseCodeConst(302, "token失效请重新登录");
+
     protected int code;
 
     protected String msg;

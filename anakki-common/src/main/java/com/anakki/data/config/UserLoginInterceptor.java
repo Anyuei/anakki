@@ -20,11 +20,13 @@ public class UserLoginInterceptor implements HandlerInterceptor {
         // 从 request 的 header 中获得 token 值
         String token = request.getHeader("authorization");
         if (token == null || token.isEmpty()) {
+
             return false;
         }
         // 验证 token, JwtUtil 是自己定义的类，里面有个方法验证 token 
         UserToken sub = JwtUtil.validateToken(token);
         if (sub == null || null==sub.getNickname()) {
+
             return false;
         }
         // 更新 token 有效时间 

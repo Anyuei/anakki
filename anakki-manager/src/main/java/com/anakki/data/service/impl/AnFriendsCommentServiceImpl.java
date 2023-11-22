@@ -1,12 +1,14 @@
 package com.anakki.data.service.impl;
 
 import com.anakki.data.bean.common.BasePageResult;
+import com.anakki.data.bean.common.enums.CommentStateEnum;
 import com.anakki.data.entity.AnFriendsComment;
 import com.anakki.data.entity.AnRecord;
 import com.anakki.data.entity.AnUser;
 import com.anakki.data.entity.request.CreateCommentsRequest;
 import com.anakki.data.entity.request.ListCommentsManageRequest;
 import com.anakki.data.entity.request.ListCommentsRequest;
+import com.anakki.data.entity.request.UpdateCommentStateRequest;
 import com.anakki.data.mapper.AnFriendsCommentMapper;
 import com.anakki.data.service.AnFriendsCommentService;
 import com.anakki.data.service.AnUserService;
@@ -41,6 +43,7 @@ public class AnFriendsCommentServiceImpl extends ServiceImpl<AnFriendsCommentMap
         String type = listCommentsRequest.getType();
         QueryWrapper<AnFriendsComment> anFriendsCommentQueryWrapper = new QueryWrapper<>();
         anFriendsCommentQueryWrapper.eq("type",type);
+        anFriendsCommentQueryWrapper.eq("status","true");
         anFriendsCommentQueryWrapper.ge(
                 null!=listCommentsRequest.getCreateTimeStart(),"create_time",listCommentsRequest.getCreateTimeStart());
         anFriendsCommentQueryWrapper.le(
@@ -72,13 +75,32 @@ public class AnFriendsCommentServiceImpl extends ServiceImpl<AnFriendsCommentMap
 
     @Override
     public Boolean createComment(String currentNickname, CreateCommentsRequest createCommentsRequest) {
-        AnUser byNickname = anUserService.getByNickname(currentNickname);
         AnFriendsComment anFriendsComment = new AnFriendsComment();
-        BeanUtils.copyProperties(createCommentsRequest,anFriendsComment);
-        anFriendsComment.setAvatar(byNickname.getAvatar());
-        anFriendsComment.setNickname(currentNickname);
-        anFriendsComment.setUserId(byNickname.getId());
-        anFriendsComment.setUserName(byNickname.getUserName());
+        if (null==currentNickname){
+            anFriendsComment.setNickname(createCommentsRequest.getNickname());
+            anFriendsComment.setComment(createCommentsRequest.getComment());
+            anFriendsComment.setStatus("false");
+        }else{
+            AnUser byNickname = anUserService.getByNickname(currentNickname);
+            BeanUtils.copyProperties(createCommentsRequest,anFriendsComment);
+            anFriendsComment.setAvatar(byNickname.getAvatar());
+            anFriendsComment.setNickname(currentNickname);
+            anFriendsComment.setUserId(byNickname.getId());
+            anFriendsComment.setUserName(byNickname.getUserName());
+            anFriendsComment.setStatus("false");
+        }
         return save(anFriendsComment);
+    }
+
+    @Override
+    public void updateCommentState(UpdateCommentStateRequest updateCommentStateRequest) {
+        String state = updateCommentStateRequest.getStatus();
+
+            updateCommentStateRequest.getCommentIdList().forEach(commentId->{
+                AnFriendsComment byId = getById(commentId);
+                byId.setStatus(state);
+                updateById(byId);
+            });
+
     }
 }

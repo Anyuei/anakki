@@ -130,7 +130,7 @@ public class JwtUtil {
             return JSONObject.parseObject(decodedJwt.getSubject(), UserToken.class);
         } catch (Exception e){
             log.info("token过期："+e.getMessage());
-            return new UserToken();
+            throw new RuntimeException("token过期");
         }
     }
 

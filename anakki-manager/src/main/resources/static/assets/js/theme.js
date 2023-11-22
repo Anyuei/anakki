@@ -288,22 +288,24 @@ if (currentPage.includes("sign-in.html")) {
 
 
 function loadPersonDetail() {
-    const userDetail = document.getElementById("user-detail");
-    const userAvatar = document.getElementById("user-avatar");
-    $.ajax({
-        url: "/api/anakki/user/detail",
-        type: "GET",
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader('authorization', localStorage.getItem('user-token')); // Include the token in the Authorization header
-        },
-        success: function (response) {
-            const user = response.data;
-            const avatar = user.avatar;
-            const nickname = user.nickname;
-            const exp = user.exp;
-            const loginDays = user.loginDays;
-            const state = user.state;
-            userDetail.innerHTML = `
+    if(null!=localStorage.getItem('user-token')){
+        const userDetail = document.getElementById("user-detail");
+        const userAvatar = document.getElementById("user-avatar");
+        $.ajax({
+            url: "/api/anakki/user/detail",
+            type: "GET",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('authorization', localStorage.getItem('user-token')); // Include the token in the Authorization header
+            },
+            success: function (response) {
+                if (response.success) {
+                    const user = response.data;
+                    const avatar = user.avatar;
+                    const nickname = user.nickname;
+                    const exp = user.exp;
+                    const loginDays = user.loginDays;
+                    const state = user.state;
+                    userDetail.innerHTML = `
                     <a class="nav-link dropdown-toggle" href="#" id="navbar_main_dropdown_1" role="button"
                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${nickname}</a>
                     <div class="dropdown-menu" aria-labelledby="navbar_1_dropdown_1">
@@ -313,12 +315,14 @@ function loadPersonDetail() {
                         <a class="dropdown-item">${state}</a>
                         <a class="dropdown-item" href="/pages/sign-in.html" onclick="userLogout()">登出</a>
                     </div>`;
-            userAvatar.innerHTML = `<img src="${avatar}" alt="" style="width: 3rem; border-radius: 50%;" onclick="showAvatarModal()">`;
-        },
-        error: function (xhr, status, error) {
-            console.error(error);
-        }
-    });
+                    userAvatar.innerHTML = `<img src="${avatar}" alt="" style="width: 3rem; border-radius: 50%;" onclick="showAvatarModal()">`;
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error(error);
+            }
+        });
+    }
 }
 
 function showAvatarModal() {

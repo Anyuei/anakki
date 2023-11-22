@@ -8,14 +8,16 @@ public class BaseContext {
         threadLocal.set(nickname);
     }
  
-    public static String getCurrentNickname() {
+    public static String  getCurrentNickname(Boolean throwException) {
         String nickname= threadLocal.get();
-        if (null==nickname){
+        if (null==nickname&&throwException){
             throw new RuntimeException("请登录");
         }
         return nickname;
     }
- 
+    public static String getCurrentNickname() {
+        return getCurrentNickname(true);
+    }
     public static void removeCurrentNickname() {
         threadLocal.remove();
     }
