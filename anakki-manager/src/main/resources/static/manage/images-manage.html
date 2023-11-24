@@ -194,6 +194,7 @@
                         <th scope="col">分辨率</th>
                         <th scope="col">是否展示</th>
                         <th scope="col">图片</th>
+                        <th scope="col">操作</th>
                     </tr>
                     </thead>
                     <tbody id="record-list">
@@ -242,7 +243,16 @@
         $('#sidebar').load("../manage/base/sidebar.html");
         listMenu();
         listRecordType();
-        listRecord(1,10,"");
+        //const url= window.location.href;
+        const url="http://127.0.0.1:8080/manage/images-manage.html#?current=1&size=10";
+        // 从地址栏获取分页参数
+        const params = new URLSearchParams(window.location.hash.slice(1));
+        const urlCurrent = params.get('current');
+        const urlSize = params.get('size');
+        // 如果获取不到分页参数，则使用默认值1和10
+        const parsedCurrent = urlCurrent ? parseInt(urlCurrent) : 1;
+        const parsedSize = urlSize ? parseInt(urlSize) : 10;
+        listRecord(parsedCurrent,parsedSize,"");
     };
 
     function listRecordType() {
@@ -300,6 +310,7 @@
         listRecord(1, 10, searchInput);
     });
     function listRecord(current, pageSize,searchInput) {
+        const url= window.location.href;
         const get = new XMLHttpRequest();
         get.open("GET", "/manage/record/list?current=" + current + "&size=" + pageSize, true);
         get.onreadystatechange = function () {
@@ -358,11 +369,17 @@
                         "                                            </div>\n" +
                         "                                        </div>\n" +
                         "                                    </td>\n" +
+                                                        "    <td>\n" +
+                                                        "        <button class=\"btn btn-danger\" onclick=\"deleteItem(" + id + ")\">删除</button>\n" +
+                                                        "    </td>\n" +
                         "                                </tr>"
                 }
                 document.getElementById("record-list").innerHTML = html;
                 let totalPages = Math.ceil(totalNum / pageSize);
                 initPage(current, pageSize, totalPages);
+                // 拼接分页参数到地址栏
+                const newUrl = url.split("?")[0] + "?current=" + current + "&size=" + pageSize;
+                window.history.replaceState(null, null, newUrl);
             }
         };
         const token = localStorage.getItem('jwtManageToken'); // Get the JWT token from localStorage
@@ -454,6 +471,29 @@
             .then(response => {
                 // Handle the response from the backend
                 console.log(response);
+            })
+            .catch(error => {
+                // Handle any errors
+                console.error(error);
+            });
+    }
+
+    function deleteItem(id){
+        const token = localStorage.getItem('jwtManageToken'); // Get the JWT token from localStorage
+        // Send the button state and ID to the backend using AJAX or fetch API
+        // Replace the URL and method with your actual backend endpoint and HTTP method
+        fetch('/manage/record/delete', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'authorization': token
+            },
+            body: JSON.stringify({ id: id })
+        })
+            .then(response => {
+                const data = JSON.parse(response);
+                // Handle the response from the backend
+                alert('删除成功');
             })
             .catch(error => {
                 // Handle any errors

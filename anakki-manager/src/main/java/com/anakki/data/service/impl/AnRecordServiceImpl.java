@@ -1,12 +1,12 @@
 package com.anakki.data.service.impl;
 
 import com.anakki.data.bean.common.BasePageResult;
+import com.anakki.data.bean.constant.CosBucketNameConst;
 import com.anakki.data.entity.AnRecord;
-import com.anakki.data.entity.AnUser;
+import com.anakki.data.bean.constant.CosPathConst;
 import com.anakki.data.entity.request.ChangeRecordRequest;
 import com.anakki.data.entity.request.ListRecordRequest;
 import com.anakki.data.entity.request.UploadRecordRequest;
-import com.anakki.data.entity.response.ListUserResponse;
 import com.anakki.data.mapper.AnRecordMapper;
 import com.anakki.data.service.AnRecordService;
 import com.anakki.data.utils.common.COSUtil;
@@ -15,18 +15,13 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qcloud.cos.auth.BasicSessionCredentials;
-import com.tencent.cloud.Response;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
-
-import static org.bouncycastle.asn1.iana.IANAObjectIdentifiers.mail;
 
 /**
  * <p>
@@ -39,6 +34,14 @@ import static org.bouncycastle.asn1.iana.IANAObjectIdentifiers.mail;
 @Service
 public class AnRecordServiceImpl extends ServiceImpl<AnRecordMapper, AnRecord> implements AnRecordService {
 
+
+    @Override
+    public boolean removeById(Serializable id) {
+        AnRecord byId = getById(id);
+        String imgUrl = byId.getImgUrl();
+        COSUtil.deleteObject(CosBucketNameConst.BUCKET_NAME_IMAGES,imgUrl);
+        return super.removeById(id);
+    }
 
     @Override
     public List<String> getRecordTypes() {
@@ -88,8 +91,8 @@ public class AnRecordServiceImpl extends ServiceImpl<AnRecordMapper, AnRecord> i
                     multipartFile,
                     sessionCredential,
                     COSUtil.region,
-                    "anakki-1258150206",
-                    "images/",
+                    CosBucketNameConst.BUCKET_NAME_IMAGES,
+                    CosPathConst.BUCKET_NAME_IMAGES,
             null,
                     null,
                     uploadRecordRequest.getRatio()/100,

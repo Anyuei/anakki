@@ -2,6 +2,8 @@ package com.anakki.data.service.impl;
 
 import com.anakki.data.bean.common.BaseContext;
 import com.anakki.data.bean.common.BasePageResult;
+import com.anakki.data.bean.constant.CosBucketNameConst;
+import com.anakki.data.bean.constant.CosPathConst;
 import com.anakki.data.entity.common.ExpKeyConst;
 import com.anakki.data.entity.AnUser;
 import com.anakki.data.bean.common.UserToken;
@@ -20,7 +22,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.joda.time.DateTimeUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -159,9 +160,9 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
         String url = COSUtil.uploadObject(
                 file,
                 COSUtil.region,
-                "anakki-1258150206","avatar/",
-                100,100,
-                null,
+                CosBucketNameConst.BUCKET_NAME_IMAGES, CosPathConst.BUCKET_NAME_AVATAR,
+                null,null,
+                0.5F,
                 false
         );
         byNickname.setAvatar(url);

@@ -3,10 +3,7 @@ package com.anakki.data.controller.manage;
 import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.bean.common.ResponseDTO;
 import com.anakki.data.entity.AnRecord;
-import com.anakki.data.entity.request.ChangeRecordRequest;
-import com.anakki.data.entity.request.GetContentRequest;
-import com.anakki.data.entity.request.ListRecordRequest;
-import com.anakki.data.entity.request.UploadRecordRequest;
+import com.anakki.data.entity.request.*;
 import com.anakki.data.service.AnRecordService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -52,6 +49,12 @@ public class AnRecordManageController {
     @PostMapping("/change-status")
     public ResponseDTO<Boolean> changeRecordStatus(@RequestBody ChangeRecordRequest changeRecordRequest) {
         anRecordService.changeRecordStatus(changeRecordRequest);
+        return ResponseDTO.succData(true);
+    }
+    @ApiOperation(value = "修改图文状态")
+    @PostMapping("/delete")
+    public ResponseDTO<Boolean> deleteRecord(@RequestBody DeleteRecordRequest deleteRecordRequest) {
+        anRecordService.removeById(deleteRecordRequest.getId());
         return ResponseDTO.succData(true);
     }
 }

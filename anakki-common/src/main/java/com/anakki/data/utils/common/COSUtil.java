@@ -1,6 +1,7 @@
 package com.anakki.data.utils.common;
 
 import com.alibaba.fastjson.JSONObject;
+import com.anakki.data.bean.constant.CosBucketNameConst;
 import com.qcloud.cos.COSClient;
 import com.qcloud.cos.ClientConfig;
 import com.qcloud.cos.auth.BasicCOSCredentials;
@@ -35,9 +36,7 @@ public class COSUtil {
     public static String HOST = "https://anakki-1258150206.cos.ap-nanjing.myqcloud.com/";
     //地域
     public static String region = "ap-nanjing";
-    public static void main(String[] args) {
-        System.out.println(JSONObject.toJSON(getCredential()));
-    }
+
     public static BasicSessionCredentials getSessionCredential() {
         Response credential = getCredential();
         // 实际应用中，这里通过云api请求得到临时秘钥后，构造BasicSessionCredential
@@ -58,7 +57,7 @@ public class COSUtil {
             // 临时密钥有效时长，单位是秒
             config.put("durationSeconds", 1800);
             // 换成你的 bucket
-            config.put("bucket", "anakki-1258150206");
+            config.put("bucket", CosBucketNameConst.BUCKET_NAME_IMAGES);
             // 换成 bucket 所在地区
             config.put("region", region);
             // 可以通过 allowPrefixes 指定前缀数组, 例子： a.jpg 或者 a/* 或者 * (使用通配符*存在重大安全风险, 请谨慎评估使用)
@@ -173,5 +172,19 @@ public class COSUtil {
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
+    }
+
+    public static void main(String[] args) {
+        deleteObject(CosBucketNameConst.BUCKET_NAME_IMAGES, "images/04f412a9-3334-4ef6-bfe3-8c50f7dbccef.png");
+    }
+    public static void deleteObject(String bucketName, String objectKey) {
+        String replace = objectKey.replace(COSUtil.HOST, "");
+        // 初始化COS客户端
+        ClientConfig clientConfig = new ClientConfig(new Region(region));
+        COSClient cosClient = new COSClient(new BasicCOSCredentials(TencentCloudAKSK.SECRET_ID, TencentCloudAKSK.SECRET_KEY), clientConfig);
+        // 删除对象
+        cosClient.deleteObject(bucketName, replace);
+        // 关闭COS客户端
+        cosClient.shutdown();
     }
 }

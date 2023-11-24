@@ -6,9 +6,8 @@ import com.anakki.data.entity.request.ChangeRecordRequest;
 import com.anakki.data.entity.request.ListRecordRequest;
 import com.anakki.data.entity.request.UploadRecordRequest;
 import com.baomidou.mybatisplus.extension.service.IService;
-import org.apache.ibatis.annotations.Select;
 
-import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -20,7 +19,7 @@ import java.util.List;
  * @since 2023-11-08
  */
 public interface AnRecordService extends IService<AnRecord> {
-
+    boolean removeById(Serializable id);
     List<String> getRecordTypes();
 
     BasePageResult<AnRecord> listRecordRequest(ListRecordRequest listRecordRequest);
