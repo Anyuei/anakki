@@ -108,6 +108,22 @@
                         </div>
                     </div>
                     <div class="mb-3 row">
+                        <label for="images-size" class="col-sm-2 col-form-label">画面质量(1~100)</label>
+                        <div class="col-sm-10">
+                            <input type="number" class="form-control" id="images-ratio"
+                                   placeholder="请输入图片压缩质量" min="1" max="100">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label class="col-sm-2 col-form-label">是否发送原图</label>
+                        <div class="col-sm-10 d-flex align-items-center">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="images-raw">
+                                <span class="toggle-switch-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
                         <div>
                             <input type="file" name="file-1[]" id="file-1"
                                    class="custom-input-file custom-input-file--2"
@@ -379,7 +395,10 @@
         const photographer = document.getElementById("images-photographer").value;
         const size = document.getElementById("images-size").value;
         const content = document.getElementById("images-content").value;
+        const ratio = document.getElementById("images-ratio").value;
+
         const isPublished = document.getElementById("images-published").checked;
+        const isRaw = document.getElementById("images-raw").checked;
         const fileInput = document.getElementById("file-1");
         const photoTime = document.getElementById("images-create-time").value+":00";
 
@@ -393,6 +412,9 @@
         formData.append("imageSize", size);
         formData.append("description", content);
         formData.append("status", isPublished?"COMMON":"INVALID");
+        formData.append("ratio", ratio);
+        formData.append("isRaw", isRaw);
+
         formData.append("photoTime", photoTime);
 
         for (let i = 0; i < files.length; i++) {

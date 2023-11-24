@@ -89,10 +89,10 @@ public class AnRecordServiceImpl extends ServiceImpl<AnRecordMapper, AnRecord> i
                     sessionCredential,
                     COSUtil.region,
                     "anakki-1258150206",
-                    "/images",
+                    "images/",
             null,
                     null,
-            0.5F,
+                    uploadRecordRequest.getRatio()/100,
                     uploadRecordRequest.getIsRaw());
             anRecord.setImgUrl(url);
             save(anRecord);
