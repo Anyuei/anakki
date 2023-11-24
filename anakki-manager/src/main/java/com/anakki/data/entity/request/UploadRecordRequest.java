@@ -46,4 +46,7 @@ public class UploadRecordRequest extends Pagination {
 
     @ApiModelProperty("照片状态(立即发布：COMMON，)")
     private String status;
+
+    @ApiModelProperty("是否原图")
+    private Boolean isRaw=true;
 }

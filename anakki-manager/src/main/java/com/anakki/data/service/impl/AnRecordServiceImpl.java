@@ -84,7 +84,16 @@ public class AnRecordServiceImpl extends ServiceImpl<AnRecordMapper, AnRecord> i
             BeanUtils.copyProperties(uploadRecordRequest, anRecord);
             BasicSessionCredentials sessionCredential = COSUtil.getSessionCredential();
 
-            String url = COSUtil.uploadObject(multipartFile, sessionCredential, COSUtil.region, "anakki-1258150206","/images");
+            String url = COSUtil.uploadObject(
+                    multipartFile,
+                    sessionCredential,
+                    COSUtil.region,
+                    "anakki-1258150206",
+                    "/images",
+            null,
+                    null,
+            0.5F,
+                    uploadRecordRequest.getIsRaw());
             anRecord.setImgUrl(url);
             save(anRecord);
         }

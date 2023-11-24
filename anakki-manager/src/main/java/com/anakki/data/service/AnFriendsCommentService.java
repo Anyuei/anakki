@@ -2,10 +2,7 @@ package com.anakki.data.service;
 
 import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.entity.AnFriendsComment;
-import com.anakki.data.entity.request.CreateCommentsRequest;
-import com.anakki.data.entity.request.ListCommentsManageRequest;
-import com.anakki.data.entity.request.ListCommentsRequest;
-import com.anakki.data.entity.request.UpdateCommentStateRequest;
+import com.anakki.data.entity.request.*;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -20,7 +17,7 @@ import java.util.List;
  */
 public interface AnFriendsCommentService extends IService<AnFriendsComment> {
 
-    BasePageResult<AnFriendsComment> listComments(ListCommentsRequest listCommentsRequest);
+    BasePageResult<AnFriendsCommentResponse> listComments(ListCommentsRequest listCommentsRequest);
 
 
     BasePageResult<AnFriendsComment> listCommentsManage(ListCommentsManageRequest listCommentsManageRequest);

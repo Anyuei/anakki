@@ -3,6 +3,7 @@ package com.anakki.data.controller.base;
 import com.anakki.data.bean.common.ResponseDTO;
 import com.anakki.data.entity.request.SendMailRequest;
 import com.anakki.data.service.AnRecordService;
+import com.anakki.data.service.AnSystemConfigService;
 import com.anakki.data.utils.common.EmailUtil;
 import com.ramostear.captcha.HappyCaptcha;
 import com.ramostear.captcha.support.CaptchaStyle;
@@ -28,7 +29,8 @@ public class SystemController {
 
     @Autowired
     private EmailUtil emailUtil;
-
+    @Autowired
+    private AnSystemConfigService anSystemConfigService;
 
     @Autowired
     private AnRecordService anRecordService;
@@ -81,4 +83,12 @@ public class SystemController {
         List<String> recordTypes = anRecordService.getRecordTypes();
         return ResponseDTO.succData(recordTypes);
     }
+
+    @ApiOperation(value = "获取配置")
+    @GetMapping("/getNumberConfigValue")
+    public ResponseDTO<Long>  getNumberConfigValue(String key) {
+        Long numberConfigValue = anSystemConfigService.getNumberConfigValue(key);
+        return ResponseDTO.succData(numberConfigValue);
+    }
+
 }

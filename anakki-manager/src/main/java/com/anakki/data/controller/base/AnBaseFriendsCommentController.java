@@ -4,6 +4,7 @@ import com.anakki.data.bean.common.BaseContext;
 import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.bean.common.ResponseDTO;
 import com.anakki.data.entity.AnFriendsComment;
+import com.anakki.data.entity.request.AnFriendsCommentResponse;
 import com.anakki.data.entity.request.CreateCommentsRequest;
 import com.anakki.data.entity.request.ListCommentsRequest;
 import com.anakki.data.service.AnFriendsCommentService;
@@ -31,8 +32,8 @@ public class AnBaseFriendsCommentController {
     private AnFriendsCommentService anFriendsCommentService;
     @ApiOperation(value = "获取评论")
     @GetMapping("/list-comments")
-    public ResponseDTO<BasePageResult<AnFriendsComment>> listComments(ListCommentsRequest listCommentsRequest) {
-        BasePageResult<AnFriendsComment> anFriendsCommentBasePageResult = anFriendsCommentService.listComments(listCommentsRequest);
+    public ResponseDTO<BasePageResult<AnFriendsCommentResponse>> listComments(ListCommentsRequest listCommentsRequest) {
+        BasePageResult<AnFriendsCommentResponse> anFriendsCommentBasePageResult = anFriendsCommentService.listComments(listCommentsRequest);
         return ResponseDTO.succData(anFriendsCommentBasePageResult);
     }
 

@@ -12146,8 +12146,8 @@ textarea[resize="horizontal"] {
 
 .slice {
     position: relative;
-    padding-top: 4rem;
-    padding-bottom: 4rem
+    padding-top: 1rem;
+    padding-bottom: 1rem;
 }
 
 .slice-xl {
@@ -13252,4 +13252,8 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 }
 .r-4qtqp9 {
     display: inline-block;
+}
+
+.avatar-size{
+    max-width: 4rem;
 }

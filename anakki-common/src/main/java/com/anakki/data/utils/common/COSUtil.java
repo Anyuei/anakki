@@ -14,6 +14,11 @@ import com.tencent.cloud.CosStsClient;
 import com.tencent.cloud.Response;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.util.TreeMap;
@@ -84,13 +89,21 @@ public class COSUtil {
             MultipartFile file,
             String region,
             String bucketName
-    ,            String path) {
+    ,            String path,
+            Integer maxWidth,
+            Integer maxHeight,
+            Float quality,
+            Boolean isRaw) {
         return uploadObject(
                 file,
                 getSessionCredential(),
                 region,
                 bucketName,
-                path);
+                path,
+                maxWidth,
+                maxHeight,
+                quality,
+                isRaw);
     }
 
     public static String uploadObject(
@@ -98,36 +111,62 @@ public class COSUtil {
             BasicSessionCredentials basicSessionCredential,
             String region,
             String bucketName,
-            String path) {
+            String path,
+            Integer maxWidth,
+            Integer maxHeight,
+            Float ratio,
+            Boolean isRaw) {
         try {
+            // 获取上传的文件的输入流
+            InputStream inputStream = file.getInputStream();
+            if (!isRaw){
+                // 读取原始图片
+                BufferedImage originalImage = ImageIO.read(inputStream);
+                // 计算压缩后的尺寸
+                int width = originalImage.getWidth();
+                int height = originalImage.getHeight();
+                int newWidth = width;
+                int newHeight = height;
+                if (null!=ratio){
+                    newWidth = (int) (width * ratio);
+                    newHeight = (int) (height * ratio);
+                }else{
+                    if (width > maxWidth || height > maxHeight) {
+                        float widthRatio = (float) maxWidth / width;
+                        float heightRatio = (float) maxHeight / height;
+                        float ratioR = Math.min(widthRatio, heightRatio);
+                        newWidth = (int) (width * ratioR);
+                        newHeight = (int) (height * ratioR);
+                    }
+                }
+
+                // 创建压缩后的图片
+                BufferedImage resizedImage = new BufferedImage(newWidth, newHeight, originalImage.getType());
+                Graphics2D g = resizedImage.createGraphics();
+                g.drawImage(originalImage, 0, 0, newWidth, newHeight, null);
+                g.dispose();
+                // 将压缩后的图片转换为输入流
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                ImageIO.write(resizedImage, "jpg", outputStream);
+                inputStream = new ByteArrayInputStream(outputStream.toByteArray());
+            }
             // 初始化COS客户端
             ClientConfig clientConfig = new ClientConfig(new Region(region));
             COSClient cosClient = new COSClient(new COSStaticCredentialsProvider(basicSessionCredential), clientConfig);
-            // 构造PutObjectRequest对象
-            // 获取上传的文件的输入流
-            InputStream inputStream = file.getInputStream();
-
-            // 避免文件覆盖，获取文件的原始名称，如123.jpg,然后通过截取获得文件的后缀，也就是文件的类型
+            // 避免文件覆盖，生成唯一的文件名
             String originalFilename = file.getOriginalFilename();
-            //获取文件的类型
             String fileType = originalFilename.substring(originalFilename.lastIndexOf("."));
-            //使用UUID工具  创建唯一名称，放置文件重名被覆盖，在拼接上上命令获取的文件类型
             String fileName = UUID.randomUUID() + fileType;
-            // 指定文件上传到 COS 上的路径，即对象键。最终文件会传到存储桶名字中的images文件夹下的fileName名字
             String key = path + fileName;
             // 创建上传Object的Metadata
             ObjectMetadata objectMetadata = new ObjectMetadata();
-            // - 使用输入流存储，需要设置请求长度
             objectMetadata.setContentLength(inputStream.available());
-            // - 设置缓存
             objectMetadata.setCacheControl("no-cache");
-            // - 设置Content-Type
-            objectMetadata.setContentType(fileType);
-            //上传文件
+            objectMetadata.setContentType("image/jpeg");
+            // 上传压缩后的图片
             PutObjectResult putResult = cosClient.putObject(bucketName, key, inputStream, objectMetadata);
-            // 创建文件的网络访问路径
+            // 创建文件的访问路径
             String url = HOST + key;
-            //关闭 cosClient，并释放 HTTP 连接的后台管理线程
             // 关闭COS客户端
             cosClient.shutdown();
             return url;

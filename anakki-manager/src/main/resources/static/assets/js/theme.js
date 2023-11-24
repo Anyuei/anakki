@@ -270,21 +270,7 @@ function listMenu() {
 
 
 // Get the current page URL
-const currentPage = window.location.href;
-// Get the auth link element
-const authLink = document.getElementById("auth-link");
-// Check if the current page is login or register
-if (currentPage.includes("sign-in.html")) {
-    // Set the auth link text to "注册"
-    authLink.innerText = "注册";
-    // Set the auth link href to the register page URL
-    authLink.href = "../pages/sign-up.html";
-} else if (currentPage.includes("sign-up.html")) {
-    // Set the auth link text to "登录"
-    authLink.innerText = "登录";
-    // Set the auth link href to the login page URL
-    authLink.href = "../pages/sign-in.html";
-}
+
 
 
 function loadPersonDetail() {
@@ -393,4 +379,23 @@ function insertCreateTime() {
     const daysElapsed = Math.floor(timeElapsed / (1000 * 60 * 60 * 24));
     document.getElementById("time-container").innerHTML = "距离今天已经有 " + daysElapsed + " 天。";
 }
+
+function changeLoginPage(){
+    const currentPage = window.location.href;
+    // Get the auth link element
+    const authLink = document.getElementById("auth-link");
+    // Check if the current page is login or register
+    if (currentPage.includes("sign-in.html")) {
+        // Set the auth link text to "注册"
+        authLink.innerText = "注册";
+        // Set the auth link href to the register page URL
+        authLink.href = "../pages/sign-up.html";
+    } else if (currentPage.includes("sign-up.html")) {
+        // Set the auth link text to "登录"
+        authLink.innerText = "登录";
+        // Set the auth link href to the login page URL
+        authLink.href = "../pages/sign-in.html";
+    }
+}
+
 

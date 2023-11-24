@@ -5,10 +5,7 @@ import com.anakki.data.bean.common.enums.CommentStateEnum;
 import com.anakki.data.entity.AnFriendsComment;
 import com.anakki.data.entity.AnRecord;
 import com.anakki.data.entity.AnUser;
-import com.anakki.data.entity.request.CreateCommentsRequest;
-import com.anakki.data.entity.request.ListCommentsManageRequest;
-import com.anakki.data.entity.request.ListCommentsRequest;
-import com.anakki.data.entity.request.UpdateCommentStateRequest;
+import com.anakki.data.entity.request.*;
 import com.anakki.data.mapper.AnFriendsCommentMapper;
 import com.anakki.data.service.AnFriendsCommentService;
 import com.anakki.data.service.AnUserService;
@@ -20,6 +17,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,7 +34,7 @@ public class AnFriendsCommentServiceImpl extends ServiceImpl<AnFriendsCommentMap
     @Autowired
     private AnUserService anUserService;
     @Override
-    public BasePageResult<AnFriendsComment> listComments(ListCommentsRequest listCommentsRequest){
+    public BasePageResult<AnFriendsCommentResponse> listComments(ListCommentsRequest listCommentsRequest){
         IPage<AnFriendsComment>  anFriendsCommentPage= new Page<>(
                 listCommentsRequest.getCurrent(),
                 listCommentsRequest.getSize());
@@ -51,7 +49,21 @@ public class AnFriendsCommentServiceImpl extends ServiceImpl<AnFriendsCommentMap
         anFriendsCommentQueryWrapper.orderByDesc("create_time");
         IPage<AnFriendsComment> page = page(anFriendsCommentPage, anFriendsCommentQueryWrapper);
         List<AnFriendsComment> records = page.getRecords();
-        return new BasePageResult<>(records, page.getTotal());
+        List<AnFriendsCommentResponse> responses = new ArrayList<>();
+        for (AnFriendsComment record : records) {
+            AnFriendsCommentResponse anFriendsCommentResponse = new AnFriendsCommentResponse();
+            BeanUtils.copyProperties(record,anFriendsCommentResponse);
+            Long userId = record.getUserId();
+            if (null!=userId){
+                AnUser byId = anUserService.getById(userId);
+                if (null!=byId){
+                    Long exp = byId.getExp();
+                    anFriendsCommentResponse.setExp(exp);
+                }
+            }
+            responses.add(anFriendsCommentResponse);
+        }
+        return new BasePageResult<>(responses, page.getTotal());
     }
 
 

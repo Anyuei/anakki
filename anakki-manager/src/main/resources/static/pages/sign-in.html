@@ -114,7 +114,7 @@
 <script src="../assets/js/theme.js"></script>
 <script>
     window.onload = function () {
-        $('#header').load("../pages/header.html", loadPersonDetail);
+        $('#header').load("../pages/header.html", loadPersonDetail,changeLoginPage);
         $('#footer').load("../pages/footer.html", insertCreateTime);
     };
 
@@ -161,7 +161,7 @@
             });
         });
     });
-</script>
+
 </script>
 </body>
 </html>

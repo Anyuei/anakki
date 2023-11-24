@@ -2,21 +2,25 @@ package com.anakki.data.service.impl;
 
 import com.anakki.data.bean.common.BaseContext;
 import com.anakki.data.bean.common.BasePageResult;
+import com.anakki.data.entity.common.ExpKeyConst;
 import com.anakki.data.entity.AnUser;
 import com.anakki.data.bean.common.UserToken;
 import com.anakki.data.entity.request.*;
 import com.anakki.data.entity.response.ListUserResponse;
 import com.anakki.data.entity.response.UserDetailResponse;
 import com.anakki.data.mapper.AnUserMapper;
+import com.anakki.data.service.AnSystemConfigService;
 import com.anakki.data.service.AnUserService;
 import com.anakki.data.utils.common.COSUtil;
 import com.anakki.data.utils.common.JwtUtil;
+import com.anakki.data.utils.common.RedisUtil;
+import com.anakki.data.utils.common.TimeUtil;
 import com.anakki.data.utils.dealUtils.MD5SaltUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.qcloud.cos.auth.BasicSessionCredentials;
+import org.joda.time.DateTimeUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -41,6 +46,8 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
     private AnUserMapper anUserMapper;
 
 
+    @Autowired
+    private AnSystemConfigService anSystemConfigService;
     @Override
     public String login(UserLoginRequest userLoginRequest) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         String username = userLoginRequest.getUsername();
@@ -49,7 +56,11 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
         if (!MD5SaltUtil.validData(password,user.getPassword())) {
             throw new RuntimeException("用户不存在或密码错误");
         }
-        user.setLoginDays(user.getLoginDays() + 1);
+        if (!RedisUtil.KeyOps.hasKey(ExpKeyConst.EXP_LOGIN+"#anakki#"+user.getId())) {
+            RedisUtil.StringOps.setIfAbsent(ExpKeyConst.EXP_LOGIN+"#anakki#"+user.getId(),"true", TimeUtil.getMinutesOfTodayLeft(), TimeUnit.MINUTES);
+            user.setExp(user.getExp() + ExpKeyConst.EXP_CONFIG_MAP.get(ExpKeyConst.EXP_LOGIN));
+            user.setLoginDays(user.getLoginDays() + 1);
+        }
         updateById(user);
         UserToken userToken = new UserToken();
         userToken.setNickname(username);
@@ -145,7 +156,14 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
         }
         String currentNickname = BaseContext.getCurrentNickname();
         AnUser byNickname = getByNickname(currentNickname);
-        String url = COSUtil.uploadObject(file, COSUtil.region, "anakki-1258150206","avatar/");
+        String url = COSUtil.uploadObject(
+                file,
+                COSUtil.region,
+                "anakki-1258150206","avatar/",
+                100,100,
+                null,
+                false
+        );
         byNickname.setAvatar(url);
         updateById(byNickname);
     }
