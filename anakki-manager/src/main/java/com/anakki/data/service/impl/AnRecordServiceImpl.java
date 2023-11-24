@@ -38,6 +38,9 @@ public class AnRecordServiceImpl extends ServiceImpl<AnRecordMapper, AnRecord> i
     @Override
     public boolean removeById(Serializable id) {
         AnRecord byId = getById(id);
+        if (null==byId){
+            throw new RuntimeException("记录不存在");
+        }
         String imgUrl = byId.getImgUrl();
         COSUtil.deleteObject(CosBucketNameConst.BUCKET_NAME_IMAGES,imgUrl);
         return super.removeById(id);
@@ -74,7 +77,7 @@ public class AnRecordServiceImpl extends ServiceImpl<AnRecordMapper, AnRecord> i
         anRecordQueryWrapper.le(null != createTimeEnd, "create_time", createTimeEnd);
         anRecordQueryWrapper.ge(null != photoTimeStart, "photo_time", photoTimeStart);
         anRecordQueryWrapper.le(null != photoTimeEnd, "photo_time", photoTimeEnd);
-
+        anRecordQueryWrapper.orderByDesc("update_time");
         IPage<AnRecord> page = page(anRecordIPage, anRecordQueryWrapper);
         return new BasePageResult<>(page.getRecords(), page.getTotal());
 
