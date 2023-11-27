@@ -19,6 +19,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -84,7 +85,7 @@ public class AnRecordServiceImpl extends ServiceImpl<AnRecordMapper, AnRecord> i
     }
 
     @Override
-    public Boolean uploadRecord(UploadRecordRequest uploadRecordRequest) {
+    public Boolean uploadRecord(UploadRecordRequest uploadRecordRequest) throws IOException {
         for (MultipartFile multipartFile : uploadRecordRequest.getFile()) {
             AnRecord anRecord = new AnRecord();
             BeanUtils.copyProperties(uploadRecordRequest, anRecord);
@@ -98,9 +99,10 @@ public class AnRecordServiceImpl extends ServiceImpl<AnRecordMapper, AnRecord> i
                     CosPathConst.BUCKET_NAME_IMAGES,
             null,
                     null,
-                    uploadRecordRequest.getRatio()/100,
+                    uploadRecordRequest.getRatio(),
                     uploadRecordRequest.getIsRaw());
             anRecord.setImgUrl(url);
+            anRecord.setFileSize(multipartFile.getSize() / 1024);
             save(anRecord);
         }
         return true;

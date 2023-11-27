@@ -48,7 +48,7 @@ public class UploadRecordRequest extends Pagination {
     private String status;
 
     @ApiModelProperty("画面质量")
-    private Float ratio;
+    private Float ratio=100F;
 
     @ApiModelProperty("是否原图")
     private Boolean isRaw=true;

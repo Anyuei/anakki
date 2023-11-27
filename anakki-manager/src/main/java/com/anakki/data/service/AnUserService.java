@@ -8,6 +8,7 @@ import com.anakki.data.entity.response.UserDetailResponse;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 
@@ -38,5 +39,5 @@ public interface AnUserService extends IService<AnUser> {
 
     UserDetailResponse detail();
 
-    void uploadAvatar(MultipartFile file);
+    void uploadAvatar(MultipartFile file) throws IOException;
 }

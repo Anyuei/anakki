@@ -34,12 +34,19 @@
     .btn {
         line-height: 0.7;
     }
+
     .modal-dialog {
         max-width: 49rem;
         margin: 1.75rem auto;
     }
+
     .mb-3, .my-3 {
         margin-bottom: 0.3rem !important;
+    }
+
+    #image-preview img {
+        max-width: 100%;
+        height: auto;
     }
 </style>
 <body>
@@ -63,9 +70,8 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body">
-
-                        <div class="form-group">
+                    <form class="form-group form-check needs-validation" id="uploadImgForm">
+                        <div class="modal-body">
                             <div class="mb-3 row">
                                 <label for="images-type" class="col-sm-2 col-form-label">模块</label>
                                 <div class="col-md-10">
@@ -78,43 +84,46 @@
                             <div class="mb-3 row">
                                 <label for="images-title" class="col-sm-2 col-form-label">图片标题</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="images-title"
-                                           placeholder="请输入图片标题">
+                                    <input type="text" class="form-control form-control-sm" id="images-title"
+                                           placeholder="请输入图片标题" required>
+                                    <div class="invalid-feedback">请输入图片标题</div>
                                 </div>
                             </div>
                             <div class="mb-3 row">
                                 <label for="images-location" class="col-sm-2 col-form-label">拍摄地点</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="images-location"
-                                           placeholder="请输入图片拍摄地点">
+                                    <input type="text" class="form-control form-control-sm" id="images-location"
+                                           placeholder="请输入图片拍摄地点" required>
+                                    <div class="invalid-feedback">请输入拍摄地点</div>
                                 </div>
                             </div>
                             <div class="mb-3 row">
                                 <label for="images-location" class="col-sm-2 col-form-label">拍摄时间</label>
                                 <div class="col-sm-10">
-                                    <input type="datetime-local" class="form-control" id="images-create-time"
-                                           placeholder="请输入图片拍摄时间">
+                                    <input type="datetime-local" class="form-control form-control-sm"
+                                           id="images-create-time"
+                                           placeholder="请输入图片拍摄时间" required>
                                 </div>
                             </div>
                             <div class="mb-3 row">
                                 <label for="images-photographer" class="col-sm-2 col-form-label">摄影师</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="images-photographer"
-                                           placeholder="请输入图片拍摄者">
+                                    <input type="text" class="form-control form-control-sm" id="images-photographer"
+                                           placeholder="请输入图片拍摄者" required>
                                 </div>
                             </div>
                             <div class="mb-3 row">
                                 <label for="images-size" class="col-sm-2 col-form-label">分辨率</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="images-size"
-                                           placeholder="请输入图片分辨率">
+                                    <input type="text" class="form-control form-control-sm" id="images-size"
+                                           placeholder="请输入图片分辨率" required>
                                 </div>
                             </div>
                             <div class="mb-3 row">
                                 <label for="images-content" class="col-sm-2 col-form-label">描述</label>
                                 <div class="col-sm-10">
-                            <textarea class="form-control textarea-autosize"
-                                      placeholder="描述" rows="1" id="images-content"></textarea>
+                                    <textarea class="form-control textarea-autosize form-control-sm"
+                                              placeholder="描述" rows="1" id="images-content"></textarea>
                                 </div>
                             </div>
 
@@ -130,8 +139,8 @@
                             <div class="mb-3 row">
                                 <label for="images-size" class="col-sm-2 col-form-label">画面质量(1~100)</label>
                                 <div class="col-sm-10">
-                                    <input type="number" class="form-control" id="images-ratio"
-                                           placeholder="请输入图片压缩质量" min="1" max="100">
+                                    <input type="number" class="form-control form-control-sm" id="images-ratio"
+                                           placeholder="请输入图片压缩质量" min="1" max="100" required>
                                 </div>
                             </div>
                             <div class="mb-3 row">
@@ -144,21 +153,37 @@
                                 </div>
                             </div>
                             <div class="mb-3 row">
-                                    <label class="col-sm-2 col-form-label">上传图片</label>
-                                    <input type="file" name="file-1[]" id="file-1"
-                                           class="custom-input-file custom-input-file--2"
-                                           data-multiple-caption="{count} files selected" multiple/>
-                                    <label for="file-1" style="margin-left: 15px;">
-                                        <i class="fa fa-upload"></i>
-                                        <span>上传图片 (推荐20MB以下)</span>
-                                    </label>
+                                <label class="col-sm-2 col-form-label">上传图片</label>
+                                <div class="col-sm-10">
+                                    <div class="input-group">
+                                        <div class="custom-file">
+                                            <input type="file" name="file-1[]" id="file-1" class="custom-file-input"
+                                                   multiple onchange="selectImages(event)">
+                                            <label class="custom-file-label" for="file-1">选择图片</label>
+                                        </div>
+                                        <div class="input-group-append">
+                                            <label class="input-group-text" for="file-1">
+                                                <i class="fa fa-upload"></i>
+                                                <span>上传图片</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <small class="form-text text-muted">推荐20MB以下</small>
+                                </div>
+                            </div>
+                            <input type="range" id="compressionSlider" min="0" max="100" value="50" step="1">
+                            <p id="image-size-viewer"></p>
+                            <div id="image-preview"></div>
+                            <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="0"
+                                 aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar" style="width: 0%">0%</div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">返回</button>
+                                <button type="button" class="btn btn-primary" onclick="submitForm()">提交</button>
                             </div>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">返回</button>
-                        <button type="button" class="btn btn-primary" onclick="submitForm()">提交</button>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -221,6 +246,7 @@
                         <th scope="col">图片描述</th>
                         <th scope="col">拍摄者</th>
                         <th scope="col">分辨率</th>
+                        <th scope="col">文件大小</th>
                         <th scope="col">是否展示</th>
                         <th scope="col">图片</th>
                         <th scope="col">操作</th>
@@ -368,6 +394,7 @@
                     const photoTime = item.photoTime;
                     const photoBy = item.photoBy;
                     const imageSize = item.imageSize;
+                    const fileSize = (item.fileSize / 1024).toFixed(2);
                     const status = item.status;
                     const createTime = item.createTime;
                     const updateTime = item.updateTime;
@@ -389,9 +416,10 @@
                         "                                    <td>" + description + "</td>\n" +
                         "                                    <td>" + photoBy + "</td>\n" +
                         "                                    <td>" + imageSize + "</td>\n" +
+                        "                                    <td>" + fileSize + "MB</td>\n" +
                         "                                   <td> " +
                         "                                      <label class=\"toggle-switch\">\n" +
-                        "                                      <input type=\"checkbox\" " + statusCheck + " value=" + id + "onchange=\"updateImageStatus(this)\">" +
+                        "                                      <input type=\"checkbox\" " + statusCheck + " value=\"" + id + "\"onchange=\"updateImageStatus(this)\">" +
                         "                                      <span class=\"toggle-switch-slider\"></span>\n" +
                         "                                      </label>" +
                         "                                    </td>" +
@@ -442,6 +470,10 @@
 
     // 获取表单数据并发送到后端接口
     function submitForm() {
+        //
+        // const form = document.getElementById("uploadImgForm");
+        // if (form.checkValidity()) {
+        // 验证通过，执行表单提交操作
         // 获取表单元素的值
         const module = document.getElementById("images-type").value;
         const title = document.getElementById("images-title").value;
@@ -487,7 +519,13 @@
         };
         const token = localStorage.getItem('jwtManageToken'); // Get the JWT token from localStorage
         get.setRequestHeader('authorization', token); // Include the token in the Authorization header
+        if (get.upload) {
+            //处理进度条的事件
+            get.upload.addEventListener("progress", progressHandle,
+                false);
+        }
         get.send(formData);
+        // }
     }
 
 
@@ -541,6 +579,118 @@
                 console.error(error);
             });
     }
+
+    function selectImages(event){
+        // 获取滑块元素
+        var compressionRatio = document.getElementById("compressionSlider").value / 100;
+        // 压缩并显示文件大小
+        compressAndDisplayFileSize(event.target.files[0], compressionRatio);
+        previewImages(event.target.files)
+    }
+
+
+    function previewImages(files) {
+        const previewContainer = document.getElementById("image-preview");
+        previewContainer.innerHTML = ""; // 清空容器，以便重新添加预览图片
+        // const files = event.target.files;
+        for (var i = 0; i < files.length; i++) {
+            var file = files[i];
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var image = document.createElement("img");
+                image.src = e.target.result;
+                image.classList.add("preview-image");
+                previewContainer.appendChild(image);
+                initProgressBar()
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    // 压缩图片并显示文件大小
+    function compressAndDisplayFileSize(file, compressionRatio) {
+        const reader = new FileReader();
+        reader.onload = function (event) {
+            const image = new Image();
+            image.src = event.target.result;
+            image.onload = function () {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                // 设置压缩后的图片尺寸
+                const maxWidth = image.width * compressionRatio;
+                const maxHeight = image.height * compressionRatio;
+                let width = image.width;
+                let height = image.height;
+                if (width > height) {
+                    if (width > maxWidth) {
+                        height *= maxWidth / width;
+                        width = maxWidth;
+                    }
+                } else {
+                    if (height > maxHeight) {
+                        width *= maxHeight / height;
+                        height = maxHeight;
+                    }
+                }
+                canvas.width = width;
+                canvas.height = height;
+                ctx.drawImage(image, 0, 0, width, height);
+                // 压缩后的图片转换为Blob对象
+                canvas.toBlob(function (blob) {
+                    // 显示压缩后的图片文件大小
+                    const compressedFileSize = blob.size;
+                    var compressedFileSizeElement = document.getElementById("image-size-viewer");
+                    compressedFileSizeElement.textContent = '文件大小' + (compressedFileSize / 8 / 1024 / 1024).toFixed(2) + ' MB';
+                    const compressedImageFile = new File([blob], file.name);
+                    document.getElementById("file-1").files[0] = compressedImageFile;
+                }, file.type);
+            };
+        };
+        reader.readAsDataURL(file);
+    }
+
+    // 获取滑块元素
+    var slider = document.getElementById("compressionSlider");
+    // 添加滑块事件监听器
+    slider.addEventListener("input", function () {
+        // 获取滑块的值
+        var compressionRatio = this.value / 100;
+        // 获取文件输入框元素
+        var fileInput = document.getElementById("file-1");
+        // 获取选择的文件
+        var file = fileInput.files[0];
+        // 压缩并显示文件大小
+        compressAndDisplayFileSize(file, compressionRatio);
+        previewImages(fileInput.files)
+        initProgressBar()
+    });
+
+    // 进度条更新
+    function progressHandle(e) {
+        var progress = document.querySelector('.progress-bar');
+        var percent = (e.loaded / e.total * 100).toFixed(2);
+        progress.style.width = percent + "%";
+        progress.innerHTML = percent + "%";
+    };
+    function initProgressBar() {
+        var progress = document.querySelector('.progress-bar');
+        progress.style.width = 0 + "%";
+        progress.innerHTML = 0 + "%";
+    };
+    // // 启用表单验证插件
+    // (function () {
+    //     'use strict';
+    //     // 获取表单元素
+    //     const form = document.querySelector('.needs-validation');
+    //     // 添加提交事件监听器
+    //     form.addEventListener('submit', function (event) {
+    //         if (!form.checkValidity()) {
+    //             event.preventDefault();
+    //             event.stopPropagation();
+    //         }
+    //         form.classList.add('was-validated');
+    //     }, false);
+    // })();
 </script>
 </body>
 </html>

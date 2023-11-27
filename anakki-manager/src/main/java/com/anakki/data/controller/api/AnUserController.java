@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 
@@ -42,7 +43,7 @@ public class AnUserController {
 
     @ApiOperation(value = "上传头像")
     @PostMapping ("/upload-avatar")
-    public ResponseDTO<Boolean> uploadAvatar(MultipartFile file){
+    public ResponseDTO<Boolean> uploadAvatar(MultipartFile file) throws IOException {
         anUserService.uploadAvatar(file);
         return ResponseDTO.succData(true);
     }

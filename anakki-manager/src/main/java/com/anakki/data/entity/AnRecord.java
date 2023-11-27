@@ -57,6 +57,10 @@ public class AnRecord extends BaseEntity implements Serializable {
     @TableField("image_size")
     private String imageSize;
 
+    @ApiModelProperty("图片文件大小 KB")
+    @TableField("file_size")
+    private Long fileSize;
+
     @ApiModelProperty("图片状态")
     @TableField("status")
     private String status;

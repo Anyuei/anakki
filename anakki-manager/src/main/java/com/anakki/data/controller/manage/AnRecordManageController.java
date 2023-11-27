@@ -40,7 +40,7 @@ public class AnRecordManageController {
 
     @ApiOperation(value = "上传图文")
     @PostMapping("/upload")
-    public ResponseDTO<Boolean> upload(UploadRecordRequest uploadRecordRequest) {
+    public ResponseDTO<Boolean> upload(UploadRecordRequest uploadRecordRequest) throws IOException {
         Boolean status=anRecordService.uploadRecord(uploadRecordRequest);
         return ResponseDTO.succData(status);
     }

@@ -309,6 +309,7 @@ function loadPersonDetail() {
             }
         });
     }
+    changeLoginPage;
 }
 
 function showAvatarModal() {

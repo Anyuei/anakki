@@ -13,15 +13,13 @@ import com.qcloud.cos.model.PutObjectResult;
 import com.qcloud.cos.region.Region;
 import com.tencent.cloud.CosStsClient;
 import com.tencent.cloud.Response;
+import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.InputStream;
+import java.io.*;
 import java.util.TreeMap;
 import java.util.UUID;
 
@@ -45,6 +43,7 @@ public class COSUtil {
                 credential.credentials.tmpSecretKey,
                 credential.credentials.sessionToken);
     }
+
     public static Response getCredential() {
         TreeMap<String, Object> config = new TreeMap<String, Object>();
         try {
@@ -61,11 +60,11 @@ public class COSUtil {
             // 换成 bucket 所在地区
             config.put("region", region);
             // 可以通过 allowPrefixes 指定前缀数组, 例子： a.jpg 或者 a/* 或者 * (使用通配符*存在重大安全风险, 请谨慎评估使用)
-            config.put("allowPrefixes", new String[] {
-                    "front/*","images/*","avatar/*"
+            config.put("allowPrefixes", new String[]{
+                    "front/*", "images/*", "avatar/*"
             });
             // 密钥的权限列表。简单上传和分片需要以下的权限，其他权限列表请看 https://cloud.tencent.com/document/product/436/31923
-            String[] allowActions = new String[] {
+            String[] allowActions = new String[]{
                     // 简单上传
                     "name/cos:PutObject",
                     "name/cos:PostObject",
@@ -88,11 +87,11 @@ public class COSUtil {
             MultipartFile file,
             String region,
             String bucketName
-    ,            String path,
+            , String path,
             Integer maxWidth,
             Integer maxHeight,
             Float quality,
-            Boolean isRaw) {
+            Boolean isRaw) throws IOException {
         return uploadObject(
                 file,
                 getSessionCredential(),
@@ -114,39 +113,20 @@ public class COSUtil {
             Integer maxWidth,
             Integer maxHeight,
             Float ratio,
-            Boolean isRaw) {
+            Boolean isRaw) throws IOException {
         try {
             // 获取上传的文件的输入流
             InputStream inputStream = file.getInputStream();
-            if (!isRaw){
-                // 读取原始图片
-                BufferedImage originalImage = ImageIO.read(inputStream);
-                // 计算压缩后的尺寸
-                int width = originalImage.getWidth();
-                int height = originalImage.getHeight();
-                int newWidth = width;
-                int newHeight = height;
-                if (null!=ratio){
-                    newWidth = (int) (width * ratio);
-                    newHeight = (int) (height * ratio);
-                }else{
-                    if (width > maxWidth || height > maxHeight) {
-                        float widthRatio = (float) maxWidth / width;
-                        float heightRatio = (float) maxHeight / height;
-                        float ratioR = Math.min(widthRatio, heightRatio);
-                        newWidth = (int) (width * ratioR);
-                        newHeight = (int) (height * ratioR);
-                    }
-                }
-
-                // 创建压缩后的图片
-                BufferedImage resizedImage = new BufferedImage(newWidth, newHeight, originalImage.getType());
-                Graphics2D g = resizedImage.createGraphics();
-                g.drawImage(originalImage, 0, 0, newWidth, newHeight, null);
-                g.dispose();
+            if (!isRaw) {
                 // 将压缩后的图片转换为输入流
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                ImageIO.write(resizedImage, "jpg", outputStream);
+
+                BufferedImage originalImage = ImageIO.read(inputStream);
+                Thumbnails.of(originalImage)
+                        .size(maxWidth, maxHeight)
+                        .outputQuality(ratio)
+                        .outputFormat("jpg")
+                        .toOutputStream(outputStream);
                 inputStream = new ByteArrayInputStream(outputStream.toByteArray());
             }
             // 初始化COS客户端
@@ -177,6 +157,7 @@ public class COSUtil {
     public static void main(String[] args) {
         deleteObject(CosBucketNameConst.BUCKET_NAME_IMAGES, "images/04f412a9-3334-4ef6-bfe3-8c50f7dbccef.png");
     }
+
     public static void deleteObject(String bucketName, String objectKey) {
         String replace = objectKey.replace(COSUtil.HOST, "");
         // 初始化COS客户端
