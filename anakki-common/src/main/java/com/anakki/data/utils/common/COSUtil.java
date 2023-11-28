@@ -117,18 +117,6 @@ public class COSUtil {
         try {
             // 获取上传的文件的输入流
             InputStream inputStream = file.getInputStream();
-            if (!isRaw) {
-                // 将压缩后的图片转换为输入流
-                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
-                BufferedImage originalImage = ImageIO.read(inputStream);
-                Thumbnails.of(originalImage)
-                        .size(maxWidth, maxHeight)
-                        .outputQuality(ratio)
-                        .outputFormat("jpg")
-                        .toOutputStream(outputStream);
-                inputStream = new ByteArrayInputStream(outputStream.toByteArray());
-            }
             // 初始化COS客户端
             ClientConfig clientConfig = new ClientConfig(new Region(region));
             COSClient cosClient = new COSClient(new COSStaticCredentialsProvider(basicSessionCredential), clientConfig);
@@ -145,7 +133,7 @@ public class COSUtil {
             // 上传压缩后的图片
             PutObjectResult putResult = cosClient.putObject(bucketName, key, inputStream, objectMetadata);
             // 创建文件的访问路径
-            String url = HOST + key;
+            String url = HOST + key+"?imageMogr2/thumbnail/400x";
             // 关闭COS客户端
             cosClient.shutdown();
             return url;

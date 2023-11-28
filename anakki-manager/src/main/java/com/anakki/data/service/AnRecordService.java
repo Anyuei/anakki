@@ -28,4 +28,6 @@ public interface AnRecordService extends IService<AnRecord> {
     Boolean uploadRecord(UploadRecordRequest uploadRecordRequest) throws IOException;
 
     void changeRecordStatus(ChangeRecordRequest changeRecordRequest);
+
+    void increaseViewCount(Long recordId);
 }

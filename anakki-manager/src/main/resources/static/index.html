@@ -99,7 +99,9 @@
                     </div>
                     <div class="row typeface-palette cols-xs-space cols-sm-space cols-md-space" id="mainFlow">
                         <!--主要图文-->
-
+                        <div class="spinner-border m-5" role="status">
+                            <span class="visually-hidden">传输中...</span>
+                        </div>
                     </div>
 <!--                    &lt;!&ndash; Color palette &ndash;&gt;-->
 <!--                    <div class="row align-items-center mb-4 mt-lg">-->
@@ -2299,7 +2301,7 @@
 
                     html = html + "<div class='col-lg-4'>" +
                         "<figure class='figure'>" +
-                        "<img src='" + item.imgUrl + "'  class=\"figure-img img-fluid rounded\" alt=\"" + item.id + "\" onclick=\"showModal(this)\">" +
+                        "<img src='" + item.imgUrl + "' class=\"figure-img img-fluid rounded\" alt=\"" + item.id + "\" onclick=\"showModal(this)\">" +
                         "<figcaption class='figure-caption'>" +
                         "<strong>" +
                         item.title + " - " + item.location +
@@ -2316,13 +2318,9 @@
         };
         mainPageImageFlow.send();
 
-
     };
 
     function showModal(image) {
-        var modal = document.getElementById("modal");
-        var modalImage = document.getElementById("modal-image");
-        modal.style.display = "block";
 
         var get = new XMLHttpRequest();
         get.open("GET", "/base/anakki/record/flowById?id=" + image.alt, true);
@@ -2339,7 +2337,7 @@
 
                 var html =
                     "<div class=\"\">\n" +
-                    "  <img src=\"" + item.imgUrl + "\" class=\"card-img-bottom\" alt=\"...\">\n" +
+                    "  <img src=\"" + item.imgUrl + "\" class=\"card-img-top\" alt=\"...\">\n" +
 
                     "</div>"+
                 "  <div class=\"card-body windows-bottom\">\n" +
@@ -2352,10 +2350,27 @@
                 formattedDate +
                 "</small></p>\n" +
                 "  </div>\n"
-
                 ;
+                // Create a modal element
+                const modal = document.createElement('div');
+                modal.className = 'modal';
+                modal.style="display:block";
+                modal.style.display = 'flex';
+                modal.style.justifyContent = 'center';
+                modal.style.alignItems = 'center';
+                // Create an image element for the full-screen view
+                const fullScreenImage = document.createElement('img');
+                fullScreenImage.src = image.src;
+                fullScreenImage.className = 'modal-image';
+                // Add the image to the modal
+                modal.appendChild(fullScreenImage);
+                // Add the modal to the document body
+                document.body.appendChild(modal);
+                // Close the modal when clicked outside the image
+                modal.addEventListener('click', function (event) {
+                        modal.remove();
+                });
                 modal.innerHTML = html;
-                modalImage.src = image.src;
             }
         };
         get.send();

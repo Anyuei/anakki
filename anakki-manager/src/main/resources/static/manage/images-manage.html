@@ -171,7 +171,7 @@
                                     <small class="form-text text-muted">推荐20MB以下</small>
                                 </div>
                             </div>
-                            <input type="range" id="compressionSlider" min="0" max="100" value="50" step="1">
+<!--                            <input type="range" id="compressionSlider" min="0" max="100" value="50" step="1">-->
                             <p id="image-size-viewer"></p>
                             <div id="image-preview">
                                 <img id="preview-image">
@@ -582,77 +582,79 @@
             });
     }
 
-    function selectImages(event){
-        // 获取滑块元素
-        var compressionRatio = document.getElementById("compressionSlider").value / 100;
-        // 压缩并显示文件大小
-        compressAndDisplayFileSize(event.target.files, compressionRatio);
-
-    }
+    // function selectImages(event){
+    //     // 获取滑块元素
+    //     var compressionRatio = document.getElementById("compressionSlider").value / 100;
+    //     // 压缩并显示文件大小
+    //     compressAndDisplayFileSize(event.target.files, compressionRatio);
+    //
+    // }
 
 
 
 
     // 压缩图片并显示文件大小
-    function compressAndDisplayFileSize(files, compressionRatio) {
-        file=files[0];
-        const reader = new FileReader();
-        reader.onload = function (event) {
-            const image = new Image();
-            image.src = event.target.result;
-            image.onload = function () {
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                // 设置压缩后的图片尺寸
-                const maxWidth = image.width * compressionRatio;
-                const maxHeight = image.height * compressionRatio;
-                let width = image.width;
-                let height = image.height;
-                if (width > height) {
-                    if (width > maxWidth) {
-                        height *= maxWidth / width;
-                        width = maxWidth;
-                    }
-                } else {
-                    if (height > maxHeight) {
-                        width *= maxHeight / height;
-                        height = maxHeight;
-                    }
-                }
-                canvas.width = width;
-                canvas.height = height;
-                ctx.drawImage(image, 0, 0, width, height);
-                // 压缩后的图片转换为Blob对象
-                canvas.toBlob(function (blob) {
-                    // 显示压缩后的图片文件大小
-                    const compressedFileSize = blob.size;
-                    var compressedFileSizeElement = document.getElementById("image-size-viewer");
-                    compressedFileSizeElement.textContent = '文件大小' + (compressedFileSize  / 1024 / 1024).toFixed(2) + ' MB';
-                    const compressedImageFile = new File([blob], file.name);
-                    files = [compressedImageFile];
-                    // 渲染压缩后的图片
-                    const compressedImageElement = document.getElementById("preview-image");
-                    compressedImageElement.src = URL.createObjectURL(compressedImageFile);
-                }, file.type);
-            };
-        };
-        reader.readAsDataURL(file);
-    }
+    // function compressAndDisplayFileSize(files, compressionRatio) {
+    //     file=files[0];
+    //     const reader = new FileReader();
+    //     reader.onload = function (event) {
+    //         const image = new Image();
+    //         image.src = event.target.result;
+    //         image.onload = function () {
+    //             const canvas = document.createElement('canvas');
+    //             const ctx = canvas.getContext('2d');
+    //             // 设置压缩后的图片尺寸
+    //             const maxWidth = image.width * compressionRatio;
+    //             const maxHeight = image.height * compressionRatio;
+    //             let width = image.width;
+    //             let height = image.height;
+    //             if (width > height) {
+    //                 if (width > maxWidth) {
+    //                     height *= maxWidth / width;
+    //                     width = maxWidth;
+    //                 }
+    //             } else {
+    //                 if (height > maxHeight) {
+    //                     width *= maxHeight / height;
+    //                     height = maxHeight;
+    //                 }
+    //             }
+    //             canvas.width = width;
+    //             canvas.height = height;
+    //             ctx.drawImage(image, 0, 0, width, height);
+    //             // 压缩后的图片转换为Blob对象
+    //             canvas.toBlob(function (blob) {
+    //                 // 显示压缩后的图片文件大小
+    //                 const compressedFileSize = blob.size;
+    //                 var compressedFileSizeElement = document.getElementById("image-size-viewer");
+    //                 compressedFileSizeElement.textContent = '文件大小' + (compressedFileSize  / 1024 / 1024).toFixed(2) + ' MB';
+    //                 const compressedImageFile = new File([blob], file.name);
+    //                 // 渲染压缩后的图片
+    //                 const compressedImageElement = document.getElementById("preview-image");
+    //                 compressedImageElement.src = URL.createObjectURL(compressedImageFile);
+    //
+    //                 document.getElementById("file-1").files=;
+    //
+    //             }, file.type);
+    //         };
+    //     };
+    //     reader.readAsDataURL(file);
+    // }
 
-    // 获取滑块元素
-    var slider = document.getElementById("compressionSlider");
-    // 添加滑块事件监听器
-    slider.addEventListener("input", function () {
-        // 获取滑块的值
-        var compressionRatio = this.value / 100;
-        // 获取文件输入框元素
-        var fileInput = document.getElementById("file-1");
-        // 获取选择的文件
-        var file = fileInput.files[0];
-        // 压缩并显示文件大小
-        compressAndDisplayFileSize(fileInput.files, compressionRatio);
-        initProgressBar()
-    });
+    // // 获取滑块元素
+    // var slider = document.getElementById("compressionSlider");
+    // // 添加滑块事件监听器
+    // slider.addEventListener("input", function () {
+    //     // 获取滑块的值
+    //     var compressionRatio = this.value / 100;
+    //     // 获取文件输入框元素
+    //     var fileInput = document.getElementById("file-1");
+    //     // 获取选择的文件
+    //     var file = fileInput.files[0];
+    //     // 压缩并显示文件大小
+    //     compressAndDisplayFileSize(fileInput.files, compressionRatio);
+    //     initProgressBar()
+    // });
 
     // 进度条更新
     function progressHandle(e) {

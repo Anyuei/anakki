@@ -15,6 +15,7 @@ public class BaseContext {
         }
         return nickname;
     }
+
     public static String getCurrentNickname() {
         return getCurrentNickname(true);
     }

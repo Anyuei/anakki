@@ -1,5 +1,6 @@
 package com.anakki.data.service.impl;
 
+import com.anakki.data.bean.common.BaseContext;
 import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.bean.constant.CosBucketNameConst;
 import com.anakki.data.entity.AnRecord;
@@ -117,6 +118,17 @@ public class AnRecordServiceImpl extends ServiceImpl<AnRecordMapper, AnRecord> i
         } else {
             byId.setStatus("INVALID");
         }
+        updateById(byId);
+    }
+
+    @Override
+    public synchronized void increaseViewCount(Long recordId) {
+        String currentNickname = BaseContext.getCurrentNickname(false);
+        if (null==currentNickname){
+            currentNickname="未登录访客";
+        }
+        AnRecord byId = getById(recordId);
+        byId.setViewCount(byId.getViewCount()+1);
         updateById(byId);
     }
 }

@@ -1,5 +1,6 @@
 package com.anakki.data.controller.base;
 
+import com.anakki.data.bean.common.BaseContext;
 import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.bean.common.ResponseDTO;
 import com.anakki.data.entity.AnRecord;
@@ -54,6 +55,12 @@ public class AnRecordController {
     @GetMapping("/flowById")
     public ResponseDTO<AnRecord> flow(Long id) {
         AnRecord byId = anRecordService.getById(id);
+        if (null==byId){
+            byId=new AnRecord();
+            return ResponseDTO.succData(byId);
+        }
+        anRecordService.increaseViewCount(id);
+        byId.setImgUrl(byId.getImgUrl().split("\\?")[0]);
         return ResponseDTO.succData(byId);
     }
 

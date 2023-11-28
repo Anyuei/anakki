@@ -64,4 +64,8 @@ public class AnRecord extends BaseEntity implements Serializable {
     @ApiModelProperty("图片状态")
     @TableField("status")
     private String status;
+
+    @ApiModelProperty("浏览量")
+    @TableField("view_count")
+    private Long viewCount;
 }
