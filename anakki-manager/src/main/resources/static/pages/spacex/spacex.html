@@ -22,17 +22,54 @@
         justify-content: center;
         align-items: center;
     }
+
     .image-item {
         margin: 10px;
     }
+
     .image-spacex-list {
         width: 200px; /* Set the width of the image based on your requirement */
         height: auto; /* Automatically adjust the height based on the image proportion */
     }
+
     .image-info {
         font-size: 0.475rem;
-        text-align: center; /* Center align the image info */
+        text-align: right; /* Center align the image info */
+        text-align: -moz-right; /* Center align the image info */
+        text-align: -webkit-right; /* Center align the image info */
     }
+
+    .modal-spacex {
+        background-color: rgba(0, 0, 0, 0.8); /* Darken the background */
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        text-align: left;
+        position: absolute;
+        inset: 0;
+        margin: auto;
+        width: 100%;
+        height: 100vh;
+    }
+    .image-open {
+        text-align: right;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: rgba(0, 0, 0, 0.08);
+        color: white;
+        padding: 5px;
+    }
+    .image-open .photo-time {
+        display: block;
+    }
+    .image-open .view-count {
+        display: block;
+    }
+    .image-open .view-count i {
+        margin-right: 5px;
+    }
+
 </style>
 <body>
 <!--通用顶部导航-->
@@ -63,7 +100,7 @@
 <script>
     window.onload = function () {
         $('#header').load("../../pages/header.html", loadPersonDetail);
-        $('#footer').load("../../pages/footer.html",insertCreateTime);
+        $('#footer').load("../../pages/footer.html", insertCreateTime);
 
         var imageXHR = new XMLHttpRequest();
         imageXHR.open("GET", "/base/anakki/record/flow?imageType=SPACEX", true);
@@ -85,13 +122,13 @@
                     } else {
                         formattedDate = "未知";
                     }
-                    //展示图片列表
+                    // 展示图片列表
                     // 创建图片元素
                     html += '<div class="image-item">';
-                    html += '<img src="' + item.imgUrl + '" alt="Image" class="image-spacex-list">';
+                    html += '<img src="' + item.imgUrl + '?imageMogr2/thumbnail/400x" class="image-spacex-list" alt="' + item.id + '" onclick="showModal(this)">';
                     html += '<div class="image-info">';
-                    html += '<span class="view-count">' + viewCount + ' Views</span><br>';
                     html += '<span class="photo-time">拍摄时间: ' + formattedDate + '</span>';
+                    html += '<span class="view-count"><i class="fas fa-eye"></i> ' + viewCount + '</span><br>';
                     html += '</div>';
                     html += '</div>';
                 }
@@ -100,6 +137,57 @@
         };
         imageXHR.send();
     };
+
+    function showModal(image) {
+        var get = new XMLHttpRequest();
+        get.open("GET", "/base/anakki/record/flowById?id=" + image.alt, true);
+        get.onreadystatechange = function () {
+            if (get.readyState === 4 && get.status === 200) {
+                var response = JSON.parse(get.responseText);
+                var item = response.data;
+                var imgUrl = item.imgUrl;
+                var dateTime = new Date(item.photoTime);
+                var year = dateTime.getFullYear();
+                var month = dateTime.getMonth() + 1; // Months are zero-based, so we add 1
+                var day = dateTime.getDate();
+                var formattedDate = year + "-" + month + "-" + day;
+                //获取图片信息后，显示巨幕图片，图片高度和宽度都不超过浏览器视口
+                // 创建巨幕元素
+                var modal = document.createElement("div");
+                modal.classList.add("modal-spacex");
+                // 创建图片元素
+                var img = document.createElement("img");
+                img.src = imgUrl;
+                img.style.maxWidth = "100%"; // 图片宽度不超过浏览器视口宽度
+                img.style.maxHeight = "100%"; // 图片高度不超过浏览器视口高度
+                // 创建图片信息元素
+                var imageInfo = document.createElement("div");
+                imageInfo.classList.add("image-open");
+                imageInfo.innerHTML = "<span class='photo-time'>拍摄时间: " + formattedDate + "</span>" +
+                    "<span class='view-count'><i class='fas fa-eye'></i> " + item.viewCount + "</span>";
+                // 将图片元素添加到巨幕中
+                modal.appendChild(img);
+                modal.appendChild(imageInfo);
+                // 将巨幕添加到页面中
+                document.body.appendChild(modal);
+                // 隐藏footer
+                document.querySelector("footer").style.display = "none";
+                //添加关闭模态框事件
+                document.addEventListener("click", closeModal);
+            }
+        };
+        get.send();
+    }
+
+    //关闭模态框事件
+    function closeModal() {
+        // Get the modal element
+        var modal = document.querySelector(".modal-spacex");
+        // Remove the modal element from the document
+        modal.parentNode.removeChild(modal);
+        // 显示footer
+        document.querySelector("footer").style.display = "block";
+    }
 
 </script>
 </body>
