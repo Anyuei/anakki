@@ -48,6 +48,9 @@
         max-width: 100%;
         height: auto;
     }
+    .image-list{
+        width: 100px;
+    }
 </style>
 <body>
 
@@ -427,7 +430,9 @@
                         "                                    </td>" +
                         "                                    <td>\n" +
                         "                                        <div class=\"media align-items-center\">\n" +
-                        "                                            <img src=\"" + imgUrl + "\" class=\"golden-ratio-image\">" +
+                        "                                            <div class=\"image-list\">\n" +
+                        "                                                <img src=\"" + imgUrl + "?imageMogr2/thumbnail/400x\" class=\"golden-ratio-image\">" +
+                        "                                            </div>\n" +
                         "                                            <div class=\"media-body\">\n" +
                         "                                                <span class=\"vertical-span\">拍摄时间：" + photoTime.replace("T", " ") + "</span>\n" +
                         "                                                <span class=\"vertical-span\">上传时间：" + createTime.replace("T", " ") + "</span>\n" +

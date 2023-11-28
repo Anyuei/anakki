@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description"
+          content="Probably the most complete UI kit out there. Multiple functionalities and controls added,  extended color palette and beautiful typography, designed as its own extended version of Bootstrap at  the highest level of quality.                             ">
+    <meta name="author" content="Webpixels">
+    <title>Anakki-World</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,800|Roboto:400,500,700" rel="stylesheet">
+    <!-- Theme CSS -->
+    <link type="text/css" href="../../assets/css/theme.css" rel="stylesheet">
+    <!-- Demo CSS - No need to use these in your project -->
+    <link type="text/css" href="../../assets/css/demo.css" rel="stylesheet">
+</head>
+<style>
+    #spacexFlow {
+        flex-grow: 1; /* Allow the images to grow and occupy available space */
+        display: flex;
+        flex-wrap: wrap; /* Wrap the images to multiple lines if needed */
+        justify-content: center;
+        align-items: center;
+    }
+    .image-item {
+        margin: 10px;
+    }
+    .image-spacex-list {
+        width: 200px; /* Set the width of the image based on your requirement */
+        height: auto; /* Automatically adjust the height based on the image proportion */
+    }
+    .image-info {
+        font-size: 0.475rem;
+        text-align: center; /* Center align the image info */
+    }
+</style>
+<body>
+<!--通用顶部导航-->
+<div id="header"></div>
+<main class="main">
+    <section class="spotlight parallax bg-cover bg-size--cover" data-spotlight="fullscreen"
+             style="padding-top: 4rem;">
+        <div id="spacexFlow"></div>
+    </section>
+
+</main>
+<!-- 页面底部 -->
+<div id="footer"></div>
+<!-- Core -->
+<script src="../../assets/vendor/jquery/jquery.min.js"></script>
+<script src="../../assets/vendor/popper/popper.min.js"></script>
+<script src="../../assets/js/bootstrap/bootstrap.min.js"></script>
+<!-- FontAwesome 5 -->
+<script src="../../assets/vendor/fontawesome/js/fontawesome-all.min.js" defer></script>
+<!-- Page plugins -->
+<script src="../../assets/vendor/bootstrap-select/js/bootstrap-select.min.js"></script>
+<script src="../../assets/vendor/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>
+<script src="../../assets/vendor/input-mask/input-mask.min.js"></script>
+<script src="../../assets/vendor/nouislider/js/nouislider.min.js"></script>
+<script src="../../assets/vendor/textarea-autosize/textarea-autosize.min.js"></script>
+<!-- Theme JS -->
+<script src="../../assets/js/theme.js"></script>
+<script>
+    window.onload = function () {
+        $('#header').load("../../pages/header.html", loadPersonDetail);
+        $('#footer').load("../../pages/footer.html",insertCreateTime);
+
+        var imageXHR = new XMLHttpRequest();
+        imageXHR.open("GET", "/base/anakki/record/flow?imageType=SPACEX", true);
+        imageXHR.onreadystatechange = function () {
+            if (imageXHR.readyState === 4 && imageXHR.status === 200) {
+                var html = "";
+                var response = JSON.parse(imageXHR.responseText);
+                var itemList = response.data.data;
+                for (let i = 0; i < itemList.length; i++) {
+                    const item = itemList[i];
+                    const viewCount = item.viewCount;
+                    let formattedDate;
+                    if (item.photoTime) {
+                        const dateTime = new Date(item.photoTime);
+                        const year = dateTime.getFullYear();
+                        const month = dateTime.getMonth() + 1; // Months are zero-based, so we add 1
+                        const day = dateTime.getDate();
+                        formattedDate = year + "-" + month + "-" + day;
+                    } else {
+                        formattedDate = "未知";
+                    }
+                    //展示图片列表
+                    // 创建图片元素
+                    html += '<div class="image-item">';
+                    html += '<img src="' + item.imgUrl + '" alt="Image" class="image-spacex-list">';
+                    html += '<div class="image-info">';
+                    html += '<span class="view-count">' + viewCount + ' Views</span><br>';
+                    html += '<span class="photo-time">拍摄时间: ' + formattedDate + '</span>';
+                    html += '</div>';
+                    html += '</div>';
+                }
+                document.getElementById("spacexFlow").innerHTML = html;
+            }
+        };
+        imageXHR.send();
+    };
+
+</script>
+</body>
+</html>
