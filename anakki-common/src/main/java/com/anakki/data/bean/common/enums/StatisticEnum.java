@@ -24,7 +24,7 @@ public enum StatisticEnum {
     }
     public static boolean isValidEnumName(String name) {
         try {
-            CommentStateEnum.valueOf(name);
+            StatisticEnum.valueOf(name);
             return true;
         } catch (IllegalArgumentException e) {
             return false;

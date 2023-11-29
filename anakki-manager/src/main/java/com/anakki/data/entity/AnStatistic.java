@@ -1,5 +1,6 @@
 package com.anakki.data.entity;
 
+import com.anakki.data.entity.common.BaseEntity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -22,7 +23,7 @@ import lombok.Setter;
 @Setter
 @TableName("an_statistic")
 @ApiModel(value = "AnStatistic对象", description = "")
-public class AnStatistic implements Serializable {
+public class AnStatistic extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
