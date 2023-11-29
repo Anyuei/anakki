@@ -22,7 +22,7 @@ import java.util.List;
  */
 public interface AnRecordService extends IService<AnRecord> {
 
-    BasePageResult<AnRecord> flow(GetContentRequest getContentRequest);
+    BasePageResult<AnRecord> flow(GetContentRequest getContentRequest,String ipAddr);
 
     boolean removeById(Serializable id);
     List<String> getRecordTypes();

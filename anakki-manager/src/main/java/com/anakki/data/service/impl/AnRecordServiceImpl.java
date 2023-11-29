@@ -4,14 +4,18 @@ import com.anakki.data.bean.common.BaseContext;
 import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.bean.common.enums.StatisticEnum;
 import com.anakki.data.bean.constant.CosBucketNameConst;
+import com.anakki.data.entity.AnIpAddress;
 import com.anakki.data.entity.AnRecord;
 import com.anakki.data.bean.constant.CosPathConst;
+import com.anakki.data.entity.AnStatisticLog;
 import com.anakki.data.entity.request.ChangeRecordRequest;
 import com.anakki.data.entity.request.GetContentRequest;
 import com.anakki.data.entity.request.ListRecordRequest;
 import com.anakki.data.entity.request.UploadRecordRequest;
 import com.anakki.data.mapper.AnRecordMapper;
+import com.anakki.data.service.AnIpAddressService;
 import com.anakki.data.service.AnRecordService;
+import com.anakki.data.service.AnStatisticLogService;
 import com.anakki.data.service.AnStatisticService;
 import com.anakki.data.utils.common.COSUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -42,8 +46,12 @@ public class AnRecordServiceImpl extends ServiceImpl<AnRecordMapper, AnRecord> i
 
     @Autowired
     private AnStatisticService anStatisticService;
+    @Autowired
+    private AnStatisticLogService anStatisticLogService;
+    @Autowired
+    private AnIpAddressService anIpAddressService;
     @Override
-    public BasePageResult<AnRecord> flow(GetContentRequest getContentRequest) {
+    public BasePageResult<AnRecord> flow(GetContentRequest getContentRequest,String ipAddr) {
         IPage<AnRecord> anRecordIPage = new Page<>(
                 getContentRequest.getCurrent(),
                 getContentRequest.getSize());
@@ -54,7 +62,15 @@ public class AnRecordServiceImpl extends ServiceImpl<AnRecordMapper, AnRecord> i
         anRecordQueryWrapper.eq("status","COMMON");
         IPage<AnRecord> page = page(anRecordIPage, anRecordQueryWrapper);
         List<AnRecord> records = page.getRecords();
+        //统计模块访问数
         anStatisticService.increaseByName(type);
+        AnIpAddress addressByIp = anIpAddressService.getAddressByIp(ipAddr);
+        //统计访问日志
+        if (null!=addressByIp){
+            AnStatisticLog anStatisticLog = new AnStatisticLog();
+            BeanUtils.copyProperties(addressByIp,anStatisticLog,"id","create_time","updateTime");
+            anStatisticLogService.save(anStatisticLog);
+        }
         return new BasePageResult<>(records, page.getTotal());
     }
 

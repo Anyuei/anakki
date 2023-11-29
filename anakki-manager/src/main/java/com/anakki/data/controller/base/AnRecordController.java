@@ -3,9 +3,12 @@ package com.anakki.data.controller.base;
 import com.anakki.data.bean.common.BaseContext;
 import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.bean.common.ResponseDTO;
+import com.anakki.data.entity.AnIpAddress;
 import com.anakki.data.entity.AnRecord;
 import com.anakki.data.entity.request.GetContentRequest;
+import com.anakki.data.service.AnIpAddressService;
 import com.anakki.data.service.AnRecordService;
+import com.anakki.data.utils.IPUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -38,8 +42,10 @@ public class AnRecordController {
 
     @ApiOperation(value = "获取图文")
     @GetMapping("/flow")
-    public ResponseDTO<BasePageResult<AnRecord>> flow(GetContentRequest getContentRequest) {
-        return ResponseDTO.succData(anRecordService.flow(getContentRequest));
+    public ResponseDTO<BasePageResult<AnRecord>> flow(GetContentRequest getContentRequest, HttpServletRequest request) {
+        String ipAddr = IPUtils.getIpAddr(request);
+
+        return ResponseDTO.succData(anRecordService.flow(getContentRequest,ipAddr));
     }
 
     @ApiOperation(value = "根据id获取图文")

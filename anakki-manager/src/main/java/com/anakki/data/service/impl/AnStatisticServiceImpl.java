@@ -32,7 +32,7 @@ public class AnStatisticServiceImpl extends ServiceImpl<AnStatisticMapper, AnSta
             if (null==one){
                 one=new AnStatistic();
                 one.setStatisticName(name);
-                one.setStatisticValue("0");
+                one.setStatisticValue("1");
                 one.setStatisticDescription(statisticEnum.getDescription());
                 save(one);
             }else{
