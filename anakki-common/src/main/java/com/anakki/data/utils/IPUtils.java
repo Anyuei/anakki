@@ -27,7 +27,7 @@ public class IPUtils {
         String ip = null;
         try {
             //以下两个获取在k8s中，将真实的客户端IP，放到了x-Original-Forwarded-For。而将WAF的回源地址放到了 x-Forwarded-For了。
-            ip = request.getHeader("X-Original-Forwarded-For");
+            ip = request.getHeader("X-Real-IP");
             if (StringUtils.isEmpty(ip) || UNKNOWN.equalsIgnoreCase(ip)) {
                 ip = request.getHeader("X-Forwarded-For");
             }

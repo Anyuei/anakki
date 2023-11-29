@@ -14,5 +14,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface AnStatisticService extends IService<AnStatistic> {
 
 
-    void increaseByName(String name);
+    Boolean increaseByName(String name,String ipAddr);
 }

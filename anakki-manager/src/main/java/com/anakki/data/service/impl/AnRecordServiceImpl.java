@@ -46,10 +46,6 @@ public class AnRecordServiceImpl extends ServiceImpl<AnRecordMapper, AnRecord> i
 
     @Autowired
     private AnStatisticService anStatisticService;
-    @Autowired
-    private AnStatisticLogService anStatisticLogService;
-    @Autowired
-    private AnIpAddressService anIpAddressService;
     @Override
     public BasePageResult<AnRecord> flow(GetContentRequest getContentRequest,String ipAddr) {
         IPage<AnRecord> anRecordIPage = new Page<>(
@@ -63,14 +59,8 @@ public class AnRecordServiceImpl extends ServiceImpl<AnRecordMapper, AnRecord> i
         IPage<AnRecord> page = page(anRecordIPage, anRecordQueryWrapper);
         List<AnRecord> records = page.getRecords();
         //统计模块访问数
-        anStatisticService.increaseByName(type);
-        AnIpAddress addressByIp = anIpAddressService.getAddressByIp(ipAddr);
-        //统计访问日志
-        if (null!=addressByIp){
-            AnStatisticLog anStatisticLog = new AnStatisticLog();
-            BeanUtils.copyProperties(addressByIp,anStatisticLog,"id","create_time","updateTime");
-            anStatisticLogService.save(anStatisticLog);
-        }
+        anStatisticService.increaseByName(type,ipAddr);
+
         return new BasePageResult<>(records, page.getTotal());
     }
 
