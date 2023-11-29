@@ -29,12 +29,11 @@
     }
 
     .image-spacex-list {
-        width: 200px; /* Set the width of the image based on your requirement */
         height: auto; /* Automatically adjust the height based on the image proportion */
     }
 
     .image-info {
-        font-size: 0.475rem;
+        font-size: 0.775rem;
         text-align: center; /* Center align the image info */
         text-align: -moz-center; /* Center align the image info */
         text-align: -webkit-center; /* Center align the image info */
@@ -52,6 +51,7 @@
         width: 100%;
         height: 100vh;
     }
+
     .image-open {
         text-align: right;
         position: absolute;
@@ -61,15 +61,19 @@
         color: white;
         padding: 5px;
     }
+
     .image-open .photo-time {
         display: block;
     }
+
     .image-open .view-count {
         display: block;
     }
+
     .image-open .view-count i {
         margin-right: 5px;
     }
+
     body {
         color: #aeaeae;
         background-color: #000000b8;
@@ -79,8 +83,7 @@
 <!--通用顶部导航-->
 <div id="header"></div>
 <main class="main">
-    <section class="spotlight parallax bg-cover bg-size--cover" data-spotlight="fullscreen"
-             style="padding-top: 4rem;">
+    <section style="padding-top: 4rem;">
         <div class="container text-center" id="spacexFlow">
         </div>
     </section>
@@ -129,15 +132,17 @@
                     }
                     // 展示图片列表
                     // 创建图片元素
-
-
-                        html += '<div class="image-item">';
-                        html += '<img src="' + item.imgUrl + '?imageMogr2/thumbnail/400x" class="image-spacex-list" alt="' + item.id + '" onclick="showModal(this)">';
+                    html += '<div class="image-item row">';
+                        html += '<div class="image-item col-sm-7">';
+                            html += '<img src="' + item.imgUrl + '?imageMogr2/thumbnail/400x" class="image-spacex-list" alt="' + item.id + '" onclick="showModal(this)">';
+                        html += '</div>';
+                        html += '<div class="image-item col-s-4" style="display: flex; align-items: center;">';
                             html += '<div class="image-info">';
-                            html += '<span class="photo-time">拍摄时间: ' + formattedDate + '</span>';
-                            html += '<span class="view-count"><i class="fas fa-eye"></i> ' + viewCount + '</span><br>';
+                                html += '<span class="photo-time">拍摄时间: ' + formattedDate + ' | </span>';
+                                html += '<span class="view-count"><i class="fas fa-eye"></i> ' + viewCount + '</span><br>';
                             html += '</div>';
                         html += '</div>';
+                    html += '</div>';
                 }
                 document.getElementById("spacexFlow").innerHTML = html;
             }
@@ -170,7 +175,7 @@
                 // 创建图片信息元素
                 var imageInfo = document.createElement("div");
                 imageInfo.classList.add("image-open");
-                imageInfo.innerHTML = "<span class='photo-time'>拍摄时间: " + formattedDate + "</span>" +
+                imageInfo.innerHTML = "<span class='photo-time'>拍摄时间: " + formattedDate + "</span><hr>" +
                     "<span class='view-count'><i class='fas fa-eye'></i> " + item.viewCount + "</span>";
                 // 将图片元素添加到巨幕中
                 modal.appendChild(img);

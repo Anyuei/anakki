@@ -2,14 +2,17 @@ package com.anakki.data.service.impl;
 
 import com.anakki.data.bean.common.BaseContext;
 import com.anakki.data.bean.common.BasePageResult;
+import com.anakki.data.bean.common.enums.StatisticEnum;
 import com.anakki.data.bean.constant.CosBucketNameConst;
 import com.anakki.data.entity.AnRecord;
 import com.anakki.data.bean.constant.CosPathConst;
 import com.anakki.data.entity.request.ChangeRecordRequest;
+import com.anakki.data.entity.request.GetContentRequest;
 import com.anakki.data.entity.request.ListRecordRequest;
 import com.anakki.data.entity.request.UploadRecordRequest;
 import com.anakki.data.mapper.AnRecordMapper;
 import com.anakki.data.service.AnRecordService;
+import com.anakki.data.service.AnStatisticService;
 import com.anakki.data.utils.common.COSUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -17,6 +20,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qcloud.cos.auth.BasicSessionCredentials;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,6 +40,23 @@ import java.util.List;
 @Service
 public class AnRecordServiceImpl extends ServiceImpl<AnRecordMapper, AnRecord> implements AnRecordService {
 
+    @Autowired
+    private AnStatisticService anStatisticService;
+    @Override
+    public BasePageResult<AnRecord> flow(GetContentRequest getContentRequest) {
+        IPage<AnRecord> anRecordIPage = new Page<>(
+                getContentRequest.getCurrent(),
+                getContentRequest.getSize());
+        String type = getContentRequest.getImageType();
+
+        QueryWrapper<AnRecord> anRecordQueryWrapper = new QueryWrapper<>();
+        anRecordQueryWrapper.eq("type",type);
+        anRecordQueryWrapper.eq("status","COMMON");
+        IPage<AnRecord> page = page(anRecordIPage, anRecordQueryWrapper);
+        List<AnRecord> records = page.getRecords();
+        anStatisticService.increaseByName(type);
+        return new BasePageResult<>(records, page.getTotal());
+    }
 
     @Override
     public boolean removeById(Serializable id) {

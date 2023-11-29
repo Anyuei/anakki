@@ -39,16 +39,7 @@ public class AnRecordController {
     @ApiOperation(value = "获取图文")
     @GetMapping("/flow")
     public ResponseDTO<BasePageResult<AnRecord>> flow(GetContentRequest getContentRequest) {
-        IPage<AnRecord> anRecordIPage = new Page<>(
-                getContentRequest.getCurrent(),
-                getContentRequest.getSize());
-        String type = getContentRequest.getImageType();
-        QueryWrapper<AnRecord> anRecordQueryWrapper = new QueryWrapper<>();
-        anRecordQueryWrapper.eq("type",type);
-        anRecordQueryWrapper.eq("status","COMMON");
-        IPage<AnRecord> page = anRecordService.page(anRecordIPage, anRecordQueryWrapper);
-        List<AnRecord> records = page.getRecords();
-        return ResponseDTO.succData(new BasePageResult<>(records, page.getTotal()));
+        return ResponseDTO.succData(anRecordService.flow(getContentRequest));
     }
 
     @ApiOperation(value = "根据id获取图文")
