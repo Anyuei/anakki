@@ -3,7 +3,9 @@ package com.anakki.data.controller.base;
 import com.anakki.data.bean.common.ResponseDTO;
 import com.anakki.data.entity.request.SendMailRequest;
 import com.anakki.data.service.AnRecordService;
+import com.anakki.data.service.AnStatisticService;
 import com.anakki.data.service.AnSystemConfigService;
+import com.anakki.data.utils.IPUtils;
 import com.anakki.data.utils.common.EmailUtil;
 import com.ramostear.captcha.HappyCaptcha;
 import com.ramostear.captcha.support.CaptchaStyle;
@@ -34,6 +36,9 @@ public class SystemController {
 
     @Autowired
     private AnRecordService anRecordService;
+
+    @Autowired
+    private AnStatisticService anStatisticService;
     @ApiOperation(value = "发送邮件")
     @PostMapping("/send-mail")
     public ResponseDTO<Boolean> sendMail(@RequestBody SendMailRequest sendMailRequest) {
@@ -91,4 +96,12 @@ public class SystemController {
         return ResponseDTO.succData(numberConfigValue);
     }
 
+    @ApiOperation(value = "网页访问")
+    @GetMapping("/view")
+    public ResponseDTO<Boolean> view(String moduleType,HttpServletRequest request) {
+        String ipAddr = IPUtils.getIpAddr(request);
+        //统计模块访问数
+        anStatisticService.increaseByName(moduleType,ipAddr);
+        return ResponseDTO.succData(true);
+    }
 }

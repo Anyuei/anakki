@@ -11,6 +11,9 @@ public enum StatisticEnum {
     MAINPAGE_FLOW("主页"),
     COMMENT("评论区"),
     SPACEX("SPACEX主页"),
+
+    WXYY_PAGE("文心一言主页"),
+
     ABOUT_ME("关于我");
 
     public String getDescription() {

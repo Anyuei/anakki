@@ -56,4 +56,9 @@ public class AnUser extends BaseEntity  implements Serializable {
     @ApiModelProperty("登录天数")
     @TableField("login_days")
     private Integer loginDays;
+
+    @ApiModelProperty("文心一言token")
+    @TableField("wxyy_token")
+    private String wxyyToken;
+
 }

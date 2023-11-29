@@ -9,12 +9,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
  public class HttpUtil {
-     public static void main(String[] args) throws IOException {
-         HashMap<String, String> objectObjectHashMap = new HashMap<>();
-         objectObjectHashMap.put("ip","61.149.7.157");
-         String s = sendGetRequest("https://qifu-api.baidubce.com/ip/geo/v1/district", objectObjectHashMap);
-         System.out.println(s);
-     }
+
     public static String sendGetRequest(String url, HashMap<String, String> params) throws IOException {
         HttpURLConnection connection = null;
         BufferedReader reader = null;
@@ -49,7 +44,7 @@ import java.util.Map;
         }
          return response.toString();
     }
-     public static String sendPostRequest(String url, HashMap<String, String> requestBody) throws IOException {
+     public static String sendPostRequest(String url, HashMap<String, Object> requestBody) throws IOException {
         HttpURLConnection connection = null;
         BufferedReader reader = null;
         StringBuilder response = new StringBuilder();
@@ -60,7 +55,7 @@ import java.util.Map;
             connection.setDoOutput(true);
              StringBuilder bodyBuilder = new StringBuilder();
             if (requestBody != null && !requestBody.isEmpty()) {
-                for (Map.Entry<String, String> entry : requestBody.entrySet()) {
+                for (Map.Entry<String, Object> entry : requestBody.entrySet()) {
                     bodyBuilder.append(entry.getKey())
                             .append("=")
                             .append(entry.getValue())

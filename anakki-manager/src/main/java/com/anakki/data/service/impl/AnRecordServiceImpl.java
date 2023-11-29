@@ -56,6 +56,7 @@ public class AnRecordServiceImpl extends ServiceImpl<AnRecordMapper, AnRecord> i
         QueryWrapper<AnRecord> anRecordQueryWrapper = new QueryWrapper<>();
         anRecordQueryWrapper.eq("type",type);
         anRecordQueryWrapper.eq("status","COMMON");
+        anRecordQueryWrapper.orderByDesc("photo_time");
         IPage<AnRecord> page = page(anRecordIPage, anRecordQueryWrapper);
         List<AnRecord> records = page.getRecords();
         //统计模块访问数

@@ -15,6 +15,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
@@ -129,8 +130,8 @@ public class JwtUtil {
             DecodedJWT decodedJwt = jwtVerifier.verify(noPrefixToken);
             return JSONObject.parseObject(decodedJwt.getSubject(), UserToken.class);
         } catch (Exception e){
-            log.info("token过期："+e.getMessage());
-            throw new RuntimeException("token过期");
+            log.info("token过期："+ Arrays.toString(e.getStackTrace()));
+            throw new RuntimeException("请登录");
         }
     }
 
