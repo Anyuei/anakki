@@ -40,4 +40,11 @@ public interface AnUserService extends IService<AnUser> {
     UserDetailResponse detail();
 
     void uploadAvatar(MultipartFile file) throws IOException;
+
+    Boolean sendSms(String telephone);
+
+
+    Boolean verifyCode(String telephone, String code);
+
+    Boolean telephoneChange(String telephone, String code);
 }

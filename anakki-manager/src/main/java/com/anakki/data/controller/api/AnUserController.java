@@ -2,9 +2,7 @@ package com.anakki.data.controller.api;
 
 import com.anakki.data.bean.common.BaseContext;
 import com.anakki.data.bean.common.ResponseDTO;
-import com.anakki.data.entity.request.UserDetailRequest;
-import com.anakki.data.entity.request.UserLoginRequest;
-import com.anakki.data.entity.request.UserRegisterRequest;
+import com.anakki.data.entity.request.*;
 import com.anakki.data.entity.response.UserDetailResponse;
 import com.anakki.data.service.AnUserService;
 import com.anakki.data.utils.common.JwtUtil;
@@ -46,5 +44,17 @@ public class AnUserController {
     public ResponseDTO<Boolean> uploadAvatar(MultipartFile file) throws IOException {
         anUserService.uploadAvatar(file);
         return ResponseDTO.succData(true);
+    }
+
+    @ApiOperation(value = "手机号验证")
+    @PostMapping("/sendSms")
+    public ResponseDTO<String> sendSms(@RequestBody TelephoneVerifyRequest telephoneVerifyRequest){
+        return ResponseDTO.succData(anUserService.sendSms(telephoneVerifyRequest.getTelephone())?"发送成功":"发送失败");
+    }
+    @ApiOperation(value = "手机号验证并设置")
+    @PostMapping("/telephone-change")
+    public ResponseDTO<String> telephoneChange(@RequestBody CodeVerifyRequest codeVerifyRequest){
+        anUserService.telephoneChange(codeVerifyRequest.getTelephone(),codeVerifyRequest.getCode());
+        return ResponseDTO.succData("验证成功");
     }
 }

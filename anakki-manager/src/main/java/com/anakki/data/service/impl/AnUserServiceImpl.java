@@ -13,10 +13,7 @@ import com.anakki.data.entity.response.UserDetailResponse;
 import com.anakki.data.mapper.AnUserMapper;
 import com.anakki.data.service.AnSystemConfigService;
 import com.anakki.data.service.AnUserService;
-import com.anakki.data.utils.common.COSUtil;
-import com.anakki.data.utils.common.JwtUtil;
-import com.anakki.data.utils.common.RedisUtil;
-import com.anakki.data.utils.common.TimeUtil;
+import com.anakki.data.utils.common.*;
 import com.anakki.data.utils.dealUtils.MD5SaltUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -31,6 +28,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -168,5 +166,43 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
         );
         byNickname.setAvatar(url);
         updateById(byNickname);
+    }
+
+    @Override
+    public Boolean sendSms(String telephone) {
+        String currentNickname = BaseContext.getCurrentNickname();
+        Random random = new Random();
+        // 生成6位随机数字
+        String randomNumber = random.nextInt(900000) + 100000+"";
+        AnUser user = getByNickname(currentNickname);
+        boolean set = RedisUtil.StringOps.setIfAbsent("USER_TELEPHONE_VERIFY_" + user.getId(), randomNumber+"##"+telephone, 2L, TimeUnit.MINUTES);
+        if (!set){
+            throw new RuntimeException("请稍后再试");
+        }
+        return SmsTencentUtil.sendSms(telephone, randomNumber);
+    }
+
+    @Override
+    public Boolean verifyCode(String telephone, String code) {
+        String currentNickname = BaseContext.getCurrentNickname();
+        AnUser user = getByNickname(currentNickname);
+        String realCode = RedisUtil.StringOps.get("USER_TELEPHONE_VERIFY_" + user.getId());
+        if (realCode.split("##")[0].equals(code)&&realCode.split("##")[1].equals(telephone)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean telephoneChange(String telephone, String code) {
+        String currentNickname = BaseContext.getCurrentNickname();
+        AnUser user = getByNickname(currentNickname);
+        if (verifyCode(telephone,code)){
+            user.setTelephone(telephone);
+            updateById(user);
+            return true;
+        }
+        return null;
     }
 }

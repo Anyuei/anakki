@@ -1,4 +1,4 @@
-package com.anakki.data.entity.request;
+package com.anakki.data.entity.response;
 
 import com.anakki.data.entity.common.BaseEntity;
 import com.baomidou.mybatisplus.annotation.TableField;

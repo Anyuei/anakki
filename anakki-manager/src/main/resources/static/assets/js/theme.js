@@ -299,6 +299,7 @@ function loadPersonDetail() {
                         <a class="dropdown-item">经验值:${exp}</a>
                         <a class="dropdown-item">累计登录${loginDays}天</a>
                         <a class="dropdown-item">${state}</a>
+                        <a class="dropdown-item" href="/pages/telephone-verify.html">设置手机号</a>
                         <a class="dropdown-item" href="/pages/sign-in.html" onclick="userLogout()">登出</a>
                     </div>`;
                     userAvatar.innerHTML = `<img src="${avatar}" alt="" style="width: 3rem; border-radius: 50%;" onclick="showAvatarModal()">`;

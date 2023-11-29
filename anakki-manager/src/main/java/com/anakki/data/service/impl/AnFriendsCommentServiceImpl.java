@@ -1,11 +1,10 @@
 package com.anakki.data.service.impl;
 
 import com.anakki.data.bean.common.BasePageResult;
-import com.anakki.data.bean.common.enums.CommentStateEnum;
 import com.anakki.data.entity.AnFriendsComment;
-import com.anakki.data.entity.AnRecord;
 import com.anakki.data.entity.AnUser;
 import com.anakki.data.entity.request.*;
+import com.anakki.data.entity.response.AnFriendsCommentResponse;
 import com.anakki.data.mapper.AnFriendsCommentMapper;
 import com.anakki.data.service.AnFriendsCommentService;
 import com.anakki.data.service.AnUserService;

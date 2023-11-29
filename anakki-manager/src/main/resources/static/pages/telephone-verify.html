@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description"
+          content="时光胶囊,Anakki的个人网站,摄影,博客,技术分享。                             ">
+    <meta name="author" content="Webpixels">
+    <title>Anakki-World</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,800|Roboto:400,500,700" rel="stylesheet">
+    <!-- Theme CSS -->
+    <link type="text/css" href="../assets/css/theme.css" rel="stylesheet">
+    <!-- Demo CSS - No need to use these in your project -->
+    <link type="text/css" href="../assets/css/demo.css" rel="stylesheet">
+</head>
+<style>
+    body {
+        color: #516880;
+        background-color: #052918c9;
+    }
+    .btn {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+    .btn-outline-secondary {
+        color: #fff;
+    }
+</style>
+<body>
+<!--通用顶部导航-->
+<div id="header"></div>
+
+<div class="container" style="margin-top: 8rem; margin-bottom: 25rem;">
+    <h1 class="text-center mb-4">手机号验证</h1>
+    <form style="max-width: 400px; margin: 0 auto;">
+        <div class="input-group mb-3">
+            <input id="phone" name="telephone" type="text" class="form-control" placeholder="填写手机号" aria-label="填写手机号" aria-describedby="button-addon2">
+            <button onclick="sendVerificationCode()" class="btn btn-outline-secondary" type="button">发送验证码</button>
+        </div>
+        <div class="input-group mb-3">
+            <input id="verificationCode" name="code" type="text" class="form-control" placeholder="填写验证码" aria-label="填写验证码" aria-describedby="button-addon2">
+            <button onclick="changeTelephone()" class="btn btn-outline-secondary" type="button">提交</button>
+        </div>
+    </form>
+</div>
+
+<!-- 页面底部 -->
+<div id="footer"></div>
+<!-- Core -->
+<script src="../assets/vendor/jquery/jquery.min.js"></script>
+<script src="../assets/vendor/popper/popper.min.js"></script>
+<script src="../assets/js/bootstrap/bootstrap.min.js"></script>
+<!-- FontAwesome 5 -->
+<script src="../assets/vendor/fontawesome/js/fontawesome-all.min.js" defer></script>
+<!-- Page plugins -->
+<script src="../assets/vendor/bootstrap-select/js/bootstrap-select.min.js"></script>
+<script src="../assets/vendor/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>
+<script src="../assets/vendor/input-mask/input-mask.min.js"></script>
+<script src="../assets/vendor/nouislider/js/nouislider.min.js"></script>
+<script src="../assets/vendor/textarea-autosize/textarea-autosize.min.js"></script>
+<!-- Theme JS -->
+<script src="../assets/js/theme.js"></script>
+<script>
+
+    window.onload = function () {
+        $('#header').load("../pages/header.html", loadPersonDetail);
+        $('#footer').load("../pages/footer.html", insertCreateTime);
+
+
+    };
+    function changeTelephone() {
+        const phone = document.getElementById('phone').value;
+        const code = document.getElementById('verificationCode').value;
+
+        const data = {
+            telephone: phone,
+            code: code
+        };
+        // 发送验证码的逻辑
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/api/anakki/user/telephone-change", true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.setRequestHeader('authorization', localStorage.getItem('user-token'));
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    const response = JSON.parse(xhr.responseText);
+                    alert(response.data);
+                } else {
+                    var errorResponse = JSON.parse(xhr.responseText);
+                    alert('错误: ' + errorResponse.error);
+                }
+            }
+        };
+        xhr.send(JSON.stringify(data));
+    }
+    function sendVerificationCode() {
+        const phone = document.getElementById('phone').value;
+        const data = {
+            telephone: phone
+        };
+        // 发送验证码的逻辑
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/api/anakki/user/sendSms", true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.setRequestHeader('authorization', localStorage.getItem('user-token'));
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    const response = JSON.parse(xhr.responseText);
+                    alert(response.data);
+                } else {
+                    var errorResponse = JSON.parse(xhr.responseText);
+                    alert('错误: ' + errorResponse.error);
+                }
+            }
+        };
+        xhr.send(JSON.stringify(data));
+    }
+</script>
+</body>
+</html>

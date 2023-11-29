@@ -3,9 +3,8 @@ package com.anakki.data.service;
 import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.entity.AnFriendsComment;
 import com.anakki.data.entity.request.*;
+import com.anakki.data.entity.response.AnFriendsCommentResponse;
 import com.baomidou.mybatisplus.extension.service.IService;
-
-import java.util.List;
 
 /**
  * <p>

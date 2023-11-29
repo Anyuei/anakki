@@ -61,4 +61,8 @@ public class AnUser extends BaseEntity  implements Serializable {
     @TableField("wxyy_token")
     private String wxyyToken;
 
+    @ApiModelProperty("电话")
+    @TableField("telephone")
+    private String telephone;
+
 }
