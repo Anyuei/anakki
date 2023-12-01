@@ -53,7 +53,7 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
         String username = userLoginRequest.getUsername();
         String password = userLoginRequest.getPassword();
         AnUser user = getByNickname(username);
-        if (!MD5SaltUtil.validData(password,user.getPassword())) {
+        if (null==user||!MD5SaltUtil.validData(password,user.getPassword())) {
             throw new RuntimeException("用户不存在或密码错误");
         }
         if (!RedisUtil.KeyOps.hasKey(ExpKeyConst.EXP_LOGIN+"#anakki#"+user.getId())) {

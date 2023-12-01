@@ -557,8 +557,8 @@ pre code {
 .row {
     display: flex;
     flex-wrap: wrap;
-    margin-right: -15px;
-    margin-left: 0.2rem;
+    margin-right: 0px;
+    margin-left: 0rem;
     margin-top: 0.5rem;
 }
 

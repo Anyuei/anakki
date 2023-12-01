@@ -47,7 +47,7 @@
     <section class="spotlight parallax bg-cover bg-size--cover" data-spotlight="fullscreen"
              style="background-image: url('https://securex-1258150206.cos.ap-beijing.myqcloud.com/backend/DSC07382_1.jpg');
              align-items: center;
-             display: flex;">
+             display: flex; min-height: 50rem;">
         <!--        <span class="mask bg-primary alpha-6"></span>-->
         <div class="container-fluid d-flex align-items-center no-padding">
             <div class="col">
@@ -89,7 +89,7 @@
                                                class="form-control"
                                                placeholder="请输入验证码"
                                                maxlength="6" name="verify" required>
-                                        <img class="captcha-img" src="/base/system/captcha" alt="验证码" style="width: 6rem;">
+                                        <img class="captcha-img" src="/base/system/captcha" alt="验证码" style="width: 6rem; cursor: pointer;" onclick="refreshCaptcha()">
                                     </div>
                                     <div class="text-right mt-4"><a href="#" class="text-white"
                                                                     onclick="forgot()">忘记密码?</a></div>

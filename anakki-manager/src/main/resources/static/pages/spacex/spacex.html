@@ -13,17 +13,20 @@
     <link type="text/css" href="../../assets/css/demo.css" rel="stylesheet">
 </head>
 <style>
-    /*#spacexFlow {*/
-    /*    flex-grow: 1; !* Allow the images to grow and occupy available space *!*/
-    /*    display: flex;*/
-    /*    flex-wrap: wrap; !* Wrap the images to multiple lines if needed *!*/
-    /*    justify-content: center;*/
-    /*    align-items: center;*/
-    /*}*/
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-right: 0px;
+        margin-left: 0px;
+        margin-top: 0.5rem;
+    }
 
     .image-item {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
         text-align: center;
-        margin: 10px;
     }
 
     .image-spacex-list {
@@ -83,7 +86,7 @@
 <main class="main">
     <section style="padding-top: 4rem;">
 
-        <div class="container-fluid text-center" id="spacexFlow">
+        <div class="container-fluid text-center justify-content-center" id="spacexFlow">
         </div>
 
     </section>
@@ -132,13 +135,13 @@
                     }
                     // 展示图片列表
                     // 创建图片元素
-                    html += '<div class="image-item row">';
+                    html += '<div class="row">';
                         html += '<div class="image-item col-sm-7">';
-                            html += '<img src="' + item.imgUrl + '?imageMogr2/thumbnail/400x" class="image-spacex-list" alt="' + item.id + '" onclick="showModal(this)">';
+                            html += '<img src="' + item.imgUrl + '?imageMogr2/thumbnail/400x" class="image-spacex-list img-fluid" alt="' + item.id + '" onclick="showModal(this)">';
                         html += '</div>';
-                        html += '<div class="image-item col-s-4" style="display: flex; align-items: center;">';
+                        html += '<div class="image-item col-sm-4">';
                             html += '<div class="image-info">';
-                                html += '<span class="photo-time">拍摄时间: ' + formattedDate + ' | </span>';
+                                html += '<span class="photo-time">拍摄时间: ' + formattedDate + '  |  </span>';
                                 html += '<span class="view-count"><i class="fas fa-eye"></i> ' + viewCount + '</span><br>';
                                 html += '<span>' + "点击图片查看原图"+ '</span><br>';
                             html += '</div>';

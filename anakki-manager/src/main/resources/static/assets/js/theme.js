@@ -400,4 +400,9 @@ function changeLoginPage(){
     }
 }
 
+function refreshCaptcha() {
+    const captchaImg = document.querySelector('.captcha-img');
+    captchaImg.src = "/base/system/captcha?" + new Date().getTime();
+}
+
 
