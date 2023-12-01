@@ -51,16 +51,27 @@
         opacity: .7; /* 支持CSS3的浏览器（FF 1.5也支持）*/
         font-weight: bold;
     }
-    body{
+
+    body {
         background-color: #000000d4;
     }
+
     .figure-caption {
         font-size: 60%;
         color: #6c757d;
     }
+
     small, .small {
         font-size: 60%;
         font-weight: 400;
+    }
+
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-right: 0px;
+        margin-left: 0px;
+        margin-top: 0.5rem;
     }
 </style>
 <body>
@@ -70,7 +81,7 @@
     <section class="spotlight parallax bg-cover bg-size--cover" data-spotlight="fullscreen"
              style="background-image: url('https://securex-1258150206.cos.ap-beijing.myqcloud.com/backend/DSC06473.jpg')">
         <div class="spotlight-holder pt-lg-xl py-lg-xl">
-            <div class="container d-flex align-items-top no-padding">
+            <div class="container-fluid d-flex align-items-top no-padding">
                 <div class="col">
                     <div class="row cols-xs-space align-items-center text-center text-md-left justify-content-center">
                         <div class="col-7">
@@ -96,22 +107,20 @@
     </section>
     <hr>
     <section class="slice">
-        <div class="container-lg">
-            <div class="row justify-content-center">
-                <div class="col-lg-10">
-                    <div class="row align-items-center mb-5">
-                        <div class="col-6">
-                            <h3 class="heading h3 mb-0" style="color: #226a3e;">和光同尘，与时舒卷</h3>
-                        </div>
-                        <div class="col-6  text-right">
-                            <h3 class="heading h3 mb-0">摄影集</h3>
-                        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="row align-items-center mb-5">
+                    <div class="col-6">
+                        <h3 class="heading h3 mb-0" style="color: #226a3e;">和光同尘，与时舒卷</h3>
                     </div>
-                    <div class="row typeface-palette cols-xs-space cols-sm-space cols-md-space" id="mainFlow">
-                        <!--主要图文-->
-                        <div class="spinner-border m-5" role="status">
-                            <span class="visually-hidden"></span>
-                        </div>
+                    <div class="col-6  text-right">
+                        <h3 class="heading h3 mb-0">摄影集</h3>
+                    </div>
+                </div>
+                <div class="row typeface-palette cols-xs-space cols-sm-space cols-md-space" id="mainFlow">
+                    <!--主要图文-->
+                    <div class="spinner-border m-5" role="status">
+                        <span class="visually-hidden"></span>
                     </div>
                 </div>
             </div>
@@ -145,39 +154,39 @@
         mainPageImageFlow.open("GET", "/base/anakki/record/flow?imageType=MAINPAGE_FLOW", true);
         mainPageImageFlow.onreadystatechange = function () {
             if (mainPageImageFlow.readyState === 4 && mainPageImageFlow.status === 200) {
-                var html = "";
-                var response = JSON.parse(mainPageImageFlow.responseText);
-                var itemList = response.data.data;
+                let html = "";
+                const response = JSON.parse(mainPageImageFlow.responseText);
+                const itemList = response.data.data;
                 for (let i = 0; i < itemList.length; i++) {
-                    var item = itemList[i];
+                    const item = itemList[i];
 
-                    var dateTime = new Date(item.photoTime);
-                    var year = dateTime.getFullYear();
-                    var month = dateTime.getMonth() + 1; // Months are zero-based, so we add 1
-                    var day = dateTime.getDate();
-                    var formattedDate = year + "-" + month + "-" + day;
+                    const dateTime = new Date(item.photoTime);
+                    const year = dateTime.getFullYear();
+                    const month = dateTime.getMonth() + 1; // Months are zero-based, so we add 1
+                    const day = dateTime.getDate();
+                    const formattedDate = year + "-" + month + "-" + day;
 
-                    var fileSize=item.fileSize;
-                    var fileSizeDisplay = fileSize >= 1024 ? (fileSize / 1024).toFixed(2) + " MB" : fileSize + " KB";
+                    const fileSize = item.fileSize;
+                    const fileSizeDisplay = fileSize >= 1024 ? (fileSize / 1024).toFixed(2) + " MB" : fileSize + " KB";
                     html +=
                         "<div class='col-lg-4'>" +
-                            "<figure class='figure'>" +
-                                "<img src='" + item.imgUrl + "' class=\"figure-img img-fluid rounded\" alt=\"" + item.id + "\" onclick=\"showModal(this)\">" +
-                                "<figcaption class='figure-caption'>" +
-                                    "<strong>" +
-                                        item.title + " - " + item.location +
-                                       "<span style='float:right'><i class='fas fa-eye'></i> " + item.viewCount + "</span>" +
-                                   "</strong> " +
-                                "</figcaption>" +
-                                " <figcaption class='figure-caption'>" +
-                                    formattedDate +
-                                " </figcaption>" +
-                                "<p class=\"card-text\">" +
-                                "<small class=\"text-muted\">图片尺寸: " +
-                                    item.imageSize + " | 大小: "+fileSizeDisplay+
-                                "</small>" +
-                                "</p>\n" +
-                            " </figure>" +
+                        "<figure class='figure'>" +
+                        "<img src='" + item.imgUrl + "' class=\"figure-img img-fluid rounded\" alt=\"" + item.id + "\" onclick=\"showModal(this)\">" +
+                        "<figcaption class='figure-caption'>" +
+                        "<strong>" +
+                        item.title + " - " + item.location +
+                        "<span style='float:right'><i class='fas fa-eye'></i> " + item.viewCount + "</span>" +
+                        "</strong> " +
+                        "</figcaption>" +
+                        " <figcaption class='figure-caption'>" +
+                        formattedDate +
+                        " </figcaption>" +
+                        "<p class=\"card-text\">" +
+                        "<small class=\"text-muted\">图片尺寸: " +
+                        item.imageSize + " | 大小: " + fileSizeDisplay +
+                        "</small>" +
+                        "</p>\n" +
+                        " </figure>" +
                         " </div>";
                 }
                 document.getElementById("mainFlow").innerHTML = html;
@@ -200,28 +209,28 @@
                 var month = dateTime.getMonth() + 1; // Months are zero-based, so we add 1
                 var day = dateTime.getDate();
                 var formattedDate = year + "-" + month + "-" + day;
-                var fileSize=item.fileSize;
+                var fileSize = item.fileSize;
                 var fileSizeDisplay = fileSize >= 1024 ? (fileSize / 1024).toFixed(2) + " MB" : fileSize + " KB";
                 var html =
                     "<div class=\"\">\n" +
-                        "<img src=\"" + item.imgUrl + "\" class=\"card-img-top\" alt=\"...\">\n" +
+                    "<img src=\"" + item.imgUrl + "\" class=\"card-img-top\" alt=\"...\">\n" +
                     "</div>" +
                     "<div class=\"card-body windows-bottom\">\n" +
-                        "<h5 class=\"card-title\">" +
-                            item.title + "<i class='fas fa-eye'></i> | " + item.viewCount +
-                        "</h5>\n" +
-                        "<p class=\"card-text\">" +
-                            item.description +
-                        "<p class=\"card-text\">" +
-                            "<small class=\"text-muted\">" +
-                                formattedDate +
-                            "</small>" +
-                        "</p>\n" +
-                        "<p class=\"card-text\">" +
-                            "<small class=\"text-muted\">图片尺寸: " +
-                                item.imageSize + "| 大小: "+fileSizeDisplay+
-                            "</small>" +
-                        "</p>\n" +
+                    "<h5 class=\"card-title\">" +
+                    item.title + "<i class='fas fa-eye'></i> | " + item.viewCount +
+                    "</h5>\n" +
+                    "<p class=\"card-text\">" +
+                    item.description +
+                    "<p class=\"card-text\">" +
+                    "<small class=\"text-muted\">" +
+                    formattedDate +
+                    "</small>" +
+                    "</p>\n" +
+                    "<p class=\"card-text\">" +
+                    "<small class=\"text-muted\">图片尺寸: " +
+                    item.imageSize + "| 大小: " + fileSizeDisplay +
+                    "</small>" +
+                    "</p>\n" +
                     "</div>\n"
                 ;
                 // Create a modal element

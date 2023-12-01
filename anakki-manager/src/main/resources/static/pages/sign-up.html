@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description"
           content="时光胶囊,Anakki的个人网站,摄影,博客,技术分享。                             ">
-    <meta name="author" content="Webpixels">
+    <meta name="author" content="Anakki">
     <title>Anakki-World</title>
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,800|Roboto:400,500,700" rel="stylesheet">
@@ -21,14 +21,16 @@
         background-color: #3b694d !important;
 
     }
-
+    a {
+        color: #515151;
+    }
     .form-primary .form-control {
-        background-color: #495f77;
-        border: .0625rem solid #4d555e;
+        background-color: #48484888;
+        border: .0525rem;
     }
 
     .form-primary .form-control:focus {
-        background-color: #5772d7;
+        background-color: #484848C3;
         border: .0625rem solid #4d555e;
     }
 
@@ -45,20 +47,28 @@
 <div id="header"></div>
 <main class="main">
     <section class="spotlight parallax bg-cover bg-size--cover" data-spotlight="fullscreen"
-             style="background-image: url('https://securex-1258150206.cos.ap-beijing.myqcloud.com/backend/DSC07382_1.jpg')">
+             style="
+             background-image: url('https://securex-1258150206.cos.ap-beijing.myqcloud.com/backend/DSC07382_1.jpg');
+             align-items: center;
+             display: flex;"
+    >
         <span class="mask bg-primary alpha-5"></span>
         <div class="container d-flex align-items-center no-padding">
             <div class="col">
                 <div class="row justify-content-center">
-                    <div class="col-lg-6">
-                        <div class="card bg-primary text-white" style="background-color: #3b694de5 !important">
+                    <div style="width: 20rem;">
+                        <div>
                             <div class="card-body">
                                 <span style="margin-bottom: 2rem">
-                                    <i class="fas fa-arrow-left"></i><a href="sign-in.html">有账号去登录</a>
+                                    <i class="fas fa-arrow-left"></i>
+                                    <a href="sign-in.html">
+                                        <span style="font-weight: bold;">
+                                        登录
+                                        </span>
+                                    </a>
                                 </span>
 
                                 <span class="clearfix"></span>
-                                <img src="../assets/images/brand/icon.png" style="width: 50px;">
                                 <h4 class="heading h3 text-white pt-3 pb-5">初次见面
                                     <br>请多关照</h4>
 
@@ -77,10 +87,10 @@
                                                class="form-control"
                                                placeholder="请输入验证码"
                                                maxlength="6" name="verify" required>
-                                        <img class="captcha-img" src="/base/system/captcha" alt="验证码">
+                                        <img class="captcha-img" src="/base/system/captcha" alt="验证码" style="width: 6rem;">
                                     </div>
                                     <p id="register-notice" style="color: red"></p>
-                                    <button type="submit" class="btn btn-block btn-lg bg-white mt-4">注册</button>
+                                    <button type="submit" class="btn btn-block btn-lg bg-white mt-4" style="padding: 0.3rem 1rem;">注册</button>
                                 </form>
                             </div>
                         </div>

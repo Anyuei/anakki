@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="时光胶囊,Anakki的个人网站,摄影,博客,技术分享。">
-    <meta name="author" content="Webpixels">
+    <meta name="author" content="Anakki">
     <title>Anakki-World</title>
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,800|Roboto:400,500,700" rel="stylesheet">
@@ -74,6 +74,9 @@
                         <div class="input-group-append">
                             <button id="send-button" class="btn btn-primary" onclick="sendMessage()">发送</button>
                         </div>
+                        <div class="input-group-append">
+                            <button id="clear-button" class="btn btn-primary" onclick="clearMessage()">清空会话</button>
+                        </div>
                     </div>
                 </div>
 
@@ -141,6 +144,31 @@
             }
             sendButton.disabled = false; // 启用发送按钮
             sendButton.innerHTML = "发送"; // 将按钮的文字恢复为"发送"
+        };
+        xhr.setRequestHeader('authorization', localStorage.getItem('user-token'));
+        xhr.send();
+    }
+
+    function clearMessage() {
+        const clearButton = document.getElementById("clear-button");
+        clearButton.disabled = true; // 禁用发送按钮
+        clearButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; // 将按钮的文字设置为加载符号
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/api/anakki/wxxy/message-clear", true);
+        xhr.onreadystatechange = function () {
+            const response = JSON.parse(xhr.responseText);
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                if (response.code === 200) {
+                    const response = JSON.parse(xhr.responseText);
+                    const messages = response.data;
+                    const messagesContainer = document.getElementById("messages");
+                    messagesContainer.innerHTML = ""; // 清空之前的聊天内容
+                } else {
+                    alert(response.data);
+                }
+            }
+            clearButton.disabled = false; // 启用发送按钮
+            clearButton.innerHTML = "清空"; // 将按钮的文字恢复为"发送"
         };
         xhr.setRequestHeader('authorization', localStorage.getItem('user-token'));
         xhr.send();

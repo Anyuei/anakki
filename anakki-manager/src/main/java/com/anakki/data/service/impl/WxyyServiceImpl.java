@@ -50,4 +50,9 @@ public class WxyyServiceImpl{
         }
 
     }
+
+    public void messageClear(String currentNickname) {
+        AnUser user = anUserService.getByNickname(currentNickname);
+        WXYYUtil.userWXYYMessageMap.remove(user.getId().toString());
+    }
 }

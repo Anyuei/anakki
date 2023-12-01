@@ -47,4 +47,12 @@ public class AnWxxyController {
         List<WXYYMessage> reMessages = wxyyServicel.message(currentNickname, message);
         return ResponseDTO.succData(reMessages);
     }
+
+    @ApiOperation(value = "清空聊天内容")
+    @PostMapping("/message-clear")
+    public ResponseDTO<Boolean> messageClear() {
+        String currentNickname = BaseContext.getCurrentNickname();
+        wxyyServicel.messageClear(currentNickname);
+        return ResponseDTO.succData(true);
+    }
 }

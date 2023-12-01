@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description"
           content="时光胶囊,Anakki的个人网站,摄影,博客,技术分享。                             ">
-    <meta name="author" content="Webpixels">
+    <meta name="author" content="Anakki">
     <title>Anakki-World</title>
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,800|Roboto:400,500,700" rel="stylesheet">
@@ -21,15 +21,17 @@
     }
 
     .form-primary .form-control {
-        background-color: #495f77;
-        border: .0625rem solid #4d555e;
+        background-color: rgba(73, 95, 119, 0.65);
+        border: .0525rem;
     }
 
     .form-primary .form-control:focus {
-        background-color: #5772d7;
+        background-color: rgba(98, 203, 241, 0.8);
         border: .0625rem solid #4d555e;
     }
-
+    a {
+        color: #515151;
+    }
     .shorten-width {
         display: inline-block;
         width: 80px;
@@ -43,18 +45,24 @@
 <div id="header"></div>
 <main class="main">
     <section class="spotlight parallax bg-cover bg-size--cover" data-spotlight="fullscreen"
-             style="background-image: url('https://securex-1258150206.cos.ap-beijing.myqcloud.com/backend/DSC07382_1.jpg')">
+             style="background-image: url('https://securex-1258150206.cos.ap-beijing.myqcloud.com/backend/DSC07382_1.jpg');
+             align-items: center;
+             display: flex;">
         <!--        <span class="mask bg-primary alpha-6"></span>-->
-        <div class="container d-flex align-items-center no-padding">
+        <div class="container-fluid d-flex align-items-center no-padding">
             <div class="col">
                 <div class="row justify-content-center">
-                    <div class="col-lg-6">
-                        <div class="card bg-primary text-white" style="background-color: #3b694d47 !important">
+                    <div style="width: 20rem;">
+                        <div>
                             <div class="card-body">
-                                <i class="fas fa-arrow-left"></i><a href="sign-up.html">没有账号去注册</a>
+                                <i class="fas fa-arrow-left"></i>
+                                <a href="sign-up.html">
+                                    <span style="font-weight: bold;">
+                                        注册
+                                    </span>
+                                </a>
                                 <span class="clearfix"></span>
-                                <img src="../assets/images/brand/icon.png" style="width: 50px;">
-                                <h4 class="heading h3 text-white pt-3 pb-5">欢迎回家<br>登录您的账户</h4>
+                                <h4 class="heading h3 text-white pt-3 pb-5">欢迎回家</h4>
 
 
                                 <!--                                <&#45;&#45;验证码+提交验证&ndash;&gt;-->
@@ -81,12 +89,12 @@
                                                class="form-control"
                                                placeholder="请输入验证码"
                                                maxlength="6" name="verify" required>
-                                        <img class="captcha-img" src="/base/system/captcha" alt="验证码">
+                                        <img class="captcha-img" src="/base/system/captcha" alt="验证码" style="width: 6rem;">
                                     </div>
                                     <div class="text-right mt-4"><a href="#" class="text-white"
                                                                     onclick="forgot()">忘记密码?</a></div>
                                     <p id="login-notice" style="color: red"></p>
-                                    <button type="submit" class="btn btn-block btn-lg bg-white mt-4">登录</button>
+                                    <button type="submit" class="btn btn-block btn-lg bg-white mt-4" style="padding: 0.3rem 1rem;">登录</button>
                                 </form>
                             </div>
                         </div>
