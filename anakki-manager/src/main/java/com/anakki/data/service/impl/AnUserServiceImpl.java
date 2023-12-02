@@ -4,9 +4,11 @@ import com.anakki.data.bean.common.BaseContext;
 import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.bean.constant.CosBucketNameConst;
 import com.anakki.data.bean.constant.CosPathConst;
+import com.anakki.data.bean.constant.RedisKey;
 import com.anakki.data.entity.common.ExpKeyConst;
 import com.anakki.data.entity.AnUser;
 import com.anakki.data.bean.common.UserToken;
+import com.anakki.data.entity.common.SystemConfigConst;
 import com.anakki.data.entity.request.*;
 import com.anakki.data.entity.response.ListUserResponse;
 import com.anakki.data.entity.response.UserDetailResponse;
@@ -27,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -48,16 +51,17 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
 
     @Autowired
     private AnSystemConfigService anSystemConfigService;
+
     @Override
     public String login(UserLoginRequest userLoginRequest) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         String username = userLoginRequest.getUsername();
         String password = userLoginRequest.getPassword();
         AnUser user = getByNickname(username);
-        if (null==user||!MD5SaltUtil.validData(password,user.getPassword())) {
+        if (null == user || !MD5SaltUtil.validData(password, user.getPassword())) {
             throw new RuntimeException("用户不存在或密码错误");
         }
-        if (!RedisUtil.KeyOps.hasKey(ExpKeyConst.EXP_LOGIN+"#anakki#"+user.getId())) {
-            RedisUtil.StringOps.setIfAbsent(ExpKeyConst.EXP_LOGIN+"#anakki#"+user.getId(),"true", TimeUtil.getMinutesOfTodayLeft(), TimeUnit.MINUTES);
+        if (!RedisUtil.KeyOps.hasKey(ExpKeyConst.EXP_LOGIN + "#anakki#" + user.getId())) {
+            RedisUtil.StringOps.setIfAbsent(ExpKeyConst.EXP_LOGIN + "#anakki#" + user.getId(), "true", TimeUtil.getMinutesOfTodayLeft(), TimeUnit.MINUTES);
             user.setExp(user.getExp() + ExpKeyConst.EXP_CONFIG_MAP.get(ExpKeyConst.EXP_LOGIN));
             user.setLoginDays(user.getLoginDays() + 1);
         }
@@ -91,12 +95,14 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
         userQueryWrapper.eq("nickname", nickname);
         return 0 < anUserMapper.selectCount(userQueryWrapper);
     }
+
     @Override
     public AnUser getByNickname(String nickname) {
         QueryWrapper<AnUser> userQueryWrapper = new QueryWrapper<>();
         userQueryWrapper.eq("nickname", nickname);
         return anUserMapper.selectOne(userQueryWrapper);
     }
+
     @Override
     public BasePageResult<ListUserResponse> listUser(ListUserRequest listUserRequest) {
         String mail = listUserRequest.getMail();
@@ -143,7 +149,7 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
         String currentNickname = BaseContext.getCurrentNickname();
         AnUser byNickname = getByNickname(currentNickname);
         UserDetailResponse userDetailResponse = new UserDetailResponse();
-        BeanUtils.copyProperties(byNickname,userDetailResponse);
+        BeanUtils.copyProperties(byNickname, userDetailResponse);
         return userDetailResponse;
     }
 
@@ -151,7 +157,7 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
     public void uploadAvatar(MultipartFile file) throws IOException {
         long sizeInBytes = file.getSize();
         long sizeInMB = sizeInBytes / (1024 * 1024);
-        if (sizeInMB>2){
+        if (sizeInMB > 2) {
             throw new RuntimeException("头像不能大于2MB");
         }
         String currentNickname = BaseContext.getCurrentNickname();
@@ -160,7 +166,7 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
                 file,
                 COSUtil.region,
                 CosBucketNameConst.BUCKET_NAME_IMAGES, CosPathConst.BUCKET_NAME_AVATAR,
-                null,null,
+                null, null,
                 0.5F,
                 false
         );
@@ -173,13 +179,32 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
         String currentNickname = BaseContext.getCurrentNickname();
         Random random = new Random();
         // 生成6位随机数字
-        String randomNumber = random.nextInt(900000) + 100000+"";
+        String randomNumber = random.nextInt(900000) + 100000 + "";
         AnUser user = getByNickname(currentNickname);
-        boolean set = RedisUtil.StringOps.setIfAbsent("USER_TELEPHONE_VERIFY_" + user.getId(), randomNumber+"##"+telephone, 2L, TimeUnit.MINUTES);
-        if (!set){
+        boolean set = RedisUtil.StringOps.setIfAbsent("USER_TELEPHONE_VERIFY_" + user.getId(), randomNumber + "##" + telephone, 2L, TimeUnit.MINUTES);
+        if (!set) {
             throw new RuntimeException("请稍后再试");
         }
-        return SmsTencentUtil.sendSms(telephone, randomNumber);
+
+        String smsLimit = RedisUtil.StringOps.get(RedisKey.USER_SMS_SEND_LIMIT_FOR_EVERY_24HOURS_COUNT_KEY + user.getId());
+        if (null == smsLimit) {
+            RedisUtil.StringOps.setEx(RedisKey.USER_SMS_SEND_LIMIT_FOR_EVERY_24HOURS_COUNT_KEY + user.getId(), "1", 24, TimeUnit.HOURS);
+            smsLimit="1";
+        } else {
+            long userCount = Long.parseLong(smsLimit);
+            String systemLimit = SystemConfigConst.CONFIG_MAP.get(SystemConfigConst.USER_SMS_SEND_LIMIT_FOR_EVERY_24HOURS);
+            if (null == systemLimit) {
+                //系统未配置发送次数数，默认每天3次
+                systemLimit = "3";
+            }
+            long systemLimitLong = Long.parseLong(systemLimit);
+            if (systemLimitLong >= userCount) {
+                throw new RuntimeException("每天只能发送"+systemLimit+"条短信");
+            }
+        }
+        boolean state = SmsTencentUtil.sendSms(telephone, randomNumber);
+        RedisUtil.StringOps.set(RedisKey.USER_SMS_SEND_LIMIT_FOR_EVERY_24HOURS_COUNT_KEY + user.getId(), Long.parseLong(smsLimit)+1+"");
+        return state;
     }
 
     @Override
@@ -187,9 +212,9 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
         String currentNickname = BaseContext.getCurrentNickname();
         AnUser user = getByNickname(currentNickname);
         String realCode = RedisUtil.StringOps.get("USER_TELEPHONE_VERIFY_" + user.getId());
-        if (realCode.split("##")[0].equals(code)&&realCode.split("##")[1].equals(telephone)){
+        if (realCode.split("##")[0].equals(code) && realCode.split("##")[1].equals(telephone)) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -198,7 +223,11 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
     public Boolean telephoneChange(String telephone, String code) {
         String currentNickname = BaseContext.getCurrentNickname();
         AnUser user = getByNickname(currentNickname);
-        if (verifyCode(telephone,code)){
+        LocalDateTime telephoneLastUpdateTime = user.getTelephoneLastUpdateTime();
+        if (telephoneLastUpdateTime.plusDays(30).isAfter(LocalDateTime.now())) {
+            throw new RuntimeException("请稍后再试");
+        }
+        if (verifyCode(telephone, code)) {
             user.setTelephone(telephone);
             updateById(user);
             return true;

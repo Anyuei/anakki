@@ -272,9 +272,8 @@ function listMenu() {
 // Get the current page URL
 
 
-
 function loadPersonDetail() {
-    if(null!=localStorage.getItem('user-token')){
+    if (null != localStorage.getItem('user-token')) {
         const userDetail = document.getElementById("user-detail");
         const userAvatar = document.getElementById("user-avatar");
         $.ajax({
@@ -287,6 +286,7 @@ function loadPersonDetail() {
                 if (response.success) {
                     const user = response.data;
                     const avatar = user.avatar;
+
                     const nickname = user.nickname;
                     const exp = user.exp;
                     const loginDays = user.loginDays;
@@ -382,7 +382,7 @@ function insertCreateTime() {
     document.getElementById("time-container").innerHTML = "距离今天已经有 " + daysElapsed + " 天。";
 }
 
-function changeLoginPage(){
+function changeLoginPage() {
     const currentPage = window.location.href;
     // Get the auth link element
     const authLink = document.getElementById("auth-link");
@@ -405,4 +405,84 @@ function refreshCaptcha() {
     captchaImg.src = "/base/system/captcha?" + new Date().getTime();
 }
 
+/**
+ * 原作者   简书 : GaoSQ
+ * 链接     https://www.jianshu.com/p/84e995404b96
+ */
+var EventUtil = {
+    addHandler: function (element, type, handler) {
+        if (element.addEventListener)
+            element.addEventListener(type, handler, false);
+        else if (element.attachEvent)
+            element.attachEvent("on" + type, handler);
+        else
+            element["on" + type] = handler;
+    },
+    removeHandler: function (element, type, handler) {
+        if (element.removeEventListener)
+            element.removeEventListener(type, handler, false);
+        else if (element.detachEvent)
+            element.detachEvent("on" + type, handler);
+        else
+            element["on" + type] = handler;
+    },
+    /**
+     * 监听触摸的方向
+     * @param target            要绑定监听的目标元素
+     * @param isPreventDefault  是否屏蔽掉触摸滑动的默认行为（例如页面的上下滚动，缩放等）
+     * @param upCallback        向上滑动的监听回调（若不关心，可以不传，或传false）
+     * @param rightCallback     向右滑动的监听回调（若不关心，可以不传，或传false）
+     * @param downCallback      向下滑动的监听回调（若不关心，可以不传，或传false）
+     * @param leftCallback      向左滑动的监听回调（若不关心，可以不传，或传false）
+     */
+    listenTouchDirection: function (target, isPreventDefault, upCallback, rightCallback, downCallback, leftCallback) {
+        this.addHandler(target, "touchstart", handleTouchEvent);
+        this.addHandler(target, "touchend", handleTouchEvent);
+        this.addHandler(target, "touchmove", handleTouchEvent);
+        var startX;
+        var startY;
+
+        function handleTouchEvent(event) {
+            switch (event.type) {
+                case "touchstart":
+                    startX = event.touches[0].pageX;
+                    startY = event.touches[0].pageY;
+                    break;
+                case "touchend":
+                    var spanX = event.changedTouches[0].pageX - startX;
+                    var spanY = event.changedTouches[0].pageY - startY;
+                    //test
+                    // console.log("startX:", startX);//[old] X
+                    // console.log("startY:", startY);//[old] Y
+                    // console.log("event.touches[0].pageX:", event.changedTouches[0].pageX);//[now] X
+                    // console.log("event.touches[0].pageY:", event.changedTouches[0].pageY);//[now] Y
+                    // console.log("spanX:", spanX);//[span] X
+                    // console.log("spanY:", spanY);//[span] X
+                    if (Math.abs(spanX) > Math.abs(spanY)) {      //认定为水平方向滑动
+                        if (spanX > 0) {         //向右
+                            if (rightCallback)
+                                rightCallback();
+                        } else if (spanX < -0) { //向左
+                            if (leftCallback)
+                                leftCallback();
+                        }
+                    } else {                                    //认定为垂直方向滑动
+                        if (spanY > 0) {         //向下
+                            if (downCallback)
+                                downCallback();
+                        } else if (spanY < -0) {//向上
+                            if (upCallback)
+                                upCallback();
+                        }
+                    }
+                break;
+                case "touchmove":
+                    //阻止默认行为
+                    if(isPreventDefault)
+                        event.preventDefault();
+                    break;
+            }
+        }
+    }
+};
 

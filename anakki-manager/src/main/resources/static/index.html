@@ -18,6 +18,13 @@
     <!--    <link rel="stylesheet" href="https://cdn.staticfile.org/bootstrap-icons/1.10.0/bootstrap-icons.min.css">-->
 </head>
 <style>
+
+    .btn-primary {
+        color: #fff;
+        background: #07070700;
+        border-color: #fff0;
+        box-shadow: none;
+    }
     .modal {
         display: none;
         height: auto;
@@ -33,7 +40,7 @@
     .modal-image {
         display: block;
         max-width: 90%;
-        max-height: 90%;
+        max-height: 95vh;
         margin: auto;
         margin-top: 5%;
     }
@@ -46,7 +53,7 @@
         color: #fff;
         display: block;
         width: 100%;
-        text-align: right;
+        text-align: left;
         filter: alpha(opacity=70); /* IE */
         opacity: .7; /* 支持CSS3的浏览器（FF 1.5也支持）*/
         font-weight: bold;
@@ -72,6 +79,23 @@
         margin-right: 0px;
         margin-left: 0px;
         margin-top: 0.5rem;
+    }
+
+    #mainFlow{
+        -webkit-column-width:30rem; /*Safari and Chrome*/
+        -moz-column-width:30rem; /*Firefox*/
+        -o-column-width:30rem; /*Opera*/
+        -ms-column-width:30rem; /*IE*/
+        column-width:30rem;
+    }
+    #mainFlow > div{
+        width:30rem; /*宽度根据实际情况调节，应与上面一致*/
+        overflow:auto; /*防止内容溢出导致布局错位*/
+    }
+
+    p {
+        margin-top: 0;
+        margin-bottom: 0;
     }
 </style>
 <body>
@@ -108,7 +132,7 @@
     <hr>
     <section class="slice">
         <div class="row justify-content-center">
-            <div class="col-lg-10">
+            <div class="col-12">
                 <div class="row align-items-center mb-5">
                     <div class="col-6">
                         <h3 class="heading h3 mb-0" style="color: #226a3e;">和光同尘，与时舒卷</h3>
@@ -117,10 +141,15 @@
                         <h3 class="heading h3 mb-0">摄影集</h3>
                     </div>
                 </div>
-                <div class="row typeface-palette cols-xs-space cols-sm-space cols-md-space" id="mainFlow">
-                    <!--主要图文-->
-                    <div class="spinner-border m-5" role="status">
-                        <span class="visually-hidden"></span>
+                <div class="row  align-items-center mb-5" >
+                    <div class="col-12 col-offset-1" id="mainFlow">
+                        <!--主要图文-->
+                    </div>
+                </div>
+                <!--半透明的加载按钮-->
+                <div class="row justify-content-center">
+                    <div class="col-12 text-center">
+                        <button id="loadMoreButton" class="btn btn-primary btn-lg" style="opacity: 0.55;padding: .55rem 1rem;">加载更多</button>
                     </div>
                 </div>
             </div>
@@ -145,62 +174,87 @@
 <!-- Theme JS -->
 <script src="assets/js/theme.js"></script>
 <script>
-
+    let currentPage=1;
+    let size=10;
+    let loading = false;
+    let lastPage = false;
     window.onload = function () {
         $('#header').load("../pages/header.html", loadPersonDetail);
         $('#footer').load("../pages/footer.html", insertCreateTime);
-
+        localImgData(currentPage)
+    };
+    document.getElementById("loadMoreButton").addEventListener("click", function() {
+        localImgData(currentPage)
+    });
+    function localImgData(current){
+        loading=true;
         var mainPageImageFlow = new XMLHttpRequest();
-        mainPageImageFlow.open("GET", "/base/anakki/record/flow?imageType=MAINPAGE_FLOW", true);
+        mainPageImageFlow.open("GET", "/base/anakki/record/flow?imageType=MAINPAGE_FLOW&current="+current+"&size"+size, true);
         mainPageImageFlow.onreadystatechange = function () {
             if (mainPageImageFlow.readyState === 4 && mainPageImageFlow.status === 200) {
-                let html = "";
                 const response = JSON.parse(mainPageImageFlow.responseText);
                 const itemList = response.data.data;
-                for (let i = 0; i < itemList.length; i++) {
-                    const item = itemList[i];
+                if (!(Array.isArray(itemList) && itemList.length === 0)){
+                    currentPage=currentPage+1;
+                    for (let i = 0; i < itemList.length; i++) {
+                        const item = itemList[i];
 
-                    const dateTime = new Date(item.photoTime);
-                    const year = dateTime.getFullYear();
-                    const month = dateTime.getMonth() + 1; // Months are zero-based, so we add 1
-                    const day = dateTime.getDate();
-                    const formattedDate = year + "-" + month + "-" + day;
+                        const dateTime = new Date(item.photoTime);
+                        const year = dateTime.getFullYear();
+                        const month = dateTime.getMonth() + 1; // Months are zero-based, so we add 1
+                        const day = dateTime.getDate();
+                        const formattedDate = year + "-" + month + "-" + day;
 
-                    const fileSize = item.fileSize;
-                    const fileSizeDisplay = fileSize >= 1024 ? (fileSize / 1024).toFixed(2) + " MB" : fileSize + " KB";
-                    html +=
-                        "<div class='col-lg-4'>" +
-                        "<figure class='figure'>" +
-                        "<img src='" + item.imgUrl + "' class=\"figure-img img-fluid rounded\" alt=\"" + item.id + "\" onclick=\"showModal(this)\">" +
-                        "<figcaption class='figure-caption'>" +
-                        "<strong>" +
-                        item.title + " - " + item.location +
-                        "<span style='float:right'><i class='fas fa-eye'></i> " + item.viewCount + "</span>" +
-                        "</strong> " +
-                        "</figcaption>" +
-                        " <figcaption class='figure-caption'>" +
-                        formattedDate +
-                        " </figcaption>" +
-                        "<p class=\"card-text\">" +
-                        "<small class=\"text-muted\">图片尺寸: " +
-                        item.imageSize + " | 大小: " + fileSizeDisplay +
-                        "</small>" +
-                        "</p>\n" +
-                        " </figure>" +
-                        " </div>";
+                        const fileSize = item.fileSize;
+                        const fileSizeDisplay = fileSize >= 1024 ? (fileSize / 1024).toFixed(2) + " MB" : fileSize + " KB";
+                        var itemHtml = document.createElement("div")
+                        itemHtml.className = 'col-12';
+                        itemHtml.innerHTML="<figure class='figure'>" +
+                            "<img src='" + item.imgUrl + "' class=\"figure-img img-fluid rounded\" alt=\"" + item.id + "\" onclick=\"showModal(this)\">" +
+                            "<figcaption class='figure-caption'>" +
+                            "<strong>" +
+                            item.title + " - " + item.location +
+                            "<span style='float:right'><i class='fas fa-eye'></i> " + item.viewCount + "</span>" +
+                            "</strong> " +
+                            "</figcaption>" +
+                            " <figcaption class='figure-caption'>" +
+                            formattedDate +
+                            " </figcaption>" +
+                            "<p class=\"card-text\">" +
+                            "<small class=\"text-muted\">图片尺寸: " +
+                            item.imageSize + " | 大小: " + fileSizeDisplay +
+                            "</small>" +
+                            "</p>\n" +
+                            " </figure>";
+                        document.getElementById("mainFlow").appendChild(itemHtml);
+                    }
                 }
-                document.getElementById("mainFlow").innerHTML = html;
+                loading=false;
             }
         };
         mainPageImageFlow.send();
-    };
+    }
+    function up(){
+        const number = window.scrollY + window.innerHeight;
+        if (number >= document.body.scrollHeight-20&&!loading&&!lastPage) {
+            localImgData(currentPage);
+        }
+    }
+    function isMobileDevice() {
+        return /Mobi/.test(navigator.userAgent);
+    }
+
+    EventUtil.listenTouchDirection(document,true,up,false,false,false)
+
 
     function showModal(image) {
+
 
         var get = new XMLHttpRequest();
         get.open("GET", "/base/anakki/record/flowById?id=" + image.alt, true);
         get.onreadystatechange = function () {
             if (get.readyState === 4 && get.status === 200) {
+                let downLoadAlert;
                 var response = JSON.parse(get.responseText);
                 var item = response.data;
 
@@ -211,27 +265,46 @@
                 var formattedDate = year + "-" + month + "-" + day;
                 var fileSize = item.fileSize;
                 var fileSizeDisplay = fileSize >= 1024 ? (fileSize / 1024).toFixed(2) + " MB" : fileSize + " KB";
+
+                if (isMobileDevice()) {
+                    downLoadAlert= "长按图片保存原图(消耗"+fileSizeDisplay+")"
+                } else {
+                    downLoadAlert= "右键点击图片保存原图(消耗"+fileSizeDisplay+")"
+                }
+
                 var html =
-                    "<div class=\"\">\n" +
-                    "<img src=\"" + item.imgUrl + "\" class=\"card-img-top\" alt=\"...\">\n" +
+                    "<div style='width: 100%;background: #000000b2;height: 100%;'>\n" +
+                        "<img src=\"" + item.imgUrl + "\" class=\"modal-image\" alt=\"...\">\n" +
                     "</div>" +
                     "<div class=\"card-body windows-bottom\">\n" +
-                    "<h5 class=\"card-title\">" +
-                    item.title + "<i class='fas fa-eye'></i> | " + item.viewCount +
-                    "</h5>\n" +
-                    "<p class=\"card-text\">" +
-                    item.description +
-                    "<p class=\"card-text\">" +
-                    "<small class=\"text-muted\">" +
-                    formattedDate +
-                    "</small>" +
-                    "</p>\n" +
-                    "<p class=\"card-text\">" +
-                    "<small class=\"text-muted\">图片尺寸: " +
-                    item.imageSize + "| 大小: " + fileSizeDisplay +
-                    "</small>" +
-                    "</p>\n" +
-                    "</div>\n"
+                        "<p>" +
+                            "<small class=\"text-muted\">" +
+                                downLoadAlert+
+                            "</small>" +
+                        "</p>\n" +
+                        "<h5 class=\"card-title\">" +
+                            "标题:"+ item.title +" &nbsp;|&nbsp; "+item.viewCount +"<i class='fas fa-eye'></i>"+
+                        "</h5>\n" +
+                        "<p >" +
+                            "描述:"+item.description +
+                        "</p>" +
+                        "<p>" +
+                            "<small class=\"text-muted\">" +
+                                "拍摄日期:"+  formattedDate +
+                            "</small>" +
+                        "</p>\n" +
+                        "<p>" +
+                            "<small class=\"text-muted\">" +
+                            "拍摄位置:"+  item.location +
+                            "</small>" +
+                        "</p>\n" +
+                        "<p>" +
+                            "<small class=\"text-muted\">图片尺寸: " +
+                                item.imageSize + "&nbsp;|&nbsp;大小: " + fileSizeDisplay +
+                            "</small>" +
+                        "</p>\n" +
+                    "</div>\n"+
+                    "<div id='downloadSuccessMessage' style='display: none;'>下载成功!</div>"
                 ;
                 // Create a modal element
                 const modal = document.createElement('div');
@@ -257,11 +330,56 @@
         };
         get.send();
     }
-
+    function showDownloadSuccessMessage() {
+        var successMessage = document.getElementById('downloadSuccessMessage');
+        successMessage.style.display = 'block';
+    }
     function hideModal() {
         var modal = document.getElementById("modal");
         modal.style.display = "none";
     }
+
+    // $(function () {
+    //     // 获取图片的宽度(200px)
+    //     let imgWidth = $(".figure").outerWidth(); // 200
+    //
+    //     waterfallHandler();
+    //
+    //     // 瀑布流处理
+    //     function waterfallHandler() {
+    //         // 获取图片的列数
+    //         let column = parseInt($(window).width() / imgWidth);
+    //
+    //         // 高度数组
+    //         let heightArr = [];
+    //         for(let i=0; i<column; i++) {
+    //             heightArr[i] = 0;
+    //         }
+    //
+    //         // 遍历所有图片进行定位处理
+    //         $.each($('img'), function (index, item) {
+    //             // 当前元素的高度
+    //             let itemHeight = $(item).outerHeight();
+    //             // 高度数组最小的高度
+    //             let minHeight = Math.min(...heightArr);
+    //             // 高度数组最小的高度的索引
+    //             let minIndex = heightArr.indexOf(minHeight);
+    //
+    //             $(item).css({
+    //                 position: 'absolute',
+    //                 top: minHeight + 'px',
+    //                 left: minIndex * imgWidth + 'px'
+    //             });
+    //
+    //             heightArr[minIndex] += itemHeight;
+    //         });
+    //     }
+    //
+    //     // 窗口大小改变
+    //     $(window).resize(function () {
+    //         waterfallHandler();
+    //     });
+    // });
 </script>
 </body>
 </html>

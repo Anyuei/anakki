@@ -65,4 +65,8 @@ public class AnUser extends BaseEntity  implements Serializable {
     @TableField("telephone")
     private String telephone;
 
+    @ApiModelProperty("电话最后修改时间")
+    @TableField("telephone_last_update_time")
+    private LocalDateTime telephoneLastUpdateTime;
+
 }
