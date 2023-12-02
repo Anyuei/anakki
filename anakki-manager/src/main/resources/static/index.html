@@ -267,9 +267,9 @@
                 var fileSizeDisplay = fileSize >= 1024 ? (fileSize / 1024).toFixed(2) + " MB" : fileSize + " KB";
 
                 if (isMobileDevice()) {
-                    downLoadAlert= "长按图片保存原图(消耗"+fileSizeDisplay+")"
+                    downLoadAlert= "长按图片无损保存原图(消耗"+fileSizeDisplay+"),双指可放大原图"
                 } else {
-                    downLoadAlert= "右键点击图片保存原图(消耗"+fileSizeDisplay+")"
+                    downLoadAlert= "右击图片无损保存原图(消耗"+fileSizeDisplay+")"
                 }
 
                 var html =
@@ -282,11 +282,13 @@
                                 downLoadAlert+
                             "</small>" +
                         "</p>\n" +
-                        "<h5 class=\"card-title\">" +
+                        "<h5 class=\"card-title\"  style='color: #fff;'>" +
                             "标题:"+ item.title +" &nbsp;|&nbsp; "+item.viewCount +"<i class='fas fa-eye'></i>"+
                         "</h5>\n" +
-                        "<p >" +
+                        "<p>" +
+                            "<small class=\"text-muted\">" +
                             "描述:"+item.description +
+                            "</small>" +
                         "</p>" +
                         "<p>" +
                             "<small class=\"text-muted\">" +
