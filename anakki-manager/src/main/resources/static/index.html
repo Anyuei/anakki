@@ -87,9 +87,11 @@
         -o-column-width:20rem; /*Opera*/
         -ms-column-width:20rem; /*IE*/
         column-width:20rem;
+        padding-right: 0px;
+        padding-left: 0px;
     }
     #mainFlow > div{
-        width:20rem; /*宽度根据实际情况调节，应与上面一致*/
+        width:25rem; /*宽度根据实际情况调节，应与上面一致*/
         overflow:auto; /*防止内容溢出导致布局错位*/
     }
 
@@ -132,8 +134,8 @@
     <hr>
     <section class="slice">
         <div class="row justify-content-center">
-            <div class="col-12">
-                <div class="row align-items-center mb-5">
+            <div class="col-12" style="padding-right: 0px; padding-left: 0px;">
+                <div class="row align-items-center mb-3">
                     <div class="col-6">
                         <h3 id="mainPageHead" class="heading h3 mb-0" style="color: #226a3e;">和光同尘，与时舒卷</h3>
                     </div>
@@ -144,7 +146,7 @@
             </div>
         </div>
         <div class="row justify-content-center">
-            <div class="col-12">
+            <div class="col-12" style="padding-right: 0px; padding-left: 0px;">
                 <div class="row  align-items-center mb-5" >
                     <div class="col-12 col-offset-1" id="mainFlow">
                         <!--主要图文-->
@@ -185,8 +187,8 @@
     window.onload = function () {
         $('#header').load("../pages/header.html", loadPersonDetail);
         $('#footer').load("../pages/footer.html", insertCreateTime);
-        localImgData(currentPage)
-        mainPageHead()
+        localImgData(currentPage);
+        mainPageHead();
     };
     document.getElementById("loadMoreButton").addEventListener("click", function() {
         localImgData(currentPage)
@@ -215,8 +217,8 @@
                         var itemHtml = document.createElement("div")
                         itemHtml.className = 'col-12';
                         itemHtml.innerHTML=
-                            "<figure class='figure'>" +
-                                "<img src='" + item.imgUrl + "' class=\"figure-img img-fluid rounded\" alt=\"" + item.id + "\" onclick=\"showModal(this)\">" +
+                            "<figure class='figure' style='width: 100%;'>" +
+                                "<img style='width: 100%;' src='" + item.imgUrl + "' class=\"figure-img img-fluid rounded\" alt=\"" + item.id + "\" onclick=\"showModal(this)\">" +
                                 "<figcaption class='figure-caption'>" +
                                     "<span style='float:right'><i class='fas fa-eye'></i> " + item.viewCount + "</span>" +
                                     "<strong>" +
@@ -301,9 +303,9 @@
         xhr.send();
     }
 
-    function mainPageHead(id){
+    function mainPageHead(){
         var xhr = new XMLHttpRequest();
-        xhr.open("POST", "/base/system/getStringConfigValue?key=MAIN_PAGE_HEAD", true);
+        xhr.open("GET", "/base/system/getStringConfigValue?key=MAIN_PAGE_HEAD", true);
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4 && xhr.status === 200) {
                 const response = JSON.parse(xhr.responseText);
