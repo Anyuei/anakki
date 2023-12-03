@@ -327,11 +327,12 @@
                 let html = "";
                 const response = JSON.parse(get.responseText);
                 const typeList = response.data;
-                for (let i = 0; i < typeList.length; i++) {
-                    html +=
-                        `
-                             <option>${typeList[i]}</option>
-                            `
+                for (let i = 1; i < typeList.length; i++) {
+                    if (i==0){
+                        html +=`<option selected>${typeList[i]}</option>`
+                    }else{
+                        html +=`<option>${typeList[i]}</option>`
+                    }
                 }
                 // html += "</select>";
                 document.getElementById("images-type").innerHTML = html;
@@ -431,7 +432,7 @@
                         "                                    <td>\n" +
                         "                                        <div class=\"media align-items-center\">\n" +
                         "                                            <div class=\"image-list\">\n" +
-                        "                                                <img src=\"" + imgUrl + "?imageMogr2/thumbnail/400x\" class=\"golden-ratio-image\">" +
+                        "                                                <img src=\"" + imgUrl + "?imageMogr2/thumbnail/100x\" class=\"golden-ratio-image\">" +
                         "                                            </div>\n" +
                         "                                            <div class=\"media-body\">\n" +
                         "                                                <span class=\"vertical-span\">拍摄时间：" + photoTime.replace("T", " ") + "</span>\n" +

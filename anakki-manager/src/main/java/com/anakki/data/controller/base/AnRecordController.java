@@ -60,7 +60,4 @@ public class AnRecordController {
         byId.setImgUrl(byId.getImgUrl().split("\\?")[0]);
         return ResponseDTO.succData(byId);
     }
-
-
-
 }

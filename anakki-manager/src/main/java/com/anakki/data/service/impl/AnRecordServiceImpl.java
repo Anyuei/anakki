@@ -8,15 +8,13 @@ import com.anakki.data.entity.AnIpAddress;
 import com.anakki.data.entity.AnRecord;
 import com.anakki.data.bean.constant.CosPathConst;
 import com.anakki.data.entity.AnStatisticLog;
+import com.anakki.data.entity.AnUser;
 import com.anakki.data.entity.request.ChangeRecordRequest;
 import com.anakki.data.entity.request.GetContentRequest;
 import com.anakki.data.entity.request.ListRecordRequest;
 import com.anakki.data.entity.request.UploadRecordRequest;
 import com.anakki.data.mapper.AnRecordMapper;
-import com.anakki.data.service.AnIpAddressService;
-import com.anakki.data.service.AnRecordService;
-import com.anakki.data.service.AnStatisticLogService;
-import com.anakki.data.service.AnStatisticService;
+import com.anakki.data.service.*;
 import com.anakki.data.utils.common.COSUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -32,6 +30,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -46,6 +45,12 @@ public class AnRecordServiceImpl extends ServiceImpl<AnRecordMapper, AnRecord> i
 
     @Autowired
     private AnStatisticService anStatisticService;
+
+    @Autowired
+    private AnRecordUserOperateLogService anRecordUserOperateLogService;
+
+    @Autowired
+    private AnUserService anUserService;
     @Override
     public BasePageResult<AnRecord> flow(GetContentRequest getContentRequest,String ipAddr) {
         IPage<AnRecord> anRecordIPage = new Page<>(
@@ -159,4 +164,30 @@ public class AnRecordServiceImpl extends ServiceImpl<AnRecordMapper, AnRecord> i
         byId.setViewCount(byId.getViewCount()+1);
         updateById(byId);
     }
+
+    @Override
+    public synchronized Object userOperate(Long id, String ipAddr, String operateType) {
+        String currentNickname = BaseContext.getCurrentNickname(false);
+        AnUser user = anUserService.getByNickname(currentNickname);
+        AnRecord record = getById(id);
+        Long userId=null==user?0L:user.getId();
+        if (null==record){
+            throw new RuntimeException("记录不存在");
+        }
+        if ("LIKE".equals(operateType)){
+            long currentCount = record.getLikeCount() + 1;
+            record.setLikeCount(currentCount);
+            anRecordUserOperateLogService.log(id,userId,ipAddr,"LIKE");
+            updateById(record);
+            return currentCount;
+        }else if ("UNLIKE".equals(operateType)){
+            long currentCount = record.getUnlikeCount() + 1;
+            record.setUnlikeCount(currentCount);
+            anRecordUserOperateLogService.log(id,userId,ipAddr,"UNLIKE");
+            updateById(record);
+            return currentCount;
+        }
+        return null;
+    }
+
 }

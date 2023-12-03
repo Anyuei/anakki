@@ -22,7 +22,17 @@ public class AnSystemConfigServiceImpl extends ServiceImpl<AnSystemConfigMapper,
     public Long getNumberConfigValue(String key) {
         QueryWrapper<AnSystemConfig> systemConfigQueryWrapper = new QueryWrapper<>();
         systemConfigQueryWrapper.eq("config_key",key);
+        systemConfigQueryWrapper.eq("type","user");
         AnSystemConfig one = getOne(systemConfigQueryWrapper);
         return Long.parseLong(one.getConfigValue());
+    }
+
+    @Override
+    public String getStringConfigValue(String key) {
+        QueryWrapper<AnSystemConfig> systemConfigQueryWrapper = new QueryWrapper<>();
+        systemConfigQueryWrapper.eq("config_key",key);
+        systemConfigQueryWrapper.eq("type","user");
+        AnSystemConfig one = getOne(systemConfigQueryWrapper);
+        return one.getConfigValue();
     }
 }

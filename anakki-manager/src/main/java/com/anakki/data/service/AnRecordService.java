@@ -34,4 +34,6 @@ public interface AnRecordService extends IService<AnRecord> {
     void changeRecordStatus(ChangeRecordRequest changeRecordRequest);
 
     void increaseViewCount(Long recordId);
+
+    Object userOperate(Long id, String ipAddr, String operateType);
 }

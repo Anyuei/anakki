@@ -16,4 +16,6 @@ public interface AnSystemConfigService extends IService<AnSystemConfig> {
 
 
     Long getNumberConfigValue(String key);
+
+    String getStringConfigValue(String key);
 }

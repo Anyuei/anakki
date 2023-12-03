@@ -89,11 +89,17 @@ public class SystemController {
         return ResponseDTO.succData(recordTypes);
     }
 
-    @ApiOperation(value = "获取配置")
+    @ApiOperation(value = "获取配置(数值配置)")
     @GetMapping("/getNumberConfigValue")
     public ResponseDTO<Long>  getNumberConfigValue(String key) {
         Long numberConfigValue = anSystemConfigService.getNumberConfigValue(key);
         return ResponseDTO.succData(numberConfigValue);
+    }
+    @ApiOperation(value = "获取配置(字符配置)")
+    @GetMapping("/getStringConfigValue")
+    public ResponseDTO<String>  getStringConfigValue(String key) {
+        String s = anSystemConfigService.getStringConfigValue(key);
+        return ResponseDTO.succData(s);
     }
 
     @ApiOperation(value = "网页访问")
