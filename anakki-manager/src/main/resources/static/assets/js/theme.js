@@ -486,3 +486,31 @@ var EventUtil = {
     }
 };
 
+function zoomImage(image) {
+    // Create a new element for the zoomed image
+    var zoomedImg = document.createElement('img');
+    zoomedImg.src = image.src;
+    zoomedImg.style.width = '100%';
+    zoomedImg.style.height = 'auto';
+    // Create a modal container for the zoomed image
+    var modal = document.createElement('div');
+    modal.style.position = 'fixed';
+    modal.style.top = '0';
+    modal.style.left = '0';
+    modal.style.width = '100%';
+    modal.style.height = '100%';
+    modal.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+    modal.style.display = 'flex';
+    modal.style.justifyContent = 'center';
+    modal.style.alignItems = 'center';
+    modal.style.zIndex = '9999';
+    // Append the zoomed image to the modal container
+    modal.appendChild(zoomedImg);
+    // Add an event listener to close the modal when clicked outside the image
+    zoomedImg.addEventListener('click', function () {
+        modal.remove();
+    });
+    // Append the modal container to the document body
+    document.body.appendChild(modal);
+}
+

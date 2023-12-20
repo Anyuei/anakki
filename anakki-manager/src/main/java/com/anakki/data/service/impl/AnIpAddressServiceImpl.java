@@ -27,7 +27,7 @@ import java.util.HashMap;
 public class AnIpAddressServiceImpl extends ServiceImpl<AnIpAddressMapper, AnIpAddress> implements AnIpAddressService {
 
     @Override
-    public AnIpAddress getAddressByIp(String ip) {
+    public synchronized AnIpAddress getAddressByIp(String ip) {
         if (IPUtils.isPrivateIPAddress(ip)){
             return null;
         }

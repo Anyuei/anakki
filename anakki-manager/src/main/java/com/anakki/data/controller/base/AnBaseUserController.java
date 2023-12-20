@@ -34,7 +34,11 @@ public class AnBaseUserController {
 
     @ApiOperation(value = "登录")
     @PostMapping("/login")
-    public ResponseDTO<String> login(UserLoginRequest userLoginRequest) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+    public ResponseDTO<String> login(UserLoginRequest userLoginRequest,HttpServletRequest request) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+        boolean verification = HappyCaptcha.verification(request, userLoginRequest.getVerify(), true);
+        if (!verification) {
+            throw new RuntimeException("验证码错误");
+        }
         String token = anUserService.login(userLoginRequest);
         return ResponseDTO.succData(token);
     }

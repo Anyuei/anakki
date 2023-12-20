@@ -27,7 +27,7 @@ public class AnPathStatisticLogServiceImpl extends ServiceImpl<AnPathStatisticLo
     @Autowired
     private AnIpAddressService anIpAddressService;
     @Override
-    public Boolean log(String path, String ipAddr) {
+    public synchronized Boolean log(String path, String ipAddr) {
             AnIpAddress addressByIp = anIpAddressService.getAddressByIp(ipAddr);
             //统计访问日志
             if (null!=addressByIp){

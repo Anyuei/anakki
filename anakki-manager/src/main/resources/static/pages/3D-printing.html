@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description"
+          content="时光胶囊,Anakki的个人网站,摄影,博客,技术分享。                             ">
+    <meta name="author" content="Anakki">
+    <title>Anakki-World</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,800|Roboto:400,500,700" rel="stylesheet">
+    <!-- Theme CSS -->
+    <link type="text/css" href="../assets/css/theme.css" rel="stylesheet">
+    <!-- Demo CSS - No need to use these in your project -->
+    <link type="text/css" href="../assets/css/demo.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+</head>
+<style>
+
+    .section {
+        display: none;
+    }
+
+    .section.active {
+        display: block;
+    }
+
+    body {
+        color: #495057;
+        background-color: #151111f2;
+    }
+    .vertical-span {
+        display: block;
+        margin-left: 1.4rem;
+        margin-bottom: 0.2rem;
+        font-size: 0.7rem;
+    }
+    .image-list{
+        width: 100px;
+    }
+    .golden-ratio-image {
+        width: 100px; /* 设置图片的宽度 */
+        height: calc(100px / 1.618); /* 根据黄金比例计算图片的高度 */
+    }
+</style>
+<body>
+<!--通用顶部导航-->
+<div id="header"></div>
+
+<main class="main">
+    <div style="margin-top: 4rem;">
+        <ul class="nav justify-content-center">
+            <div class="container" style="height: 48rem;">
+                <table class="table table-hover align-items-center" data-resizable="true">
+                    <thead>
+                    <tr class="bg-white" scope="row">
+                        <th scope="col">模型图片</th>
+                        <th scope="col">模块类型</th>
+                        <th scope="col">标题</th>
+                        <th scope="col">描述</th>
+                        <th scope="col">下载</th>
+                    </tr>
+                    </thead>
+                    <tbody id="list">
+
+                    </tbody>
+                </table>
+            </div>
+
+            <footer class="footer bg-white " style="width: 100%;">
+                <div class="container">
+                    <div class="row justify-content-end">
+                        <div class="col-4">
+                            <ul class="pagination footer " style="margin-top: 1rem" id="page-module">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </ul>
+    </div>
+    </main>
+    <!-- 页面底部 -->
+    <div id="footer"></div>
+    <!-- Core -->
+    <script src="../assets/vendor/jquery/jquery.min.js"></script>
+    <script src="../assets/vendor/popper/popper.min.js"></script>
+    <script src="../assets/js/bootstrap/bootstrap.min.js"></script>
+    <!-- FontAwesome 5 -->
+    <script src="../assets/vendor/fontawesome/js/fontawesome-all.min.js" defer></script>
+    <!-- Page plugins -->
+    <script src="../assets/vendor/bootstrap-select/js/bootstrap-select.min.js"></script>
+    <script src="../assets/vendor/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>
+    <script src="../assets/vendor/input-mask/input-mask.min.js"></script>
+    <script src="../assets/vendor/nouislider/js/nouislider.min.js"></script>
+    <script src="../assets/vendor/textarea-autosize/textarea-autosize.min.js"></script>
+    <!-- Theme JS -->
+    <script src="../assets/js/theme.js"></script>
+    <script>
+
+        window.onload = function () {
+            $('#header').load("../pages/header.html", loadPersonDetail);
+            $('#footer').load("../pages/footer.html", insertCreateTime);
+            list3dModelFile(1, 10)
+            lightbox.option({
+                'resizeDuration': 200,
+                'wrapAround': true
+            });
+        };
+
+
+        function list3dModelFile(current, pageSize, searchInput) {
+            const url = window.location.href;
+            const get = new XMLHttpRequest();
+            get.open("GET", "/base/anakki/3dModel/list-3dModels?current=" + current + "&size=" + pageSize, true);
+            get.onreadystatechange = function () {
+                if (get.readyState === 4 && get.status === 200) {
+                    let html = "";
+                    const response = JSON.parse(get.responseText);
+
+                    const itemList = response.data.data;
+                    const totalNum = response.data.totalNum;
+
+                    for (let i = 0; i < itemList.length; i++) {
+                        const item = itemList[i];
+                        const id = item.id;
+                        const type = item.type;
+                        const title = item.title;
+                        const description = item.description;
+                        const modelImageUrl = item.modelImageUrl;
+                        const fileSize = (item.fileSize / 1024).toFixed(2);
+                        const createTime = item.createTime;
+                        html = html + "                           <tr>\n" +
+                            "                                    <td>\n" +
+                            "                                        <div class=\"media align-items-center\">\n" +
+                            "                                            <div class=\"image-list\">\n" +
+                                                                "                <img src=\""+modelImageUrl+"\" class=\"golden-ratio-image\" onclick=\"zoomImage(this)\">\n" +
+                            "                                            </div>\n" +
+                            "                                            <div class=\"media-body\">\n" +
+                            "                                                <span class=\"vertical-span\">文件大小" + fileSize + "MB</span>" +
+                            "                                                <span class=\"vertical-span\">上传时间：" + createTime.replace("T", " ") + "</span>\n" +
+                            "                                            </div>\n" +
+                            "                                        </div>\n" +
+                            "                                    </td>\n" +
+                            "                                    <td>" + type + "</td>\n" +
+                            "                                    <td>" + title + "</td>\n" +
+                            "                                    <td>" + description + "</td>\n" +
+                            "    <td>\n" +
+                            "        <button class=\"btn btn-success\" onclick=\"downloadModel(" + id + ")\">下载模型</button>\n" +
+                            "    </td>\n" +
+                            "                                </tr>"
+                    }
+                    document.getElementById("list").innerHTML = html;
+                    let totalPages = Math.ceil(totalNum / pageSize);
+                    initPage(current, pageSize, totalPages);
+                    // 拼接分页参数到地址栏
+                    const newUrl = url.split("?")[0] + "?current=" + current + "&size=" + pageSize;
+                    window.history.replaceState(null, null, newUrl);
+                }
+            };
+            get.send();
+        }
+        function initPage(currentPage, pageSize, totalPages) {
+            const paginationContainer = document.getElementById("page-module");
+            let html = "";
+            // Previous page button
+            if (currentPage > 1) {
+                let number = currentPage - 1;
+                html += `<li class="page-item"><a class="page-link" href="#" onclick="list3dModelFile(${number}, '${pageSize}')">上一页</a></li>`;
+            } else {
+                html += `<li class="page-item disabled"><a class="page-link" href="#"><<</a></li>`;
+            }
+            // Page numbers
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === currentPage) {
+                    html += `<li class="page-item active"><a class="page-link" href="#">${i}</a></li>`;
+                } else {
+                    html += `<li class="page-item"><a class="page-link" href="#" onclick="list3dModelFile(${i}, '${pageSize}')">${i}</a></li>`;
+                }
+            }
+            // Next page button
+            if (currentPage < totalPages) {
+                let number = currentPage + 1;
+                html += `<li class="page-item"><a class="page-link" href="#" onclick="list3dModelFile(${number}, '${pageSize}')">下一页</a></li>`;
+            } else {
+                html += `<li class="page-item disabled"><a class="page-link" href="#">>></a></li>`;
+            }
+            paginationContainer.innerHTML = html;
+        }
+        function toggleSection(sectionId) {
+            const sections = document.getElementsByClassName('section');
+            for (let i = 0; i < sections.length; i++) {
+                sections[i].classList.remove('active');
+            }
+            const section = document.getElementById(sectionId);
+            section.classList.add('active');
+        }
+
+
+        function downloadModel(id){
+            const get = new XMLHttpRequest();
+            get.open("GET", "/api/anakki/3dModel/download?id=" + id, true);
+            get.onreadystatechange = function () {
+                if (get.readyState === 4 && get.status === 200) {
+                    const response = JSON.parse(get.responseText);
+                    if (101===response.code){
+                        alert(response.data)
+                    }else{
+                        const downloadUrl = response.data;
+                        window.open(downloadUrl);
+                    }
+                }
+            };
+            get.setRequestHeader('authorization', localStorage.getItem('user-token'));
+            get.send();
+        }
+
+    </script>
+</body>
+</html>

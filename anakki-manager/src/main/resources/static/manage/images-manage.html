@@ -303,8 +303,6 @@
         $('#sidebar').load("../manage/base/sidebar.html");
         listMenu();
         listRecordType();
-        //const url= window.location.href;
-        const url = "http://127.0.0.1:8080/manage/images-manage.html#?current=1&size=10";
         flushRecord();
     };
 
@@ -327,8 +325,8 @@
                 let html = "";
                 const response = JSON.parse(get.responseText);
                 const typeList = response.data;
-                for (let i = 1; i < typeList.length; i++) {
-                    if (i==0){
+                for (let i = 0; i < typeList.length; i++) {
+                    if (i===0){
                         html +=`<option selected>${typeList[i]}</option>`
                     }else{
                         html +=`<option>${typeList[i]}</option>`
