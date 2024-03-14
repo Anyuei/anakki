@@ -70,7 +70,7 @@ public class AnRecord extends BaseEntity implements Serializable {
     private Long viewCount;
 
     @ApiModelProperty("登录用户点赞数")
-    @TableField("view_count")
+    @TableField("login_user_like_count")
     private Long loginUserLikeCount;
 
     @ApiModelProperty("登录用户不喜欢数")

@@ -212,7 +212,7 @@
                         const month = dateTime.getMonth() + 1; // Months are zero-based, so we add 1
                         const day = dateTime.getDate();
                         const formattedDate = year + "-" + month + "-" + day;
-
+                        const photoBy = item.photoBy;
                         const fileSize = item.fileSize;
                         const fileSizeDisplay = fileSize >= 1024 ? (fileSize / 1024).toFixed(2) + " MB" : fileSize + " KB";
                         var itemHtml = document.createElement("div")
@@ -226,8 +226,11 @@
                                     item.title + " - " + item.location +
                                     "</strong> " +
                                 "</figcaption>" +
-                                "<figcaption class='figure-caption'>" +
+                                "<figcaption class='figure-caption'>拍摄日期:" +
                                     formattedDate +
+                                "</figcaption>" +
+                                "<figcaption class='figure-caption'>摄影师:" +
+                                    photoBy +
                                 "</figcaption>" +
                                 "<p class=\"card-text\">" +
                                 "<small class=\"text-muted\">图片尺寸: " +

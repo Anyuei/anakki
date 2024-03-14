@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description"
+          content="时光胶囊,Anakki的个人网站,摄影,博客,技术分享。                             ">
+    <meta name="author" content="Anakki">
+    <title>Anakki-World</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,800|Roboto:400,500,700" rel="stylesheet">
+    <!-- Theme CSS -->
+    <link type="text/css" href="../assets/css/theme.css" rel="stylesheet">
+    <!-- Demo CSS - No need to use these in your project -->
+    <link type="text/css" href="../assets/css/demo.css" rel="stylesheet">
+
+    <script src="../assets/js/EasyPlayer-element.min.js"></script>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta
+            content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"
+            name="viewport"
+    />
+    <style>
+        .bg-tertiary {
+            background-color: #503662 !important;
+        }
+    </style>
+
+</head>
+<body>
+<style>
+    .center-video {
+        text-align: center;
+    }
+</style>
+<main class="main">
+    <!--通用顶部导航-->
+    <div id="header"></div>
+    <div class="container my-5">
+        <div class="bg-light p-5 rounded">
+            <div class="col-sm-8 py-5 mx-auto">
+                <h1 class="display-5 fw-normal">Navbar with offcanvas examples</h1>
+                <p class="fs-5">This example shows how responsive offcanvas menus work within the navbar. For
+                    positioning of navbars, checkout the <a href="/docs/examples/navbar-static/">top</a> and <a
+                            href="/docs/examples/navbar-fixed/">fixed top</a> examples.</p>
+                <p>From the top down, you'll see a dark navbar, light navbar and a responsive navbar—each with
+                    offcanvases built in. Resize your browser window to the large breakpoint to see the toggle for the
+                    offcanvas.</p>
+                <p>
+                    <a class="btn btn-primary" href="/docs/components/navbar/#offcanvas" role="button">Learn more about
+                        offcanvas navbars »</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</main>
+<!-- 页面底部 -->
+<div id="footer"></div>
+
+<!-- Core -->
+<script src="../assets/vendor/jquery/jquery.min.js"></script>
+<script src="../assets/vendor/popper/popper.min.js"></script>
+<script src="../assets/js/bootstrap/bootstrap.min.js"></script>
+<!-- FontAwesome 5 -->
+<script src="../assets/vendor/fontawesome/js/fontawesome-all.min.js" defer></script>
+<!-- Page plugins -->
+<script src="../assets/vendor/bootstrap-select/js/bootstrap-select.min.js"></script>
+<script src="../assets/vendor/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>
+<script src="../assets/vendor/input-mask/input-mask.min.js"></script>
+<script src="../assets/vendor/nouislider/js/nouislider.min.js"></script>
+<script src="../assets/vendor/textarea-autosize/textarea-autosize.min.js"></script>
+<!-- Theme JS -->
+<script src="../assets/js/theme.js"></script>
+<script>
+    window.onload = function () {
+        $('#header').load("../pages/header.html", loadPersonDetail);
+        $('#footer').load("../pages/footer.html", insertCreateTime);
+    }
+    var player = new easyplayer({
+        container: document.getElementById('player'),
+        url: 'http://dev.zhixing.shutongmofang.com:20000/stream/4c352f516448486476337833717937584e7458334b696d6f61345a6a6835736b71744347595a6547554330744265534754376c30497232426f522f676c732f666a616a70324b5731347533537a4e414461426a444f38594d7838796b363843706b54634366364166326c7143717731366b756a794c636a644653722f596f6e72',
+        autoplay: true,
+        width: '100%',
+        height: '100%',
+        controls: true,
+        contextmenu: true,
+        muted: false,
+        poster: 'your_poster_image_url_here',
+        preload: 'auto',
+        aspectRatio: '16:9'
+    });
+</script>
+</body>
+</html>

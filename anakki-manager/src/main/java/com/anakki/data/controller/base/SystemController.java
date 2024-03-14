@@ -48,7 +48,11 @@ public class SystemController {
                 sendMailRequest.getContent());
         return ResponseDTO.succData(true);
     }
-
+    @ApiOperation(value = "发送邮件")
+    @GetMapping("/healthy")
+    public ResponseDTO<String> healthy() {
+        return ResponseDTO.succData("ok");
+    }
     @PostMapping("/verify")
     @ResponseBody
     //code是前端验证码的name名

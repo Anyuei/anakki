@@ -41,6 +41,8 @@ public class An3dModelServiceImpl extends ServiceImpl<An3dModelMapper, An3dModel
     public String downloadModel(Long id) {
         An3dModel byId = getById(id);
         if (null!=byId){
+            byId.setDownloadCount(byId.getDownloadCount()+1);
+            updateById(byId);
             return byId.getFileUrl();
         }
         throw new RuntimeException("资源不存在");

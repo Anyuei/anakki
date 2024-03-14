@@ -13,14 +13,27 @@
     <link type="text/css" href="../assets/css/theme.css" rel="stylesheet">
     <!-- Demo CSS - No need to use these in your project -->
     <link type="text/css" href="../assets/css/demo.css" rel="stylesheet">
-  <style>
-    .bg-tertiary {
-      background-color: #503662 !important;
-    }
-  </style>
+
+    <script src="../assets/js/EasyPlayer-element.min.js"></script>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta
+            content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"
+            name="viewport"
+    />
+    <style>
+        .bg-tertiary {
+            background-color: #503662 !important;
+        }
+    </style>
+
 </head>
 <body>
-
+<style>
+    .center-video {
+        text-align: center;
+    }
+</style>
 <main class="main">
     <!--通用顶部导航-->
     <div id="header"></div>
@@ -29,29 +42,8 @@
         <span class="mask bg-tertiary alpha-7"></span>
         <div class="spotlight-holder py-lg pt-lg-xl">
             <div class="container d-flex align-items-center no-padding">
-                <div class="col">
-                    <div class="row cols-xs-space align-items-center text-center text-md-left justify-content-center">
-                        <div class="col-lg-7">
-                            <div class="text-center mt-5">
-                                <h1 class="heading h1 text-white">
-                                    资源
-                                </h1>
-                                <p class="lead lh-180 text-white mt-3">
-                                    资源1
-                                </p>
-                                <p class="lead lh-180 text-white mt-3">
-                                    资源2
-                                </p>
-                                <div class="mt-5">
-<!--                                    <a href="#" class="btn btn-primary mr-3">Our services</a>-->
-<!--                                    <a href="#" class="btn btn-secondary">Meet the team</a>-->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
             </div>
-        </div>
     </section>
 </main>
 <!-- 页面底部 -->
@@ -71,12 +63,24 @@
 <script src="../assets/vendor/textarea-autosize/textarea-autosize.min.js"></script>
 <!-- Theme JS -->
 <script src="../assets/js/theme.js"></script>
-
 <script>
     window.onload = function () {
         $('#header').load("../pages/header.html", loadPersonDetail);
-        $('#footer').load("../pages/footer.html",insertCreateTime);
+        $('#footer').load("../pages/footer.html", insertCreateTime);
     }
+    var player = new easyplayer({
+        container: document.getElementById('player'),
+        url: 'http://dev.zhixing.shutongmofang.com:20000/stream/4c352f516448486476337833717937584e7458334b696d6f61345a6a6835736b71744347595a6547554330744265534754376c30497232426f522f676c732f666a616a70324b5731347533537a4e414461426a444f38594d7838796b363843706b54634366364166326c7143717731366b756a794c636a644653722f596f6e72',
+        autoplay: true,
+        width: '100%',
+        height: '100%',
+        controls: true,
+        contextmenu: true,
+        muted: false,
+        poster: 'your_poster_image_url_here',
+        preload: 'auto',
+        aspectRatio: '16:9'
+    });
 </script>
 </body>
 </html>

@@ -59,6 +59,7 @@
                         <th scope="col">模块类型</th>
                         <th scope="col">标题</th>
                         <th scope="col">描述</th>
+                        <th scope="col">下载量</th>
                         <th scope="col">下载</th>
                     </tr>
                     </thead>
@@ -128,6 +129,7 @@
                         const type = item.type;
                         const title = item.title;
                         const description = item.description;
+                        const downloadCount = item.downloadCount;
                         const modelImageUrl = item.modelImageUrl;
                         const fileSize = (item.fileSize / 1024).toFixed(2);
                         const createTime = item.createTime;
@@ -146,6 +148,7 @@
                             "                                    <td>" + type + "</td>\n" +
                             "                                    <td>" + title + "</td>\n" +
                             "                                    <td>" + description + "</td>\n" +
+                            "                                    <td>" + downloadCount + "</td>\n" +
                             "    <td>\n" +
                             "        <button class=\"btn btn-success\" onclick=\"downloadModel(" + id + ")\">下载模型</button>\n" +
                             "    </td>\n" +

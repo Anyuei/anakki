@@ -142,6 +142,9 @@ public class AnRecordServiceImpl extends ServiceImpl<AnRecordMapper, AnRecord> i
         return true;
     }
 
+
+
+
     @Override
     public void changeRecordStatus(ChangeRecordRequest changeRecordRequest) {
         Long id = changeRecordRequest.getId();
@@ -161,7 +164,8 @@ public class AnRecordServiceImpl extends ServiceImpl<AnRecordMapper, AnRecord> i
             currentNickname="未登录访客";
         }
         AnRecord byId = getById(recordId);
-        byId.setViewCount(byId.getViewCount()+1);
+        long count = byId.getViewCount() + 1;
+        byId.setViewCount(count);
         updateById(byId);
     }
 

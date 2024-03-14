@@ -59,6 +59,10 @@ public class An3dModel extends BaseEntity implements Serializable {
     @TableField("view_count")
     private Long viewCount;
 
+    @ApiModelProperty("下载量")
+    @TableField("download_count")
+    private Long downloadCount;
+
     @ApiModelProperty("登录用户点赞数")
     @TableField("login_user_like_count")
     private Long loginUserLikeCount;
