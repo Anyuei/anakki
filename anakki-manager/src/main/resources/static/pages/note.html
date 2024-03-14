@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -8,7 +8,6 @@
     <meta name="author" content="Anakki">
     <title>Anakki-World</title>
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,800|Roboto:400,500,700" rel="stylesheet">
     <!-- Theme CSS -->
     <link type="text/css" href="../assets/css/theme.css" rel="stylesheet">
     <!-- Demo CSS - No need to use these in your project -->
@@ -28,35 +27,60 @@
     </style>
 
 </head>
-<body>
 <style>
     .center-video {
         text-align: center;
     }
+    .bg-light {
+        position: relative;
+    }
+
+    .date {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        margin: 10px;
+        font-size: 14px;
+        color: #666;
+    }
 </style>
+<body>
+<!--通用顶部导航-->
+<div id="header"></div>
 <main class="main">
-    <!--通用顶部导航-->
-    <div id="header"></div>
-    <div class="container my-5">
-        <div class="bg-light p-5 rounded">
-            <div class="col-sm-8 py-5 mx-auto">
-                <h1 class="display-5 fw-normal">Navbar with offcanvas examples</h1>
-                <p class="fs-5">This example shows how responsive offcanvas menus work within the navbar. For
-                    positioning of navbars, checkout the <a href="/docs/examples/navbar-static/">top</a> and <a
-                            href="/docs/examples/navbar-fixed/">fixed top</a> examples.</p>
-                <p>From the top down, you'll see a dark navbar, light navbar and a responsive navbar—each with
-                    offcanvases built in. Resize your browser window to the large breakpoint to see the toggle for the
-                    offcanvas.</p>
-                <p>
-                    <a class="btn btn-primary" href="/docs/components/navbar/#offcanvas" role="button">Learn more about
-                        offcanvas navbars »</a>
-                </p>
+
+        <div class="container" style="margin-top: 4rem;">
+            <div class="bg-light p-2 mt-4 rounded">
+                <div class="col-sm-12 py-3 mx-auto">
+                    <h1 class="display-5 fw-normal">Navbar with offcanvas examples</h1>
+                    <p class="fs-5">This example shows how responsive offcanvas menus work within the navbar. For
+                        positioning of navbars, checkout the <a href="/docs/examples/navbar-static/">top</a> and <a
+                                href="/docs/examples/navbar-fixed/">fixed top</a> examples.</p>
+                    <p>From the top down, you'll see a dark navbar, light navbar and a responsive navbar—each with
+                        offcanvases built in. Resize your browser window to the large breakpoint to see the toggle for
+                        the
+                        offcanvas.</p>
+                </div>
+            </div>
+            <div class="bg-light p-2 mt-4 rounded">
+                <div class="col-sm-12 py-3 mx-auto">
+                    <h1 class="display-5 fw-normal">Navbar with offcanvas examples</h1>
+                    <p class="fs-5">This example shows how responsive offcanvas menus work within the navbar. For
+                        positioning of navbars, checkout the <a href="/docs/examples/navbar-static/">top</a> and <a
+                                href="/docs/examples/navbar-fixed/">fixed top</a> examples.</p>
+                    <p>From the top down, you'll see a dark navbar, light navbar and a responsive navbar—each with
+                        offcanvases built in. Resize your browser window to the large breakpoint to see the toggle for
+                        the
+                        offcanvas.</p>
+                    <p>From the top down, you'll see a dark navbar, light navbar and a responsive navbar—each with
+                        offcanvases built in. Resize your browser window to the large breakpoint to see the toggle for
+                        the
+                        offcanvas.</p>
+                    <div class="date">2024-03-12</div>
+                </div>
             </div>
         </div>
-    </div>
 </main>
-<!-- 页面底部 -->
-<div id="footer"></div>
 
 <!-- Core -->
 <script src="../assets/vendor/jquery/jquery.min.js"></script>
@@ -75,21 +99,8 @@
 <script>
     window.onload = function () {
         $('#header').load("../pages/header.html", loadPersonDetail);
-        $('#footer').load("../pages/footer.html", insertCreateTime);
     }
-    var player = new easyplayer({
-        container: document.getElementById('player'),
-        url: 'http://dev.zhixing.shutongmofang.com:20000/stream/4c352f516448486476337833717937584e7458334b696d6f61345a6a6835736b71744347595a6547554330744265534754376c30497232426f522f676c732f666a616a70324b5731347533537a4e414461426a444f38594d7838796b363843706b54634366364166326c7143717731366b756a794c636a644653722f596f6e72',
-        autoplay: true,
-        width: '100%',
-        height: '100%',
-        controls: true,
-        contextmenu: true,
-        muted: false,
-        poster: 'your_poster_image_url_here',
-        preload: 'auto',
-        aspectRatio: '16:9'
-    });
+
 </script>
 </body>
 </html>
