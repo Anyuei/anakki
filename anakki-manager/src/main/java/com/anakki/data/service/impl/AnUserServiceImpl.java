@@ -166,8 +166,6 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
                 file,
                 COSUtil.region,
                 CosBucketNameConst.BUCKET_NAME_IMAGES, CosPathConst.BUCKET_NAME_AVATAR,
-                null, null,
-                0.5F,
                 false
         );
         byNickname.setAvatar(url);

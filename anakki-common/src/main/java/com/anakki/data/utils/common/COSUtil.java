@@ -7,6 +7,10 @@ import com.qcloud.cos.ClientConfig;
 import com.qcloud.cos.auth.BasicCOSCredentials;
 import com.qcloud.cos.auth.BasicSessionCredentials;
 import com.qcloud.cos.auth.COSStaticCredentialsProvider;
+import com.qcloud.cos.exception.CosClientException;
+import com.qcloud.cos.exception.CosServiceException;
+import com.qcloud.cos.http.HttpMethodName;
+import com.qcloud.cos.model.GetObjectRequest;
 import com.qcloud.cos.model.ObjectMetadata;
 import com.qcloud.cos.model.PutObjectRequest;
 import com.qcloud.cos.model.PutObjectResult;
@@ -20,6 +24,8 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.URL;
+import java.util.Date;
 import java.util.TreeMap;
 import java.util.UUID;
 
@@ -37,6 +43,15 @@ public class COSUtil {
 
     public static BasicSessionCredentials getSessionCredential() {
         Response credential = getCredential();
+        // 实际应用中，这里通过云api请求得到临时秘钥后，构造BasicSessionCredential
+        return new BasicSessionCredentials(
+                credential.credentials.tmpSecretId,
+                credential.credentials.tmpSecretKey,
+                credential.credentials.sessionToken);
+    }
+
+    public static BasicSessionCredentials getGetObjCredential() {
+        Response credential = getObjCredential();
         // 实际应用中，这里通过云api请求得到临时秘钥后，构造BasicSessionCredential
         return new BasicSessionCredentials(
                 credential.credentials.tmpSecretId,
@@ -83,14 +98,43 @@ public class COSUtil {
         }
     }
 
+    public static Response getObjCredential() {
+        TreeMap<String, Object> config = new TreeMap<String, Object>();
+        try {
+            // 云 api 密钥 SecretId
+            config.put("secretId", TencentCloudAKSK.SECRET_ID);
+            // 云 api 密钥 SecretKey
+            config.put("secretKey", TencentCloudAKSK.SECRET_KEY);
+            // 设置域名,可通过此方式设置内网域名
+            //config.put("host", "sts.internal.tencentcloudapi.com");
+            // 临时密钥有效时长，单位是秒
+            config.put("durationSeconds", 1800);
+            // 换成你的 bucket
+            config.put("bucket", CosBucketNameConst.BUCKET_NAME_IMAGES);
+            // 换成 bucket 所在地区
+            config.put("region", region);
+            // 可以通过 allowPrefixes 指定前缀数组, 例子： a.jpg 或者 a/* 或者 * (使用通配符*存在重大安全风险, 请谨慎评估使用)
+            config.put("allowPrefixes", new String[]{
+                    "front/*", "images/*", "avatar/*"
+            });
+            // 密钥的权限列表。简单上传和分片需要以下的权限，其他权限列表请看 https://cloud.tencent.com/document/product/436/31923
+            String[] allowActions = new String[]{
+                    // 简单下载
+                    "name/cos:GetObject"
+            };
+            config.put("allowActions", allowActions);
+            return CosStsClient.getCredential(config);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("no valid secret !");
+        }
+    }
+
     public static String uploadObject(
             MultipartFile file,
             String region,
             String bucketName
             , String path,
-            Integer maxWidth,
-            Integer maxHeight,
-            Float quality,
             Boolean isRaw) throws IOException {
         return uploadObject(
                 file,
@@ -98,9 +142,6 @@ public class COSUtil {
                 region,
                 bucketName,
                 path,
-                maxWidth,
-                maxHeight,
-                quality,
                 isRaw);
     }
 
@@ -110,9 +151,6 @@ public class COSUtil {
             String region,
             String bucketName,
             String path,
-            Integer maxWidth,
-            Integer maxHeight,
-            Float ratio,
             Boolean isRaw) throws IOException {
         try {
             // 获取上传的文件的输入流
@@ -132,8 +170,12 @@ public class COSUtil {
             objectMetadata.setContentType("image/jpeg");
             // 上传压缩后的图片
             PutObjectResult putResult = cosClient.putObject(bucketName, key, inputStream, objectMetadata);
-            // 创建文件的访问路径
-            String url = HOST + key+"?imageMogr2/thumbnail/400x";
+            String url;
+            if (isRaw) {
+                url = HOST + key;
+            } else {
+                url = HOST + key + "?imageMogr2/thumbnail/400x";
+            }
             // 关闭COS客户端
             cosClient.shutdown();
             return url;
@@ -143,7 +185,7 @@ public class COSUtil {
     }
 
     public static void main(String[] args) {
-        deleteObject(CosBucketNameConst.BUCKET_NAME_IMAGES, "images/04f412a9-3334-4ef6-bfe3-8c50f7dbccef.png");
+        System.out.println(getObjectUrl(CosBucketNameConst.BUCKET_NAME_IMAGES, "resource/DiskGenius.zip"));
     }
 
     public static void deleteObject(String bucketName, String objectKey) {
@@ -155,5 +197,45 @@ public class COSUtil {
         cosClient.deleteObject(bucketName, replace);
         // 关闭COS客户端
         cosClient.shutdown();
+    }
+
+    public static String getObjectUrl(String bucketName, String objectKey) {
+        String replace = objectKey.replace(COSUtil.HOST, "");
+        // 初始化COS客户端
+        ClientConfig clientConfig = new ClientConfig(new Region(region));
+        COSClient cosClient = new COSClient(new BasicCOSCredentials(TencentCloudAKSK.SECRET_ID, TencentCloudAKSK.SECRET_KEY), clientConfig);
+        // 获取对象url
+        Date expirationDate = new Date(System.currentTimeMillis() +  60 * 1000);
+        URL objectUrl = cosClient.generatePresignedUrl(bucketName, replace, expirationDate, HttpMethodName.GET);
+        // 关闭COS客户端
+        cosClient.shutdown();
+        return objectUrl.toString();
+    }
+
+    public static String getTmpUrl(
+            BasicSessionCredentials basicSessionCredential,
+            String region,
+            String bucketName,
+            String key
+    ) {
+        ClientConfig clientConfig = new ClientConfig(new Region(region));
+        // 3 生成 cos 客户端
+        COSClient cosclient = new COSClient(basicSessionCredential, clientConfig);
+
+
+        try {
+            URL objectUrl = cosclient.getObjectUrl(bucketName, key);
+            // 成功：putobjectResult 会返回文件的 etag
+            return objectUrl.getPath();
+        } catch (CosServiceException e) {
+            //失败，抛出 CosServiceException
+            e.printStackTrace();
+        } catch (CosClientException e) {
+            //失败，抛出 CosClientException
+            e.printStackTrace();
+        }
+        // 关闭客户端
+        cosclient.shutdown();
+        return "";
     }
 }

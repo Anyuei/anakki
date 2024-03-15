@@ -14,4 +14,6 @@ public class CosPathConst {
     public static String BUCKET_NAME_IMAGES="images/";
 
     public static String BUCKET_NAME_AVATAR="avatar/";
+
+    public static String BUCKET_NAME_RESOURCE="resource/";
 }

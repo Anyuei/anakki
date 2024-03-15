@@ -131,9 +131,6 @@ public class AnRecordServiceImpl extends ServiceImpl<AnRecordMapper, AnRecord> i
                     COSUtil.region,
                     CosBucketNameConst.BUCKET_NAME_IMAGES,
                     CosPathConst.BUCKET_NAME_IMAGES,
-            null,
-                    null,
-                    uploadRecordRequest.getRatio(),
                     uploadRecordRequest.getIsRaw());
             anRecord.setImgUrl(url);
             anRecord.setFileSize(multipartFile.getSize() / 1024);
