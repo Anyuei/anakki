@@ -13,38 +13,146 @@
     <link type="text/css" href="../assets/css/theme.css" rel="stylesheet">
     <!-- Demo CSS - No need to use these in your project -->
     <link type="text/css" href="../assets/css/demo.css" rel="stylesheet">
-
-    <script src="../assets/js/EasyPlayer-element.min.js"></script>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     <meta
             content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"
             name="viewport"
     />
-    <style>
-        .bg-tertiary {
-            background-color: #503662 !important;
-        }
-    </style>
 
 </head>
-<body>
 <style>
-    .center-video {
-        text-align: center;
+    .card {
+        border-radius: 0.5rem;
+    }
+
+    .icon {
+        width: 1.5rem;
+        height: 1rem;
+    }
+
+    .table td {
+        padding: 0.4rem;
+        vertical-align: middle;
+        border-top: .125rem solid #dee2e6;
+    }
+    .truncate {
+        max-width: 100px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .row input{
+            width: 100%;
     }
 </style>
+<body>
+<!--通用顶部导航-->
+<div id="header"></div>
 <main class="main">
-    <!--通用顶部导航-->
-    <div id="header"></div>
-    <section class="spotlight parallax bg-cover bg-size--cover" data-spotlight="fullscreen"
-             style="background-image: url('img-3.jpg')">
-        <span class="mask bg-tertiary alpha-7"></span>
-        <div class="spotlight-holder py-lg pt-lg-xl">
-            <div class="container d-flex align-items-center no-padding">
-
+    <div class="container" style="height: 48rem;">
+        <div class="card" style="margin-top: 4rem">
+            <div class="card-header d-flex justify-content-between align-items-center" style="padding: 0.3rem 0.8rem;">
+                <h5 style="margin-bottom: 0;">资源下载</h5>
+                <span>
+                     <button type="button" class="btn btn-primary" data-toggle="modal"
+                             data-target="#uploadModal">
+                    上传
+                    </button>
+                </span>
             </div>
-    </section>
+            <div class="card-table table-responsive">
+                <table class="table table-vcenter">
+                    <thead>
+                    <tr>
+<!--                        <th>标题</th>-->
+                        <th>文件名称</th>
+                        <th>描述</th>
+                        <th>下载量</th>
+                        <th>文件大小</th>
+                        <th>上传用户</th>
+                        <th>上传时间</th>
+                    </tr>
+                    </thead>
+                    <tbody id="list">
+<!--                    <tr>-->
+<!--                        <td>-->
+<!--                            /about.html-->
+<!--                            <a href="#" class="ms-1" aria-label="Open website">-->
+<!--                                &lt;!&ndash; Download SVG icon from http://tabler-icons.io/i/link &ndash;&gt;-->
+<!--                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"-->
+<!--                                     viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"-->
+<!--                                     stroke-linecap="round" stroke-linejoin="round">-->
+<!--                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>-->
+<!--                                    <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path>-->
+<!--                                    <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path>-->
+<!--                                </svg>-->
+<!--                            </a>-->
+<!--                        </td>-->
+<!--                        <td class="text-muted">4,896</td>-->
+<!--                        <td class="text-muted">3,654</td>-->
+<!--                        <td class="text-muted">82.54%</td>-->
+<!--                    </tr>-->
+                    </tbody>
+                </table>
+                <div class="card-footer d-flex align-items-center justify-content-end">
+                    <ul class="pagination m-0 ms-auto" id="page-module">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><polyline points="15 6 9 12 15 18"></polyline></svg>
+                            </a>
+                        </li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><polyline points="9 6 15 12 9 18"></polyline></svg>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="uploadModalLabel">资源上传</h5>
+                </div>
+                    <form class="form-group form-check needs-validation " style="padding-left: 0;" id="uploadImgForm">
+                        <div class="modal-body">
+                            <div class="row">
+                                    <input type="text" class="form-control form-control-sm" id="title"
+                                           placeholder="请输入标题" required>
+                                    <div class="invalid-feedback">请输入标题</div>
+                            </div>
+                            <div class="row">
+                                    <input type="text" class="form-control form-control-sm" id="description"
+                                           placeholder="请输入描述" required>
+                                    <div class="invalid-feedback">请输入描述</div>
+
+                            </div>
+                            <div class="row">
+                                    <div class="input-group">
+                                        <input type="file" name="file-1[]" class="form-control" id="file-1" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+                                    </div>
+                                    <small class="form-text text-muted">支持1GB以内资源上传</small>
+                            </div>
+                            <div class=" justify-content-between align-items-center">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">返回</button>
+                                <button type="button" class="btn btn-primary" onclick="submitForm()">提交</button>
+                            </div>
+                        </div>
+                    </form>
+
+                <div class="progress" style="margin-bottom: 0;" role="progressbar" aria-label="Example with label" aria-valuenow="0"
+                     aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                </div>
+        </div>
+    </div>
 </main>
 <!-- 页面底部 -->
 <div id="footer"></div>
@@ -61,26 +169,176 @@
 <script src="../assets/vendor/input-mask/input-mask.min.js"></script>
 <script src="../assets/vendor/nouislider/js/nouislider.min.js"></script>
 <script src="../assets/vendor/textarea-autosize/textarea-autosize.min.js"></script>
+
 <!-- Theme JS -->
 <script src="../assets/js/theme.js"></script>
 <script>
     window.onload = function () {
         $('#header').load("../pages/header.html", loadPersonDetail);
         $('#footer').load("../pages/footer.html", insertCreateTime);
+        list(1, 10)
     }
-    var player = new easyplayer({
-        container: document.getElementById('player'),
-        url: 'http://dev.zhixing.shutongmofang.com:20000/stream/4c352f516448486476337833717937584e7458334b696d6f61345a6a6835736b71744347595a6547554330744265534754376c30497232426f522f676c732f666a616a70324b5731347533537a4e414461426a444f38594d7838796b363843706b54634366364166326c7143717731366b756a794c636a644653722f596f6e72',
-        autoplay: true,
-        width: '100%',
-        height: '100%',
-        controls: true,
-        contextmenu: true,
-        muted: false,
-        poster: 'your_poster_image_url_here',
-        preload: 'auto',
-        aspectRatio: '16:9'
-    });
+
+    // 进度条更新
+    function progressHandle(e) {
+        var progress = document.querySelector('.progress-bar');
+        var percent = (e.loaded / e.total * 100).toFixed(2);
+        progress.style.width = percent + "%";
+        progress.innerHTML = percent + "%";
+    }
+
+    function submitForm() {
+
+        checkFileSize()
+
+        const title = document.getElementById("title").value;
+        const description = document.getElementById("description").value;
+        const fileInput = document.getElementById("file-1");
+        const files = fileInput.files;
+        // 创建FormData对象并添加表单数据
+        const formData = new FormData();
+        formData.append("title", title);
+        formData.append("description", description);
+
+        for (let i = 0; i < files.length; i++) {
+            formData.append("files", files[i]);
+        }
+
+        const get = new XMLHttpRequest();
+
+        get.open("POST", "/api/anakki/resource/upload");
+
+        get.onreadystatechange = function () {
+            const response = JSON.parse(get.responseText);
+            if (get.readyState === 4 && get.status === 200) {
+                if (response.data.code === 200) {
+                    alert("上传成功");
+                } else {
+                    alert(response.data);
+                }
+            }
+        };
+        get.setRequestHeader('authorization', localStorage.getItem('user-token'));
+        if (get.upload) {
+            //处理进度条的事件
+            get.upload.addEventListener("progress", progressHandle,
+                false);
+        }
+        get.send(formData);
+        // }
+    }
+
+
+    function list(current, pageSize, searchInput) {
+        const url = window.location.href;
+        const get = new XMLHttpRequest();
+        get.open("GET", "/base/anakki/resource/list?current=" + current + "&size=" + pageSize, true);
+        get.onreadystatechange = function () {
+            if (get.readyState === 4 && get.status === 200) {
+                let html = "";
+                const response = JSON.parse(get.responseText);
+
+                const itemList = response.data.data;
+                const totalNum = response.data.totalNum;
+
+                for (let i = 0; i < itemList.length; i++) {
+                    const item = itemList[i];
+                    const id = item.id;
+                    const type = item.type;
+                    const resourceName = item.resourceName;
+                    const title = item.title;
+                    const downloadCount = item.downloadCount;
+                    const description = item.description;
+                    let fileSize;
+                    if (item.fileSize<1024){
+                        fileSize= (item.fileSize).toFixed(2)+"KB"
+                    }else if(item.fileSize>1024&&item.fileSize<1024*1024){
+                        fileSize= (item.fileSize/1024).toFixed(2)+"MB"
+                    }else if(item.fileSize>1024*1024*1024){
+                        fileSize= (item.fileSize/(1024*1024)).toFixed(2)+"GB"
+                    }
+
+                    const createTime = item.createTime.replace("T","");
+                    const uploadUser = item.uploadUser;
+                    html = html + "                           <tr>\n" +
+                        "                                    <td>" + resourceName + "</td>\n" +
+                        "                                    <td class=\"truncate\">" + description + "</td>\n" +
+                        "                                    <td>" + downloadCount + "</td>\n" +
+                        "                                    <td>" + fileSize + "</td>\n" +
+                        "                                    <td>" + uploadUser + "</td>\n" +
+                        "                                    <td>" + createTime + "</td>\n" +
+                        "    <td>\n" +
+                        "        <button class=\"btn btn-success\" onclick=\"downloadResource(" + id + ")\">下载</button>\n" +
+                        "    </td>\n" +
+                        "                                </tr>"
+                }
+                document.getElementById("list").innerHTML = html;
+                let totalPages = Math.ceil(totalNum / pageSize);
+                initPage(current, pageSize, totalPages);
+                // 拼接分页参数到地址栏
+                const newUrl = url.split("?")[0] + "?current=" + current + "&size=" + pageSize;
+                window.history.replaceState(null, null, newUrl);
+            }
+        };
+        get.send();
+    }
+
+    function initPage(currentPage, pageSize, totalPages) {
+        const paginationContainer = document.getElementById("page-module");
+        let html = "";
+        // Previous page button
+        if (currentPage > 1) {
+            let number = currentPage - 1;
+            html += `<li class="page-item"><a class="page-link" href="#" onclick="list3dModelFile(${number}, '${pageSize}')"><</a></li>`;
+        } else {
+            html += `<li class="page-item disabled"><a class="page-link" href="#"><<</a></li>`;
+        }
+        // Page numbers
+        for (let i = 1; i <= totalPages; i++) {
+            if (i === currentPage) {
+                html += `<li class="page-item active"><a class="page-link" href="#">${i}</a></li>`;
+            } else {
+                html += `<li class="page-item"><a class="page-link" href="#" onclick="list3dModelFile(${i}, '${pageSize}')">${i}</a></li>`;
+            }
+        }
+        // Next page button
+        if (currentPage < totalPages) {
+            let number = currentPage + 1;
+            html += `<li class="page-item"><a class="page-link" href="#" onclick="list3dModelFile(${number}, '${pageSize}')">></li>`;
+        } else {
+            html += `<li class="page-item disabled"><a class="page-link" href="#">>></a></li>`;
+        }
+        paginationContainer.innerHTML = html;
+    }
+
+    function checkFileSize() {
+        var input = document.getElementById('file-1');
+        if (input.files.length > 0) {
+            var fileSize = input.files[0].size; // size in bytes
+            var maxSize = 1024 * 1024 * 1024; // 1GB in bytes
+            if (fileSize > maxSize) {
+                alert('文件大小超过1GB，请选择小于1GB的文件进行上传。');
+                return false; // Prevent form submission
+            }
+        }
+    }
+    function downloadResource(id) {
+        const get = new XMLHttpRequest();
+        get.open("GET", "/api/anakki/resource/download?key=" + id, true);
+        get.onreadystatechange = function () {
+            if (get.readyState === 4 && get.status === 200) {
+                const response = JSON.parse(get.responseText);
+                if (101 === response.code) {
+                    alert(response.data)
+                } else {
+                    const downloadUrl = response.data;
+                    window.open(downloadUrl);
+                }
+            }
+        };
+        get.setRequestHeader('authorization', localStorage.getItem('user-token'));
+        get.send();
+    }
 </script>
 </body>
 </html>

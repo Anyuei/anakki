@@ -29,7 +29,17 @@ import lombok.Setter;
 public class AnResource extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    @ApiModelProperty("上传用户id")
+    @TableField("upload_user_id")
+    private Long uploadUserId;
 
+    @ApiModelProperty("上传用户")
+    @TableField("upload_user")
+    private String uploadUser;
+
+    @ApiModelProperty("资源名称")
+    @TableField("resource_name")
+    private String resourceName;
 
     @ApiModelProperty("文件类型")
     @TableField("type")

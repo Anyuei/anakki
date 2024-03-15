@@ -162,7 +162,7 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
         }
         String currentNickname = BaseContext.getCurrentNickname();
         AnUser byNickname = getByNickname(currentNickname);
-        String url = COSUtil.uploadObject(
+        String url = COSUtil.uploadImage(
                 file,
                 COSUtil.region,
                 CosBucketNameConst.BUCKET_NAME_IMAGES, CosPathConst.BUCKET_NAME_AVATAR,

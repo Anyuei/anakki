@@ -1,28 +1,20 @@
 package com.anakki.data.utils.common;
 
-import com.alibaba.fastjson.JSONObject;
 import com.anakki.data.bean.constant.CosBucketNameConst;
 import com.qcloud.cos.COSClient;
 import com.qcloud.cos.ClientConfig;
 import com.qcloud.cos.auth.BasicCOSCredentials;
 import com.qcloud.cos.auth.BasicSessionCredentials;
 import com.qcloud.cos.auth.COSStaticCredentialsProvider;
-import com.qcloud.cos.exception.CosClientException;
-import com.qcloud.cos.exception.CosServiceException;
 import com.qcloud.cos.http.HttpMethodName;
-import com.qcloud.cos.model.GetObjectRequest;
 import com.qcloud.cos.model.ObjectMetadata;
-import com.qcloud.cos.model.PutObjectRequest;
 import com.qcloud.cos.model.PutObjectResult;
 import com.qcloud.cos.region.Region;
 import com.tencent.cloud.CosStsClient;
 import com.tencent.cloud.Response;
-import net.coobird.thumbnailator.Thumbnails;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
 import java.util.Date;
@@ -76,7 +68,7 @@ public class COSUtil {
             config.put("region", region);
             // 可以通过 allowPrefixes 指定前缀数组, 例子： a.jpg 或者 a/* 或者 * (使用通配符*存在重大安全风险, 请谨慎评估使用)
             config.put("allowPrefixes", new String[]{
-                    "front/*", "images/*", "avatar/*"
+                    "front/*", "images/*", "avatar/*", "resource/*"
             });
             // 密钥的权限列表。简单上传和分片需要以下的权限，其他权限列表请看 https://cloud.tencent.com/document/product/436/31923
             String[] allowActions = new String[]{
@@ -130,13 +122,13 @@ public class COSUtil {
         }
     }
 
-    public static String uploadObject(
+    public static String uploadImage(
             MultipartFile file,
             String region,
             String bucketName
             , String path,
             Boolean isRaw) throws IOException {
-        return uploadObject(
+        return uploadImage(
                 file,
                 getSessionCredential(),
                 region,
@@ -145,7 +137,7 @@ public class COSUtil {
                 isRaw);
     }
 
-    public static String uploadObject(
+    public static String uploadImage(
             MultipartFile file,
             BasicSessionCredentials basicSessionCredential,
             String region,
@@ -184,6 +176,46 @@ public class COSUtil {
         }
     }
 
+    public static String uploadResource(
+            MultipartFile file,
+            BasicSessionCredentials basicSessionCredential,
+            String region,
+            String bucketName,
+            String path) throws IOException {
+        try {
+            // 获取上传的文件的输入流
+            InputStream inputStream = file.getInputStream();
+            // 初始化COS客户端
+            ClientConfig clientConfig = new ClientConfig(new Region(region));
+            COSClient cosClient = new COSClient(new COSStaticCredentialsProvider(basicSessionCredential), clientConfig);
+            // 避免文件覆盖，生成唯一的文件名
+            String originalFilename = file.getOriginalFilename();
+            String key = getFileName(path, originalFilename);
+            // 创建上传Object的Metadata
+            ObjectMetadata objectMetadata = new ObjectMetadata();
+            objectMetadata.setContentLength(inputStream.available());
+            objectMetadata.setCacheControl("no-cache");
+            objectMetadata.setContentType(file.getContentType());
+            objectMetadata.setHeader("Content-Disposition","attachment");
+            cosClient.putObject(bucketName, key, inputStream, objectMetadata);
+            // 关闭COS客户端
+            cosClient.shutdown();
+            return key;
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public static String getFileName(String path, String originalFilename) {
+        if (!StringUtils.isEmpty(originalFilename)) {
+            String fileType = originalFilename.substring(originalFilename.lastIndexOf("."));
+            String fileName = UUID.randomUUID() + fileType;
+            return path + fileName;
+        } else {
+            return path + UUID.randomUUID();
+        }
+    }
+
     public static void main(String[] args) {
         System.out.println(getObjectUrl(CosBucketNameConst.BUCKET_NAME_IMAGES, "resource/DiskGenius.zip"));
     }
@@ -205,37 +237,10 @@ public class COSUtil {
         ClientConfig clientConfig = new ClientConfig(new Region(region));
         COSClient cosClient = new COSClient(new BasicCOSCredentials(TencentCloudAKSK.SECRET_ID, TencentCloudAKSK.SECRET_KEY), clientConfig);
         // 获取对象url
-        Date expirationDate = new Date(System.currentTimeMillis() +  60 * 1000);
+        Date expirationDate = new Date(System.currentTimeMillis() + 60 * 1000);
         URL objectUrl = cosClient.generatePresignedUrl(bucketName, replace, expirationDate, HttpMethodName.GET);
         // 关闭COS客户端
         cosClient.shutdown();
         return objectUrl.toString();
-    }
-
-    public static String getTmpUrl(
-            BasicSessionCredentials basicSessionCredential,
-            String region,
-            String bucketName,
-            String key
-    ) {
-        ClientConfig clientConfig = new ClientConfig(new Region(region));
-        // 3 生成 cos 客户端
-        COSClient cosclient = new COSClient(basicSessionCredential, clientConfig);
-
-
-        try {
-            URL objectUrl = cosclient.getObjectUrl(bucketName, key);
-            // 成功：putobjectResult 会返回文件的 etag
-            return objectUrl.getPath();
-        } catch (CosServiceException e) {
-            //失败，抛出 CosServiceException
-            e.printStackTrace();
-        } catch (CosClientException e) {
-            //失败，抛出 CosClientException
-            e.printStackTrace();
-        }
-        // 关闭客户端
-        cosclient.shutdown();
-        return "";
     }
 }

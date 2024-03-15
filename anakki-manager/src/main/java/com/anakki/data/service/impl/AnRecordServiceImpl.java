@@ -2,12 +2,9 @@ package com.anakki.data.service.impl;
 
 import com.anakki.data.bean.common.BaseContext;
 import com.anakki.data.bean.common.BasePageResult;
-import com.anakki.data.bean.common.enums.StatisticEnum;
 import com.anakki.data.bean.constant.CosBucketNameConst;
-import com.anakki.data.entity.AnIpAddress;
 import com.anakki.data.entity.AnRecord;
 import com.anakki.data.bean.constant.CosPathConst;
-import com.anakki.data.entity.AnStatisticLog;
 import com.anakki.data.entity.AnUser;
 import com.anakki.data.entity.request.ChangeRecordRequest;
 import com.anakki.data.entity.request.GetContentRequest;
@@ -30,7 +27,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * <p>
@@ -125,7 +121,7 @@ public class AnRecordServiceImpl extends ServiceImpl<AnRecordMapper, AnRecord> i
             BeanUtils.copyProperties(uploadRecordRequest, anRecord);
             BasicSessionCredentials sessionCredential = COSUtil.getSessionCredential();
 
-            String url = COSUtil.uploadObject(
+            String url = COSUtil.uploadImage(
                     multipartFile,
                     sessionCredential,
                     COSUtil.region,

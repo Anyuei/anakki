@@ -1,26 +1,33 @@
 package com.anakki.data.service.impl;
 
 import com.anakki.data.bean.common.BaseContext;
+import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.bean.constant.CosBucketNameConst;
 import com.anakki.data.bean.constant.CosPathConst;
 import com.anakki.data.entity.AnRecord;
 import com.anakki.data.entity.AnResource;
 import com.anakki.data.entity.AnUser;
+import com.anakki.data.entity.request.ListResourceRequest;
 import com.anakki.data.entity.request.UploadResourceRequest;
+import com.anakki.data.entity.response.ListResourceResponse;
 import com.anakki.data.mapper.AnResourceMapper;
 import com.anakki.data.service.AnResourceService;
 import com.anakki.data.service.AnUserService;
 import com.anakki.data.utils.common.COSUtil;
-import com.anakki.data.utils.common.JwtUtil;
-import com.auth0.jwt.JWT;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qcloud.cos.auth.BasicSessionCredentials;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -39,22 +46,57 @@ public class AnResourceServiceImpl extends ServiceImpl<AnResourceMapper, AnResou
     public void upload(UploadResourceRequest uploadResourceRequest) throws IOException {
         String currentNickname = BaseContext.getCurrentNickname(false);
         AnUser byNickname = anUserService.getByNickname(currentNickname);
-
+        //文件大小判空
+        for (MultipartFile multipartFile : uploadResourceRequest.getFiles()) {
+            long size = multipartFile.getSize();
+            if (size  > 1024*1024*1024){
+                throw new RuntimeException("文件不能超过1GB");
+            }
+        }
         for (MultipartFile multipartFile : uploadResourceRequest.getFiles()) {
             AnResource anResource = new AnResource();
             BeanUtils.copyProperties(uploadResourceRequest, anResource);
             BasicSessionCredentials sessionCredential = COSUtil.getSessionCredential();
 
-            String url = COSUtil.uploadObject(
+            String key = COSUtil.uploadResource(
                     multipartFile,
                     sessionCredential,
                     COSUtil.region,
                     CosBucketNameConst.BUCKET_NAME_IMAGES,
-                    CosPathConst.BUCKET_NAME_RESOURCE,
-                    true);
-            anResource.setFileUrl(url);
+                    CosPathConst.BUCKET_NAME_RESOURCE);
+            if (StringUtils.isEmpty(uploadResourceRequest.getTitle())){
+                anResource.setTitle(multipartFile.getOriginalFilename());
+            }
+            if (StringUtils.isEmpty(uploadResourceRequest.getDescription())){
+                anResource.setDescription(multipartFile.getOriginalFilename());
+            }
+            anResource.setFileUrl(key);
             anResource.setFileSize(multipartFile.getSize() / 1024);
+            anResource.setUploadUser(currentNickname);
+            anResource.setResourceName(multipartFile.getOriginalFilename());
+            anResource.setUploadUserId(byNickname.getId());
+            anResource.setType(multipartFile.getContentType());
             save(anResource);
         }
+    }
+
+    @Override
+    public BasePageResult<ListResourceResponse> listResource(ListResourceRequest listResourceRequest) {
+        String type = listResourceRequest.getType();
+        String description = listResourceRequest.getDescription();
+        String title = listResourceRequest.getTitle();
+
+        IPage<AnResource> resourceIPage = new Page<>(
+                listResourceRequest.getCurrent(),
+                listResourceRequest.getSize());
+        QueryWrapper<AnResource> anRecordQueryWrapper = new QueryWrapper<>();
+        anRecordQueryWrapper.like(null != type, "type", type);
+        anRecordQueryWrapper.like(null != description, "description", description);
+        anRecordQueryWrapper.like(null != title, "title", title);
+        anRecordQueryWrapper.orderByDesc("create_time");
+        IPage<AnResource> page = page(resourceIPage, anRecordQueryWrapper);
+        List<ListResourceResponse> listResourceResponses
+                = com.anakki.data.utils.common.BeanUtils.copyBeanList(page.getRecords(), ListResourceResponse.class);
+        return new BasePageResult<>(listResourceResponses, page.getTotal());
     }
 }
