@@ -53,6 +53,14 @@ public class AnUser extends BaseEntity  implements Serializable {
     @TableField("exp")
     private Long exp;
 
+    @ApiModelProperty("邮箱")
+    @TableField("mail")
+    private String mail;
+
+    @ApiModelProperty("是否是超管")
+    @TableField("is_super")
+    private Boolean isSuper;
+
     @ApiModelProperty("登录天数")
     @TableField("login_days")
     private Integer loginDays;

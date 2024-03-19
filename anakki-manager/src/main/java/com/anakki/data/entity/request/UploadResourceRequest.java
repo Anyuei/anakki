@@ -3,7 +3,6 @@ package com.anakki.data.entity.request;
 import com.anakki.data.entity.common.Pagination;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -29,4 +28,10 @@ public class UploadResourceRequest extends Pagination {
 
     @ApiModelProperty("资源文件")
     private MultipartFile[] files;
+
+    @ApiModelProperty("有效时间")
+    private LocalDateTime availableTime=LocalDateTime.now().plusDays(7);
+
+    @ApiModelProperty("是否是临时文件")
+    private Boolean isTemporary=true;
 }

@@ -6,6 +6,7 @@ import com.anakki.data.bean.common.ResponseDTO;
 import com.anakki.data.bean.constant.CosBucketNameConst;
 import com.anakki.data.entity.AnResource;
 import com.anakki.data.entity.request.ListResourceRequest;
+import com.anakki.data.entity.request.RemoveResourceRequest;
 import com.anakki.data.entity.request.UploadResourceRequest;
 import com.anakki.data.entity.response.ListResourceResponse;
 import com.anakki.data.service.An3dModelService;
@@ -14,10 +15,7 @@ import com.anakki.data.utils.common.COSUtil;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -60,5 +58,11 @@ public class AnResourceController {
     public ResponseDTO<String> resourceUpload(UploadResourceRequest uploadResourceRequest) throws IOException {
         anResourceService.upload(uploadResourceRequest);
         return ResponseDTO.succData("上传成功");
+    }
+    @ApiOperation(value = "删除资源")
+    @PostMapping("/remove")
+    public ResponseDTO<String> resourceRemove(@RequestBody RemoveResourceRequest request) {
+        anResourceService.removeResource(request);
+        return ResponseDTO.succData("删除成功");
     }
 }

@@ -49,6 +49,10 @@ public class AnResource extends BaseEntity implements Serializable {
     @TableField("title")
     private String title;
 
+    @ApiModelProperty("过期时间")
+    @TableField("expiration_date")
+    private LocalDateTime expirationDate;
+
     @ApiModelProperty("文件介绍")
     @TableField("description")
     private String description;

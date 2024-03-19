@@ -60,6 +60,7 @@
                     上传
                     </button>
                 </span>
+
             </div>
             <div class="card-table table-responsive">
                 <table class="table table-vcenter">
@@ -148,7 +149,7 @@
 
                 <div class="progress" style="margin-bottom: 0;" role="progressbar" aria-label="Example with label" aria-valuenow="0"
                      aria-valuemin="0" aria-valuemax="100">
-                    <div class="progress-bar" style="width: 0%">0%</div>
+                    <div class="progress-bar" style="width: 0%"  id="progressBar">0%</div>
                 </div>
                 </div>
         </div>
@@ -181,8 +182,8 @@
 
     // 进度条更新
     function progressHandle(e) {
-        var progress = document.querySelector('.progress-bar');
-        var percent = (e.loaded / e.total * 100).toFixed(2);
+        const progress = document.querySelector('.progress-bar');
+        const percent = (e.loaded / e.total * 100).toFixed(2);
         progress.style.width = percent + "%";
         progress.innerHTML = percent + "%";
     }
@@ -190,11 +191,19 @@
     function submitForm() {
 
         checkFileSize()
-
+        if (null==localStorage.getItem('user-token')){
+            alert("需要登录后上传")
+        }
         const title = document.getElementById("title").value;
         const description = document.getElementById("description").value;
         const fileInput = document.getElementById("file-1");
         const files = fileInput.files;
+
+        if (files.length === 0) {
+            alert("请选择文件后再上传");
+            return; // Prevent form submission
+        }
+
         // 创建FormData对象并添加表单数据
         const formData = new FormData();
         formData.append("title", title);
@@ -211,8 +220,10 @@
         get.onreadystatechange = function () {
             const response = JSON.parse(get.responseText);
             if (get.readyState === 4 && get.status === 200) {
-                if (response.data.code === 200) {
+                if (response.code === 200) {
                     alert("上传成功");
+                    list(1, 10);
+                    hideUploadModalAndResetProgress(); // 隐藏模态框并重置进度条
                 } else {
                     alert(response.data);
                 }
@@ -225,10 +236,14 @@
                 false);
         }
         get.send(formData);
-        // }
     }
 
-
+    function hideUploadModalAndResetProgress() {
+        $('#uploadModal').modal('hide');
+        // 重置进度条
+        var progressBar = document.getElementById("progressBar");
+        progressBar.value = 0;
+    }
     function list(current, pageSize, searchInput) {
         const url = window.location.href;
         const get = new XMLHttpRequest();
@@ -269,6 +284,7 @@
                         "                                    <td>" + createTime + "</td>\n" +
                         "    <td>\n" +
                         "        <button class=\"btn btn-success\" onclick=\"downloadResource(" + id + ")\">下载</button>\n" +
+                        "        <button class=\"btn btn-success\" onclick=\"deleteResource(" + id + ")\">删除</button>\n" +
                         "    </td>\n" +
                         "                                </tr>"
                 }
@@ -282,6 +298,7 @@
         };
         get.send();
     }
+
 
     function initPage(currentPage, pageSize, totalPages) {
         const paginationContainer = document.getElementById("page-module");
@@ -323,6 +340,9 @@
         }
     }
     function downloadResource(id) {
+        if (null==localStorage.getItem('user-token')){
+            alert("需要登录后下载")
+        }
         const get = new XMLHttpRequest();
         get.open("GET", "/api/anakki/resource/download?key=" + id, true);
         get.onreadystatechange = function () {
@@ -339,6 +359,39 @@
         get.setRequestHeader('authorization', localStorage.getItem('user-token'));
         get.send();
     }
+    function deleteResource(id) {
+        if (null == localStorage.getItem('user-token')) {
+            alert("需要登录后操作");
+            return; // 防止进一步执行
+        }
+        var isConfirmed = confirm("确定要删除这个资源吗？");
+        if (!isConfirmed) {
+            return; // If the user clicks "Cancel", stop the function
+        }
+        // 创建JSON对象包含资源ID
+        const data = JSON.stringify({"id": id});
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/api/anakki/resource/remove", true);
+
+        // 设置请求头以发送JSON数据
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.setRequestHeader('Authorization', localStorage.getItem('user-token'));
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                const response = JSON.parse(xhr.responseText);
+                if (101 === response.code) {
+                    alert(response.data)
+                } else {
+                    list(1, 10)
+                }
+            }
+        };
+
+        // 发送包含ID的JSON数据
+        xhr.send(data);
+    }
+
 </script>
 </body>
 </html>
