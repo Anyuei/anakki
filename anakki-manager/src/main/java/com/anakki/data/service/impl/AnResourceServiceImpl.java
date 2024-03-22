@@ -107,6 +107,9 @@ public class AnResourceServiceImpl extends ServiceImpl<AnResourceMapper, AnResou
 
     @Override
     public BasePageResult<ListResourceResponse> listResource(ListResourceRequest listResourceRequest) {
+        String currentNickname = BaseContext.getCurrentNickname(false);
+        AnUser user = anUserService.getByNickname(currentNickname);
+
         String type = listResourceRequest.getType();
         String description = listResourceRequest.getDescription();
         String title = listResourceRequest.getTitle();
@@ -119,6 +122,10 @@ public class AnResourceServiceImpl extends ServiceImpl<AnResourceMapper, AnResou
         anRecordQueryWrapper.like(null != description, "description", description);
         anRecordQueryWrapper.like(null != title, "title", title);
         anRecordQueryWrapper.eq("status", "COMMON");
+        anRecordQueryWrapper
+                .eq(!user.getUserName().equals("Anakki"),"upload_user_id",user.getId())
+                .or().eq("status", "OPEN");
+
         anRecordQueryWrapper.orderByDesc("create_time");
         IPage<AnResource> page = page(resourceIPage, anRecordQueryWrapper);
         List<ListResourceResponse> listResourceResponses
