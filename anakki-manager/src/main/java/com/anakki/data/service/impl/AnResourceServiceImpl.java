@@ -121,10 +121,9 @@ public class AnResourceServiceImpl extends ServiceImpl<AnResourceMapper, AnResou
         anRecordQueryWrapper.like(null != type, "type", type);
         anRecordQueryWrapper.like(null != description, "description", description);
         anRecordQueryWrapper.like(null != title, "title", title);
-        anRecordQueryWrapper.eq("status", "COMMON")
-                .and(wrapper -> wrapper.eq(!user.getUserName().equals("Anakki"),"upload_user_id",user.getId())
-                ).or().eq("status", "OPEN");
-
+        anRecordQueryWrapper.eq("status", "COMMON");
+        anRecordQueryWrapper.eq(!user.getUserName().equals("Anakki"),"upload_user_id",user.getId())
+                .or().eq("is_public", "true");
         anRecordQueryWrapper.orderByDesc("create_time");
         IPage<AnResource> page = page(resourceIPage, anRecordQueryWrapper);
         List<ListResourceResponse> listResourceResponses

@@ -69,6 +69,10 @@ public class AnResource extends BaseEntity implements Serializable {
     @TableField("file_size")
     private Long fileSize;
 
+    @ApiModelProperty("是否公开")
+    @TableField("is_public")
+    private Boolean is_public;
+
     @ApiModelProperty("浏览量")
     @TableField("view_count")
     private Long viewCount;
