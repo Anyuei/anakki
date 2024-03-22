@@ -132,8 +132,26 @@
                                     <input type="text" class="form-control form-control-sm" id="description"
                                            placeholder="请输入描述" required>
                                     <div class="invalid-feedback">请输入描述</div>
-
                             </div>
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label">是否全站公开可见</label>
+                                <div class="col-sm-10 d-flex align-items-center">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="isPublic">
+                                        <span class="toggle-switch-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label">是否临时文件(保存7天)</label>
+                                <div class="col-sm-10 d-flex align-items-center">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="isTemporary">
+                                        <span class="toggle-switch-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+
                             <div class="row">
                                     <div class="input-group">
                                         <input type="file" name="file-1[]" class="form-control" id="file-1" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
@@ -197,6 +215,9 @@
         const title = document.getElementById("title").value;
         const description = document.getElementById("description").value;
         const fileInput = document.getElementById("file-1");
+        const isPublic = document.getElementById("isPublic").value;
+        const isTemporary = document.getElementById("isTemporary").value;
+
         const files = fileInput.files;
 
         if (files.length === 0) {
@@ -208,7 +229,8 @@
         const formData = new FormData();
         formData.append("title", title);
         formData.append("description", description);
-
+        formData.append("isPublic", isPublic);
+        formData.append("isTemporary", isTemporary);
         for (let i = 0; i < files.length; i++) {
             formData.append("files", files[i]);
         }

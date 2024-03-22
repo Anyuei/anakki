@@ -26,6 +26,9 @@ public class UploadResourceRequest extends Pagination {
     @ApiModelProperty("资源介绍")
     private String description;
 
+    @ApiModelProperty("资源是否公开")
+    private Boolean isPublic;
+
     @ApiModelProperty("资源文件")
     private MultipartFile[] files;
 
