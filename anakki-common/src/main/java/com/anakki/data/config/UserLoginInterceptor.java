@@ -3,6 +3,7 @@ package com.anakki.data.config;
 import com.anakki.data.bean.common.BaseContext;
 import com.anakki.data.bean.common.UserToken;
 import com.anakki.data.utils.common.JwtUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * 拦截器：验证用户是否登录
  */
+@Slf4j
 public class UserLoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -31,6 +33,7 @@ public class UserLoginInterceptor implements HandlerInterceptor {
         }
         // 更新 token 有效时间 
         if (JwtUtil.isNeedUpdate(token)) {
+            log.info("token更新");
             // 过期就创建新的 token 给前端
             String newToken = JwtUtil.createToken(sub);
             response.setHeader(JwtUtil.USER_LOGIN_TOKEN, newToken);

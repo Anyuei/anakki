@@ -71,7 +71,7 @@ public class AnResource extends BaseEntity implements Serializable {
 
     @ApiModelProperty("是否公开")
     @TableField("is_public")
-    private Boolean is_public;
+    private Boolean isPublic;
 
     @ApiModelProperty("浏览量")
     @TableField("view_count")

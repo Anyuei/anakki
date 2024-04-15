@@ -17,9 +17,9 @@ public class CodeGenerator {
     public static void main(String[] args) {
         String PROJECT_DIR = "C:\\Users\\1\\Desktop\\gencode\\";
         // 数据库设置
-        String URL = "jdbc:mysql://49.232.11.30:3306/securex?autoReconnect=true&useServerPreparedStmts=false&rewriteBatchedStatements=true&characterEncoding=UTF-8&useSSL=false&allowMultiQueries=true&serverTimezone=UTC";
+        String URL = "jdbc:mysql://119.45.1.61:3306/anakki?autoReconnect=true&useServerPreparedStmts=false&rewriteBatchedStatements=true&characterEncoding=UTF-8&useSSL=false&allowMultiQueries=true&serverTimezone=UTC";
         String USERNAME = "root";
-        String PASSWORD = "FengXiang_123";
+        String PASSWORD = "ayp43520!@#";
         FastAutoGenerator.create(URL, USERNAME, PASSWORD)
                 // 全局配置
                 .globalConfig(builder -> {
@@ -31,13 +31,13 @@ public class CodeGenerator {
                 })
                 // 包配置
                 .packageConfig(builder -> {
-                    builder.parent("com.securex") // 设置父包名
-                            .moduleName("securex-manager") // 设置父包模块名
+                    builder.parent("com.anakki") // 设置父包名
+                            .moduleName("data") // 设置父包模块名
                             .pathInfo(Collections.singletonMap(OutputFile.mapperXml, PROJECT_DIR + "src/main/resources/mapper/")); // 设置mapperXml生成路径
                 })
                 // 策略配置
                 .strategyConfig(builder -> {
-                    builder.addInclude("sx_user_data_source_token") // 设置需要生成的表名
+                    builder.addInclude("an_resource") // 设置需要生成的表名
                             .addTablePrefix("") // 设置过滤表前缀
                             // Entity策略配置
                             .entityBuilder()

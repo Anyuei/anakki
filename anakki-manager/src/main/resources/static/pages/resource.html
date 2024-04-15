@@ -96,20 +96,23 @@
 <!--                    </tr>-->
                     </tbody>
                 </table>
-                <div class="card-footer d-flex align-items-center justify-content-end">
-                    <ul class="pagination m-0 ms-auto" id="page-module">
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><polyline points="15 6 9 12 15 18"></polyline></svg>
-                            </a>
-                        </li>
-                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><polyline points="9 6 15 12 9 18"></polyline></svg>
-                            </a>
-                        </li>
-                    </ul>
+                <div class="container">
+                    <div class="row justify-content-end">
+                        <ul class="pagination m-0 ms-auto" id="page-module">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><polyline points="15 6 9 12 15 18"></polyline></svg>
+                                </a>
+                            </li>
+                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><polyline points="9 6 15 12 9 18"></polyline></svg>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -158,7 +161,7 @@
                                     </div>
                                     <small class="form-text text-muted">支持1GB以内资源上传</small>
                             </div>
-                            <div class=" justify-content-between align-items-center">
+                            <div class="justify-content-between align-items-center">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">返回</button>
                                 <button type="button" class="btn btn-primary" onclick="submitForm()">提交</button>
                             </div>
@@ -215,8 +218,8 @@
         const title = document.getElementById("title").value;
         const description = document.getElementById("description").value;
         const fileInput = document.getElementById("file-1");
-        const isPublic = document.getElementById("isPublic").value;
-        const isTemporary = document.getElementById("isTemporary").value;
+        const isPublic = document.getElementById("isPublic").checked;
+        const isTemporary = document.getElementById("isTemporary").checked;
 
         const files = fileInput.files;
 
@@ -295,7 +298,7 @@
                         fileSize= (item.fileSize/(1024*1024)).toFixed(2)+"GB"
                     }
 
-                    const createTime = item.createTime.replace("T","");
+                    const createTime = item.createTime.replace("T"," ");
                     const uploadUser = item.uploadUser;
                     html = html + "                           <tr>\n" +
                         "                                    <td>" + resourceName + "</td>\n" +
@@ -304,7 +307,7 @@
                         "                                    <td>" + fileSize + "</td>\n" +
                         "                                    <td>" + uploadUser + "</td>\n" +
                         "                                    <td>" + createTime + "</td>\n" +
-                        "    <td>\n" +
+                        "    <td class='text-center'>\n" +
                         "        <button class=\"btn btn-success\" onclick=\"downloadResource(" + id + ")\">下载</button>\n" +
                         "        <button class=\"btn btn-success\" onclick=\"deleteResource(" + id + ")\">删除</button>\n" +
                         "    </td>\n" +

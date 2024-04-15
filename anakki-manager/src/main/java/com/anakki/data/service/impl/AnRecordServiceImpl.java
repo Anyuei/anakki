@@ -23,6 +23,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -57,7 +59,7 @@ public class AnRecordServiceImpl extends ServiceImpl<AnRecordMapper, AnRecord> i
         QueryWrapper<AnRecord> anRecordQueryWrapper = new QueryWrapper<>();
         anRecordQueryWrapper.eq("type",type);
         anRecordQueryWrapper.eq("status","COMMON");
-        anRecordQueryWrapper.orderByDesc("photo_time");
+        anRecordQueryWrapper.orderByDesc("photo_time","id");
         IPage<AnRecord> page = page(anRecordIPage, anRecordQueryWrapper);
         List<AnRecord> records = page.getRecords();
         //统计模块访问数
@@ -118,7 +120,12 @@ public class AnRecordServiceImpl extends ServiceImpl<AnRecordMapper, AnRecord> i
     public Boolean uploadRecord(UploadRecordRequest uploadRecordRequest) throws IOException {
         for (MultipartFile multipartFile : uploadRecordRequest.getFile()) {
             AnRecord anRecord = new AnRecord();
+            BufferedImage image = ImageIO.read(multipartFile.getInputStream());
+            int width = image.getWidth();
+            int height = image.getHeight();
+
             BeanUtils.copyProperties(uploadRecordRequest, anRecord);
+            anRecord.setImageSize(width+" x "+height);
             BasicSessionCredentials sessionCredential = COSUtil.getSessionCredential();
 
             String url = COSUtil.uploadImage(

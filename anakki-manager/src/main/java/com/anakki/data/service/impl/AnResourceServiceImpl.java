@@ -29,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -95,12 +96,16 @@ public class AnResourceServiceImpl extends ServiceImpl<AnResourceMapper, AnResou
             if (StringUtils.isEmpty(uploadResourceRequest.getDescription())) {
                 anResource.setDescription(multipartFile.getOriginalFilename());
             }
+            if (uploadResourceRequest.getIsTemporary()) {
+                anResource.setExpirationDate(uploadResourceRequest.getAvailableTime());
+            }
             anResource.setFileUrl(key);
             anResource.setFileSize(multipartFile.getSize() / 1024);
             anResource.setUploadUser(currentNickname);
             anResource.setResourceName(multipartFile.getOriginalFilename());
             anResource.setUploadUserId(byNickname.getId());
             anResource.setType(multipartFile.getContentType());
+            anResource.setIsPublic(uploadResourceRequest.getIsPublic());
             save(anResource);
         }
     }
@@ -148,5 +153,9 @@ public class AnResourceServiceImpl extends ServiceImpl<AnResourceMapper, AnResou
         }
         COSUtil.deleteObject(CosBucketNameConst.BUCKET_NAME_IMAGES,resource.getFileUrl());
         return removeById(id);
+    }
+
+    public static void main(String[] args) {
+        LinkedHashMap<Object, Object> objectObjectLinkedHashMap = new LinkedHashMap<>();
     }
 }

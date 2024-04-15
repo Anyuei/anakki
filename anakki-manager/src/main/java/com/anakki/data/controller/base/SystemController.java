@@ -1,12 +1,16 @@
 package com.anakki.data.controller.base;
 
+import com.anakki.data.bean.common.RandomList;
 import com.anakki.data.bean.common.ResponseDTO;
+import com.anakki.data.entity.request.RandomNameRequest;
 import com.anakki.data.entity.request.SendMailRequest;
 import com.anakki.data.service.AnRecordService;
 import com.anakki.data.service.AnStatisticService;
 import com.anakki.data.service.AnSystemConfigService;
 import com.anakki.data.utils.IPUtils;
 import com.anakki.data.utils.common.EmailUtil;
+import com.anakki.data.utils.common.RandomNameUtil;
+import com.anakki.data.utils.common.RedisUtil;
 import com.ramostear.captcha.HappyCaptcha;
 import com.ramostear.captcha.support.CaptchaStyle;
 import io.swagger.annotations.ApiOperation;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Random;
 
 /**
  * <p>
@@ -39,6 +44,7 @@ public class SystemController {
 
     @Autowired
     private AnStatisticService anStatisticService;
+
     @ApiOperation(value = "发送邮件")
     @PostMapping("/send-mail")
     public ResponseDTO<Boolean> sendMail(@RequestBody SendMailRequest sendMailRequest) {
@@ -113,5 +119,27 @@ public class SystemController {
         //统计模块访问数
         anStatisticService.increaseByName(moduleType,ipAddr);
         return ResponseDTO.succData(true);
+    }
+
+
+    @ApiOperation(value = "随机名字")
+    @PostMapping("/setRandomName")
+    public ResponseDTO<String> setRandomName(@RequestBody RandomNameRequest request) {
+        RandomNameUtil.insertRandomNames(request.getNames(),request.getOpenTime());
+        return ResponseDTO.succ();
+    }
+
+    @ApiOperation(value = "随机名字开奖")
+    @GetMapping("/getRandomName")
+    public ResponseDTO<List<RandomList>> getRandomName() {
+        List<RandomList> randomNames = RandomNameUtil.getRandomNames();
+        return ResponseDTO.succData(randomNames);
+    }
+
+    @ApiOperation(value = "清空开奖历史")
+    @DeleteMapping("/removeRandomName")
+    public ResponseDTO<String> removeRandomName() {
+        RandomNameUtil.deleteRandomNames();
+        return ResponseDTO.succ();
     }
 }

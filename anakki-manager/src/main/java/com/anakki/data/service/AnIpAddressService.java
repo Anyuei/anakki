@@ -16,4 +16,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface AnIpAddressService extends IService<AnIpAddress> {
 
     AnIpAddress getAddressByIp(String ip);
+
+    void updateAddressByIp();
 }
