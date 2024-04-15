@@ -47,6 +47,10 @@
         vertical-align: top;
         border-top: .1rem solid #484848;
     }
+    .scrollable-td {
+        max-width: 4rem; /* 设置最大宽度，根据实际情况调整 */
+        overflow-x: auto; /* 水平滚动条 */
+    }
 </style>
 <body>
 <!--通用顶部导航-->
@@ -88,41 +92,46 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="myModalLabel">Submit Form</h5>
+                        <h5 class="modal-title" id="myModalLabel">抽奖工具</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <form id="openNameForm">
-                            <label for="names">候选人:</label>
+                            <label for="gift">礼物</label>
+                            <input type="text" class="form-control" id="gift" name="gift"><br>
+
+                            <label for="names">候选人:(参与人以逗号,分隔)</label>
                             <input type="text" class="form-control" id="names" name="names"><br>
+
                             <label for="openTime">开奖时间:</label>
                             <input type="datetime-local" class="form-control" id="openTime" name="openTime"><br>
                             <button type="submit" class="btn btn-primary">提交</button>
                         </form>
                     </div>
                     <button id="historyButton" class="btn btn-primary">历史开奖</button>
-                    <table class="table table-hover align-items-center" data-resizable="true">
-                        <thead>
-                        <tr class="bg-white" scope="row">
-                            <th scope="col">参与人</th>
-                            <th scope="col">中奖人</th>
-                            <th scope="col">开奖时间
-                                <button id="removeOpenHistory" class="btn btn-primary">清空</button>
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody id="openList" style="color: darkgray;">
-                        </tbody>
-                    </table>
+                    <div class="modal-body">
+                        <table class="table table-hover align-items-center" data-resizable="true">
+                            <thead>
+                            <tr class="bg-white" scope="row">
+                                <th scope="col">发起人</th>
+                                <th scope="col">奖品</th>
+                                <th scope="col">参与人</th>
+                                <th scope="col">中奖人</th>
+                                <th scope="col">开奖时间
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody id="openList" style="color: darkgray;">
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </main>
-<!-- 页面底部 -->
-<div id="footer"></div>
 <!-- Core -->
 <script src="../assets/vendor/jquery/jquery.min.js"></script>
 <script src="../assets/vendor/popper/popper.min.js"></script>
@@ -154,19 +163,25 @@
 
             const names = $('#names').val().split(','); // 以逗号分隔输入的名字
             const openTime = $('#openTime').val();
-
+            const gift = $('#gift').val();
             const data = {
                 names: names,
-                openTime: openTime
+                openTime: openTime,
+                gift: gift
             };
 
             $.ajax({
                 type: "POST",
-                url: "/base/system/setRandomName",
+                url: "/api/anakki/3dModel/setRandomName",
                 contentType: "application/json",
                 data: JSON.stringify(data),
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader('authorization', localStorage.getItem('user-token')); // Include the token in the Authorization header
+                },
                 success: function(response) {
-                    console.log("Data submitted successfully");
+                    if (101 === response.code) {
+                        alert(response.data)
+                    }
                 },
                 error: function(xhr, status, error) {
                     console.error("Failed to submit data: " + error);
@@ -180,10 +195,6 @@
         $('#historyButton').click(function() {
             // 在这里添加按钮点击时要执行的方法
             listOpenName(); // 调用名为showHistory的方法
-        });
-        $('#removeOpenHistory').click(function() {
-            // 在这里添加按钮点击时要执行的方法
-            removeOpenHistory(); // 调用名为showHistory的方法
         });
     });
     function list3dModelFile(current, pageSize, searchInput) {
@@ -250,28 +261,27 @@
                 const itemList = response.data;
                 for (let i = 0; i < itemList.length; i++) {
                     const item = itemList[i];
-                    const names = item.names;
-                    let name = item.name;
-                    if (null==name){
-                        name="未开奖";
+                    const users = item.users;
+                    const giftName = item.giftName;
+                    const initiator =item.initiator;
+                    let winners = item.winners;
+                    if (null==winners){
+                        winners="未开奖";
                     }
                     const openTime = item.openTime;
                     // 去掉时间字符串中的"T"
                     const cleanedTimeString = openTime.replace("T", " ");
                     html = html + "<tr>\n" +
-                        "<td>"+names+"</td>" +
-                        "<td>" +name+"</td>" +
+                        "<td>"+initiator+"</td>" +
+                        "<td  class=\"scrollable-td\">"+giftName+"</td>" +
+                        "<td class=\"scrollable-td\">"+users+"</td>" +
+                        "<td>" +winners+"</td>" +
                         "<td>" +cleanedTimeString+"</td>" +
                         "</tr>"
                 }
                 document.getElementById("openList").innerHTML = html;
             }
         };
-        get.send();
-    }
-    function removeOpenHistory() {
-        const get = new XMLHttpRequest();
-        get.open("DELETE", "/base/system/removeRandomName", true);
         get.send();
     }
     function initPage(currentPage, pageSize, totalPages) {

@@ -19,6 +19,9 @@ import java.util.List;
  */
 @Data
 public class RandomNameRequest {
+    @ApiModelProperty("礼物不能为空")
+    @NotBlank(message = "礼物不能为空")
+    private String gift;
 
     @ApiModelProperty("名字不能为空")
     @NotEmpty(message = "名字不能为空")
