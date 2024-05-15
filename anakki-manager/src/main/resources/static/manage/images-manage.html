@@ -106,6 +106,7 @@
                                     <input type="datetime-local" class="form-control form-control-sm"
                                            id="images-create-time"
                                            placeholder="请输入图片拍摄时间" required>
+                                    <small class="form-text text-muted">拍摄时间服务器优先从图片元数据获取</small>
                                 </div>
                             </div>
                             <div class="mb-3 row">
@@ -140,7 +141,7 @@
                                 </div>
                             </div>
                             <div class="mb-3 row">
-                                <label class="col-sm-2 col-form-label">是否发送原图</label>
+                                <label class="col-sm-2 col-form-label">是否显示原图</label>
                                 <div class="col-sm-10 d-flex align-items-center">
                                     <label class="toggle-switch">
                                         <input type="checkbox" id="images-raw">
@@ -243,6 +244,7 @@
                         <th scope="col">拍摄地点</th>
                         <th scope="col">图片描述</th>
                         <th scope="col">拍摄者</th>
+                        <th scope="col">图片尺寸</th>
                         <th scope="col">文件大小</th>
                         <th scope="col">是否展示</th>
                         <th scope="col">图片</th>

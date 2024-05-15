@@ -8,6 +8,7 @@ import com.anakki.data.service.AnRecordService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.drew.imaging.ImageProcessingException;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +41,7 @@ public class AnRecordManageController {
 
     @ApiOperation(value = "上传图文")
     @PostMapping("/upload")
-    public ResponseDTO<Boolean> upload(UploadRecordRequest uploadRecordRequest) throws IOException {
+    public ResponseDTO<Boolean> upload(UploadRecordRequest uploadRecordRequest) throws IOException, ImageProcessingException {
         Boolean status=anRecordService.uploadRecord(uploadRecordRequest);
         return ResponseDTO.succData(status);
     }

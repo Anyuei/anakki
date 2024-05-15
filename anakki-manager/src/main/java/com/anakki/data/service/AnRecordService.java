@@ -7,6 +7,7 @@ import com.anakki.data.entity.request.GetContentRequest;
 import com.anakki.data.entity.request.ListRecordRequest;
 import com.anakki.data.entity.request.UploadRecordRequest;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.drew.imaging.ImageProcessingException;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -29,7 +30,7 @@ public interface AnRecordService extends IService<AnRecord> {
 
     BasePageResult<AnRecord> listRecordRequest(ListRecordRequest listRecordRequest);
 
-    Boolean uploadRecord(UploadRecordRequest uploadRecordRequest) throws IOException;
+    Boolean uploadRecord(UploadRecordRequest uploadRecordRequest) throws IOException, ImageProcessingException;
 
     void changeRecordStatus(ChangeRecordRequest changeRecordRequest);
 

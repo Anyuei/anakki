@@ -17,6 +17,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.drew.imaging.ImageMetadataReader;
+import com.drew.imaging.ImageProcessingException;
+import com.drew.metadata.Directory;
+import com.drew.metadata.Metadata;
+import com.drew.metadata.Tag;
 import com.qcloud.cos.auth.BasicSessionCredentials;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +33,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -110,14 +116,14 @@ public class AnRecordServiceImpl extends ServiceImpl<AnRecordMapper, AnRecord> i
         anRecordQueryWrapper.le(null != createTimeEnd, "create_time", createTimeEnd);
         anRecordQueryWrapper.ge(null != photoTimeStart, "photo_time", photoTimeStart);
         anRecordQueryWrapper.le(null != photoTimeEnd, "photo_time", photoTimeEnd);
-        anRecordQueryWrapper.orderByDesc("update_time");
+        anRecordQueryWrapper.orderByDesc("create_time");
         IPage<AnRecord> page = page(anRecordIPage, anRecordQueryWrapper);
         return new BasePageResult<>(page.getRecords(), page.getTotal());
 
     }
 
     @Override
-    public Boolean uploadRecord(UploadRecordRequest uploadRecordRequest) throws IOException {
+    public Boolean uploadRecord(UploadRecordRequest uploadRecordRequest) throws IOException, ImageProcessingException {
         for (MultipartFile multipartFile : uploadRecordRequest.getFile()) {
             AnRecord anRecord = new AnRecord();
             BufferedImage image = ImageIO.read(multipartFile.getInputStream());
@@ -127,6 +133,17 @@ public class AnRecordServiceImpl extends ServiceImpl<AnRecordMapper, AnRecord> i
             BeanUtils.copyProperties(uploadRecordRequest, anRecord);
             anRecord.setImageSize(width+" x "+height);
             BasicSessionCredentials sessionCredential = COSUtil.getSessionCredential();
+
+            Metadata metadata = ImageMetadataReader.readMetadata(multipartFile.getInputStream());
+            for (Directory directory : metadata.getDirectories()) {
+                for (Tag tag : directory.getTags()) {
+                    if (tag.getTagName().equals("Date/Time Original")&&null!=tag.getDescription()) {
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy:MM:dd HH:mm:ss");
+                        LocalDateTime dateTime = LocalDateTime.parse(tag.getDescription(), formatter);
+                        anRecord.setPhotoTime(dateTime);
+                    }
+                }
+            }
 
             String url = COSUtil.uploadImage(
                     multipartFile,

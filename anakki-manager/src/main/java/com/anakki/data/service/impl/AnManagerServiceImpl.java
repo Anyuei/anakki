@@ -83,7 +83,7 @@ public class AnManagerServiceImpl extends ServiceImpl<AnManagerMapper, AnManager
         String username = managerLoginRequest.getUsername();
         String password = managerLoginRequest.getPassword();
         AnManager manager = getByNickname(username);
-        if (!MD5SaltUtil.validData(password,manager.getPassword())) {
+        if (null==manager||!MD5SaltUtil.validData(password,manager.getPassword())) {
             throw new RuntimeException("用户不存在或密码错误");
         }
         ManagerToken managerToken = new ManagerToken();
