@@ -33,7 +33,7 @@
         </rollingPolicy>
     </appender>
 
-    <root level="INFO">
+    <root level="error">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="RollingFile"/>
         <appender-ref ref="ERROE_RollingFile"/>

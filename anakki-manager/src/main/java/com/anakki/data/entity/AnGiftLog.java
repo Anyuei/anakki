@@ -32,7 +32,7 @@ public class AnGiftLog extends BaseEntity implements Serializable {
     @TableField("gift_name")
     private String giftName;
 
-    @ApiModelProperty("中奖人	")
+    @ApiModelProperty("中奖人")
     @TableField("winners")
     private String winners;
 

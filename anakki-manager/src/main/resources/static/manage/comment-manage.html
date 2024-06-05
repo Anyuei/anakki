@@ -182,7 +182,10 @@
                     const likeCount = item.likeCount;
                     const unlikeCount = item.unlikeCount;
                     const status = item.status;
-
+                    let isChecked = "";
+                    if (status==="true"){
+                        isChecked="checked=''";
+                    }
                     const createTime = item.createTime;
                     const updateTime = item.updateTime;
                     html = html + "                           <tr scope=\"row\">\n" +
@@ -209,7 +212,7 @@
                         "                                    <td>" + unlikeCount + "</td>\n" +
                         "                                   <td> " +
                         "                                      <label class=\"toggle-switch\">\n" +
-                        "                                      <input type=\"checkbox\" "+status+" value="+ id +" onchange=\"updateCommentStatus(this)\">\n" +
+                        "                                      <input type=\"checkbox\" "+isChecked+" value="+ id +" onchange=\"updateCommentStatus(this)\">\n" +
                         "                                      <span class=\"toggle-switch-slider\"></span>\n" +
                         "                                      </label>" +
                         "                                    </td>" +

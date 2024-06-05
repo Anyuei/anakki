@@ -32,6 +32,7 @@ public class An3dModelServiceImpl extends ServiceImpl<An3dModelMapper, An3dModel
                 list3dModelRequest.getSize());
         QueryWrapper<An3dModel> list3dModelResponseQueryWrapper = new QueryWrapper<>();
         list3dModelResponseQueryWrapper.eq("status","true");
+        list3dModelResponseQueryWrapper.like(null!=list3dModelRequest.getSearchInput(),"title",list3dModelRequest.getSearchInput());
         IPage<An3dModel> page = page(anFriendsCommentPage, list3dModelResponseQueryWrapper);
         List<List3dModelResponse> list3dModelResponses = BeanUtils.copyBeanList(page.getRecords(), List3dModelResponse.class);
         return new BasePageResult<>(list3dModelResponses, page.getTotal());

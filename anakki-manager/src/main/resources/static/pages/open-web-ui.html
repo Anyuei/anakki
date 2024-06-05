@@ -47,12 +47,13 @@
         margin: 0;
         height: 100%;
     }
+
     .webui {
         border: none;
         width: 100%;
         top: 0;
         left: 0;
-        padding-top: 4rem;
+            padding-top: 4rem;
         height: 100vh;
     }
     iframe {
@@ -64,7 +65,11 @@
 <body>
 <!--通用顶部导航-->
 <div id="header"></div>
+
 <div class="webui">
+    <div class="connect-div" style="text-align: center;">
+        将您的邮箱账号发送到本邮箱进行账户激活：841843520@qq.com
+    </div>
     <iframe src="https://openwebui.anakkix.cn">
         <p>您的浏览器不支持iframe标签。</p>
     </iframe>
@@ -88,6 +93,11 @@
 <script>
     window.onload = function () {
         $('#header').load("../pages/header.html", loadPersonDetail);
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", "/base/system/view?moduleType=OPEN_WEB_UI", true);
+        xhr.onreadystatechange = function () {
+        };
+        xhr.send();
     }
 </script>
 </body>

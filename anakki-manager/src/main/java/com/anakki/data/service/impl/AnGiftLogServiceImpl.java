@@ -54,7 +54,7 @@ public class AnGiftLogServiceImpl extends ServiceImpl<AnGiftLogMapper, AnGiftLog
         objectQueryWrapper.orderByDesc("create_time");
         return list(objectQueryWrapper);
     }
-    @Scheduled(fixedRate = 10000)
+    //@Scheduled(fixedRate = 10000)
     public void openName(){
         long startTime = System.currentTimeMillis();
         List<AnGiftLog> anGiftLogs = getRandomNames();

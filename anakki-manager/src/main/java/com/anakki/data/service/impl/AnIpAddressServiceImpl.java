@@ -64,14 +64,15 @@ public class AnIpAddressServiceImpl extends ServiceImpl<AnIpAddressMapper, AnIpA
 
     @Override
     public void updateAddressByIp() {
-        List<AnIpAddress> ipAddresses = list();
+        QueryWrapper<AnIpAddress> objectQueryWrapper = new QueryWrapper<>();
+        objectQueryWrapper.eq("state","0");
+        List<AnIpAddress> ipAddresses = list(objectQueryWrapper);
         ipAddresses.forEach(ipAddress ->{
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            if (StringUtils.isEmpty(ipAddress.getCountry())||StringUtils.isEmpty(ipAddress.getCity())){
                 HashMap<String, String> objectObjectHashMap = new HashMap<>();
                 objectObjectHashMap.put("key","koAO6jUwkei2qVUvnQ4EpoSQL81qcG6YGZTSnM8XgJJJhLKAtEPYZBDEnYS2iTmZ");
                 objectObjectHashMap.put("ip",ipAddress.getIp());
@@ -82,15 +83,15 @@ public class AnIpAddressServiceImpl extends ServiceImpl<AnIpAddressMapper, AnIpA
                     JSONObject data = resultJsonString.getJSONObject("data");
                     ipAddress.setCountry(data.getString("country"));
                     ipAddress.setCity(data.getString("city"));
+                    ipAddress.setProv(data.getString("prov"));
                     ipAddress.setDistrict(data.getString("district"));
                     ipAddress.setContentJson(JSONObject.toJSONString(data));
+                    ipAddress.setState("1");
                     updateById(ipAddress);
                 }catch (Exception e){
                     log.error("地域获取异常："+e.getMessage());
                 }
-            }
+
         });
-
     }
-
 }

@@ -48,8 +48,11 @@ public class AnIpAddress extends BaseEntity implements Serializable {
     @TableField("district")
     private String district;
 
-    @ApiModelProperty("区")
+    @ApiModelProperty("json")
     @TableField("content_json")
     private String contentJson;
 
+    @ApiModelProperty("状态")
+    @TableField("state")
+    private String state;
 }

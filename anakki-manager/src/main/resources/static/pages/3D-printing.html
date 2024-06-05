@@ -27,8 +27,8 @@
     }
 
     body {
-        color: #495057;
-        background-color: #151111f2;
+        color: #eaeaea;
+        background-color: #2c6863;
     }
 
     .vertical-span {
@@ -39,17 +39,42 @@
     }
 
     .golden-ratio-image {
-        width: 150px; /* 设置图片的宽度 */
-        height: calc(150px / 1.618); /* 根据黄金比例计算图片的高度 */
+        width: 175px;
+        height: calc(175px / 1.618);
+        border-radius: 1.0rem;
     }
+
     .table th, .table td {
         padding: 0.4rem;
         vertical-align: top;
-        border-top: .1rem solid #484848;
+        border-top: .1rem solid #000;
     }
+
     .scrollable-td {
         max-width: 4rem; /* 设置最大宽度，根据实际情况调整 */
         overflow-x: auto; /* 水平滚动条 */
+    }
+
+    .page-item.disabled .page-link {
+        color: #ffffffc4;
+        pointer-events: none;
+        cursor: auto;
+        background-color: #fff0;
+        border-color: #dee2e600;
+    }
+
+    .page-item.active .page-link {
+        z-index: 1;
+        color: #ffffffd6;
+        background-color: #288cff00;
+        border-color: #288cff73;
+    }
+
+    .search-button {
+        border-top-left-radius: 0.0rem;
+        border-top-right-radius: 0.375rem;
+        border-bottom-right-radius: 0.375rem;
+        border-bottom-left-radius: 0.0rem;
     }
 </style>
 <body>
@@ -60,35 +85,42 @@
     <div style="margin-top: 4rem;">
         <ul class="nav justify-content-center">
             <div class="container" style="height: 48rem;">
-                <table class="table table-hover align-items-center" data-resizable="true">
-                    <thead>
-                    <tr class="bg-white" scope="row">
-                        <th scope="col">模型图片</th>
-                        <th scope="col">标题</th>
-                        <th scope="col">模块类型</th>
-                        <th scope="col">描述</th>
-                        <th scope="col">下载量</th>
-                        <th scope="col">下载</th>
-                    </tr>
-                    </thead>
-                    <tbody id="list" style="color: darkgray;">
+                <div class="input-group mb-3 mt-1">
+                    <input id="searchInputText" type="text" class="form-control" placeholder="模型名称"
+                           aria-label="模型名称" aria-describedby="button-addon2">
+                    <button class="btn search-button" type="button" id="button-addon2" onclick="searchButton()">搜索
+                    </button>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table class="table align-items-center" data-resizable="true">
+                        <thead style="color: #000;">
+                        <tr class="" scope="row">
+                            <th scope="col">模型图片</th>
+                            <th scope="col">标题</th>
+                            <th scope="col">描述</th>
+                            <th scope="col" style="min-width: 55px;">下载量</th>
+                            <th scope="col" style="min-width: 55px;">下载</th>
+                        </tr>
+                        </thead>
+                        <tbody id="list" style="color: darkgray;">
 
-                    </tbody>
-                </table>
-                <div class="container">
-                    <div class="row justify-content-end" style="margin-bottom: 0.5rem;">
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" style="line-height: 0;">
-                            抽奖
-                        </button>
-                        <ul class="pagination" id="page-module">
-                        </ul>
-                    </div>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row justify-content-end" style="margin-bottom: 0.5rem;">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal"
+                            style="line-height: 0;">
+                        抽奖
+                    </button>
+                    <ul class="pagination" id="page-module">
+                    </ul>
                 </div>
             </div>
         </ul>
     </div>
     <div>
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+             aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -131,6 +163,20 @@
             </div>
         </div>
     </div>
+
+
+    <div>
+        <div class="modal fade" id="3dPrintImgModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document" style="max-width: 1140px;">
+                <div class="modal-content" style="background-color: #686868;">
+                    <div class="modal-body" style="border-radius: 1.4rem;">
+                        <img src="" id="3dPrintImg" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </main>
 <!-- Core -->
 <script src="../assets/vendor/jquery/jquery.min.js"></script>
@@ -157,8 +203,10 @@
             'wrapAround': true
         });
     };
-    $(document).ready(function() {
-        $('#openNameForm').submit(function(event) {
+
+
+    $(document).ready(function () {
+        $('#openNameForm').submit(function (event) {
             event.preventDefault();
 
             const names = $('#names').val().split(','); // 以逗号分隔输入的名字
@@ -175,15 +223,15 @@
                 url: "/api/anakki/3dModel/setRandomName",
                 contentType: "application/json",
                 data: JSON.stringify(data),
-                beforeSend: function(xhr) {
+                beforeSend: function (xhr) {
                     xhr.setRequestHeader('authorization', localStorage.getItem('user-token')); // Include the token in the Authorization header
                 },
-                success: function(response) {
+                success: function (response) {
                     if (101 === response.code) {
                         alert(response.data)
                     }
                 },
-                error: function(xhr, status, error) {
+                error: function (xhr, status, error) {
                     console.error("Failed to submit data: " + error);
                 }
             });
@@ -191,16 +239,27 @@
             $('#myModal').modal('hide');
         });
     });
-    $(document).ready(function() {
-        $('#historyButton').click(function() {
+    $(document).ready(function () {
+        $('#historyButton').click(function () {
             // 在这里添加按钮点击时要执行的方法
             listOpenName(); // 调用名为showHistory的方法
         });
     });
+
+    function searchButton() {
+        const input = document.getElementById("searchInputText").value;
+        list3dModelFile(1, 10, input);
+    }
+
     function list3dModelFile(current, pageSize, searchInput) {
+        if (null == searchInput || "" === searchInput) {
+            searchInput = "";
+        } else {
+            searchInput = "&searchInput=" + searchInput;
+        }
         const url = window.location.href;
         const get = new XMLHttpRequest();
-        get.open("GET", "/base/anakki/3dModel/list-3dModels?current=" + current + "&size=" + pageSize, true);
+        get.open("GET", "/base/anakki/3dModel/list-3dModels?current=" + current + "&size=" + pageSize + searchInput, true);
         get.onreadystatechange = function () {
             if (get.readyState === 4 && get.status === 200) {
                 let html = "";
@@ -223,20 +282,22 @@
                         "                                    <td>\n" +
                         "                                        <div class=\"media align-items-center\">\n" +
                         "                                            <div>\n" +
-                        "                <img src=\"" + modelImageUrl + "\" class=\"golden-ratio-image\" onclick=\"zoomImage(this)\">\n" +
+                        "                                                 <img src=\"" + modelImageUrl + "\" alt=\"" + title + "\" class=\"golden-ratio-image\" data-toggle=\"modal\" data-target=\"#3dPrintImgModal\" onclick='viewImg(this)'>\n" +
                         "                                            </div>\n" +
-                        "                                            <div class=\"media-body\">\n" +
+                        "                                            <div class=\"media-body\" style=\"min-width: 200px;\">\n" +
                         "                                                <span class=\"vertical-span\">文件大小" + fileSize + "MB</span>" +
                         "                                                <span class=\"vertical-span\">上传时间：" + createTime.replace("T", " ") + "</span>\n" +
                         "                                            </div>\n" +
                         "                                        </div>\n" +
                         "                                    </td>\n" +
                         "                                    <td>" + title + "</td>\n" +
-                        "                                    <td>" + type + "</td>\n" +
                         "                                    <td>" + description + "</td>\n" +
                         "                                    <td>" + downloadCount + "</td>\n" +
                         "    <td>\n" +
-                        "        <button class=\"btn btn-success\" onclick=\"downloadModel(" + id + ")\">下载模型</button>\n" +
+                        "        <div style='color: #00ff58;' onclick=\"downloadModel(" + id + ")\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" fill=\"currentColor\" class=\"bi bi-download\" viewBox=\"0 0 16 16\">\n" +
+                        "  <path d=\"M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z\"/>\n" +
+                        "  <path d=\"M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z\"/>\n" +
+                        "</svg></div>\n" +
                         "    </td>\n" +
                         "                                </tr>"
                 }
@@ -250,6 +311,11 @@
         };
         get.send();
     }
+
+    function viewImg(html) {
+        document.getElementById("3dPrintImg").src = html.src;
+    }
+
     function listOpenName() {
         const get = new XMLHttpRequest();
         get.open("GET", "/base/system/getRandomName", true);
@@ -263,20 +329,20 @@
                     const item = itemList[i];
                     const users = item.users;
                     const giftName = item.giftName;
-                    const initiator =item.initiator;
+                    const initiator = item.initiator;
                     let winners = item.winners;
-                    if (null==winners){
-                        winners="未开奖";
+                    if (null == winners) {
+                        winners = "未开奖";
                     }
                     const openTime = item.openTime;
                     // 去掉时间字符串中的"T"
                     const cleanedTimeString = openTime.replace("T", " ");
                     html = html + "<tr>\n" +
-                        "<td>"+initiator+"</td>" +
-                        "<td  class=\"scrollable-td\">"+giftName+"</td>" +
-                        "<td class=\"scrollable-td\">"+users+"</td>" +
-                        "<td>" +winners+"</td>" +
-                        "<td>" +cleanedTimeString+"</td>" +
+                        "<td>" + initiator + "</td>" +
+                        "<td  class=\"scrollable-td\">" + giftName + "</td>" +
+                        "<td class=\"scrollable-td\">" + users + "</td>" +
+                        "<td>" + winners + "</td>" +
+                        "<td>" + cleanedTimeString + "</td>" +
                         "</tr>"
                 }
                 document.getElementById("openList").innerHTML = html;
@@ -284,6 +350,7 @@
         };
         get.send();
     }
+
     function initPage(currentPage, pageSize, totalPages) {
         const paginationContainer = document.getElementById("page-module");
         let html = "";

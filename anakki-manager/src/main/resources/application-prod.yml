@@ -1,5 +1,5 @@
 server:
-  port: 80
+  port: 8080
 
 spring:
   application:
@@ -44,11 +44,11 @@ spring:
   # redis 配置
   redis:
     # 地址
-    host: 49.232.11.30
+    host: 119.45.1.61
     # 端口，默认为6379
-    port: 6479
+    port: 6379
     # 密码
-    password: fxkj_123
+    password: ayp43520!@#
     # 连接超时时间
     timeout: 10s
     lettuce:
@@ -85,3 +85,8 @@ jwt:
   managerSecret: "qwertyuiop1214156" # 私钥
   expireTime: 3600000 # token 的有效时间，单位是毫秒
   expireManagerTime: 259200000 # token 的有效时间，单位是毫秒
+elasticsearch:
+  port: 9200
+  ip: 192.168.3.60
+  username: elastic
+  password: CWLN-1lgUdzEXoinJ6zc

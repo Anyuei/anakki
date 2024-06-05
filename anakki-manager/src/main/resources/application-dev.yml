@@ -22,8 +22,8 @@ spring:
         queue-capacity: 1000
   servlet:
     multipart:
-      max-file-size: 20MB
-      max-request-size: 20MB
+      max-file-size: 100MB
+      max-request-size: 100MB
 
   # 配置 smtp 服务器地址
   mail:
@@ -43,11 +43,11 @@ spring:
   # redis 配置
   redis:
     # 地址
-    host: 49.232.11.30
+    host: 119.45.1.61
     # 端口，默认为6379
-    port: 6479
+    port: 6379
     # 密码
-    password: fxkj_123
+    password: ayp43520!@#
     # 连接超时时间
     timeout: 10s
     lettuce:
