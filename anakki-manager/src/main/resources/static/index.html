@@ -358,7 +358,7 @@
 
                 var html =
                     "<div style='width: 100%;background: #000000b2;height: 100%;'>\n" +
-                        "<img src=\"" + item.imgUrl + "\" class=\"modal-image\" alt=\"...\">\n" +
+                        "<img src=\"" + item.imgUrl + "\" class=\"modal-image rounded\" alt=\"...\">\n" +
                     "</div>" +
                     "<div class=\"card-body windows-bottom\">\n" +
                         "<p>" +
@@ -402,7 +402,7 @@
                 // Create an image element for the full-screen view
                 const fullScreenImage = document.createElement('img');
                 fullScreenImage.src = image.src;
-                fullScreenImage.className = 'modal-image';
+                fullScreenImage.className = 'modal-image rounded';
                 // Add the image to the modal
                 modal.appendChild(fullScreenImage);
                 // Add the modal to the document body

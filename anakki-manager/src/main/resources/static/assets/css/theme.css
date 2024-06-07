@@ -11669,7 +11669,7 @@ textarea[resize="horizontal"] {
 
 @media (min-width: 992px) {
     .navbar-transparent {
-        position: absolute;
+        position: fixed;
         top: 0;
         width: 100%;
         z-index: 100;
@@ -11683,7 +11683,7 @@ textarea[resize="horizontal"] {
     }
 }
 
-@media (max-width: 767.98px) {
+@media (max-width: 992px) {
     .offcanvas-collapse {
         width: 270px;
         position: fixed;
@@ -13256,4 +13256,30 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 
 .avatar-size{
     max-width: 4rem;
+}
+.navbar {
+    background-color: rgba(0, 0, 0, 0); /* Initial semi-transparent background */
+    transition: background-color 0.5s ease; /* Smooth transition effect */
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+#breathing-light {
+    display: none; /* Initially hidden */
+    width: 10px;
+    height: 10px;
+    background-color: #ffcc00; /* 呼吸灯颜色 */
+    border-radius: 50%;
+    animation: breathe 2s infinite alternate; /* 设置呼吸灯动画 */
+}
+
+@keyframes breathe {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1.2);
+    }
 }

@@ -302,7 +302,8 @@ function loadPersonDetail() {
                         <a class="dropdown-item" href="/pages/telephone-verify.html">设置手机号</a>
                         <a class="dropdown-item" href="/pages/sign-in.html" onclick="userLogout()">登出</a>
                     </div>`;
-                    userAvatar.innerHTML = `<img src="${avatar}" alt="" style="width: 3rem; border-radius: 50%;" onclick="showAvatarModal()">`;
+                    userAvatar.innerHTML = `<img src="${avatar}" alt="x" style="width: 3rem; border-radius: 50%;" onclick="showAvatarModal()">`;
+                    document.getElementById('breathing-light').style.display = 'inline-block';
                 }
             },
             error: function (xhr, status, error) {
@@ -475,60 +476,62 @@ var EventUtil = {
                                 upCallback();
                         }
                     }
-                break;
+                    break;
                 case "touchmove":
                     //阻止默认行为
-                    if(isPreventDefault)
+                    if (isPreventDefault)
                         event.preventDefault();
                     break;
             }
         }
     }
 };
-    window.alert = alert;
-    function alert(data, callback) { //回调函数
-    var alert_bg = document.createElement('div'),
-    alert_box = document.createElement('div'),
-    alert_text = document.createElement('div'),
-    alert_btn = document.createElement('div'),
-    textNode = document.createTextNode(data ? data : ''),
-    btnText = document.createTextNode('确 定');
+window.alert = alert;
+
+function alert(data, callback) { //回调函数
+    const alert_bg = document.createElement('div'),
+        alert_box = document.createElement('div'),
+        alert_text = document.createElement('div'),
+        alert_btn = document.createElement('div'),
+        textNode = document.createTextNode(data ? data : ''),
+        btnText = document.createTextNode('确 定');
 
     // 控制样式
     css(alert_bg, {//背景颜色设置
-    'position': 'fixed',
-    'top': '0',
-    'left': '0',
-    'right': '0',
-    'bottom': '0',
-    'background-color': 'rgba(0, 0, 0, 0.1)',
-    'z-index': '999999999'
-});
+        'position': 'fixed',
+        'top': '0',
+        'left': '0',
+        'right': '0',
+        'bottom': '0',
+        'background-color': 'rgba(0, 0, 0, 0.1)',
+        'z-index': '999999999',
+        'color' : '#000'
+    });
 
     css(alert_box, {//控制盒子大小、背景颜色上下边距
-    'width': '270px',
-    'max-width': '90%',
-    'font-size': '16px',
-    'text-align': 'center',
-    'background-color': '#fff',
-    'border-radius': '15px',
-    'position': 'absolute',
-    'top': '50%',
-    'left': '50%',
-    'transform': 'translate(-50%, -50%)'
-});
+        'width': '270px',
+        'max-width': '90%',
+        'font-size': '16px',
+        'text-align': 'center',
+        'background-color': '#fff',
+        'border-radius': '15px',
+        'position': 'absolute',
+        'top': '50%',
+        'left': '50%',
+        'transform': 'translate(-50%, -50%)'
+    });
 
     css(alert_text, {
-    'padding': '10px 15px',
-    'border-bottom': '1px solid #ddd'
-});
+        'padding': '10px 15px',
+        'border-bottom': '1px solid #ddd'
+    });
 
     css(alert_btn, {
-    'padding': '10px 0',
-    'color': '#007aff',
-    'font-weight': '600',
-    'cursor': 'pointer'
-});
+        'padding': '10px 0',
+        'color': '#007aff',
+        'font-weight': '600',
+        'cursor': 'pointer'
+    });
 
     // 内部结构套入
     alert_text.appendChild(textNode);
@@ -541,20 +544,27 @@ var EventUtil = {
     document.getElementsByTagName('body')[0].appendChild(alert_bg);
 
     // 肯定绑定点击事件删除标签
-    alert_btn.onclick = function() {
-    alert_bg.parentNode.removeChild(alert_bg);
-    if (typeof callback === 'function') {
-    callback(); //回调
-}
-}
+    alert_btn.onclick = function () {
+        alert_bg.parentNode.removeChild(alert_bg);
+        if (typeof callback === 'function') {
+            callback(); //回调
+        }
+    }
 }
 
-    function css(targetObj, cssObj) {
+function css(targetObj, cssObj) {
     var str = targetObj.getAttribute("style") ? targetObj.getAttribute('style') : '';
     for (var i in cssObj) {
-    str += i + ':' + cssObj[i] + ';';
-}
+        str += i + ':' + cssObj[i] + ';';
+    }
     targetObj.style.cssText = str;
 }
-    //点击确定跳转到指定地址
-    alert('提示信息!', function() {window.location.href = 'http://cn.bing.com';});
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+    if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
+        document.querySelector('.navbar').style.backgroundColor = 'rgba(0, 0, 0, 0.5)'; /* Change the transparency level here */
+    } else {
+        document.querySelector('.navbar').style.backgroundColor = 'rgba(0, 0, 0, 0)'; /* Initial transparency level */
+    }
+}

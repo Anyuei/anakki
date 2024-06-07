@@ -15,6 +15,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
@@ -39,7 +40,8 @@ public class AnRecordController {
 
     @Autowired
     private AnRecordService anRecordService;
-
+    @Autowired
+    private  AnIpAddressService anIpAddressService;
     @ApiOperation(value = "获取图文")
     @GetMapping("/flow")
     public ResponseDTO<BasePageResult<AnRecord>> flow(GetContentRequest getContentRequest, HttpServletRequest request) {
@@ -60,4 +62,11 @@ public class AnRecordController {
         byId.setImgUrl(byId.getImgUrl().split("\\?")[0]);
         return ResponseDTO.succData(byId);
     }
+    @ApiOperation(value = "修改错误的地址")
+    @PostMapping("/updateFaultAddress")
+    public ResponseDTO<Boolean> updateAddress() {
+        anIpAddressService.updateAddressByIp();
+        return ResponseDTO.succData(true);
+    }
+
 }

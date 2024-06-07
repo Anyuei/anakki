@@ -18,20 +18,20 @@
 </head>
 <style>
     .bg-primary {
-        background-color: #3b694d !important;
+        background-color: rgba(122, 122, 122, 0.86) !important;
 
     }
     a {
         color: #515151;
     }
     .form-primary .form-control {
-        background-color: #48484888;
+        background-color: #0000002e;
         border: .0525rem;
     }
 
     .form-primary .form-control:focus {
-        background-color: #484848C3;
-        border: .0625rem solid #4d555e;
+        background-color: rgba(72, 72, 72, 0.73);
+        border: .0625rem solid rgba(100, 100, 100, 0.62);
     }
 
     .shorten-width {
@@ -75,12 +75,20 @@
 
                                 <form class="form-primary" id="register-form">
                                     <div class="form-group">
-                                        <input type="text" class="form-control" name="username"
-                                               placeholder="昵称" required>
+                                        <input type="text"
+                                               class="form-control"
+                                               name="username"
+                                               placeholder="昵称"
+                                               maxlength="10" required>
                                     </div>
                                     <div class="form-group">
-                                        <input type="password" class="form-control" name="password"
-                                               placeholder="密码" required>
+                                        <input type="password"
+                                               class="form-control"
+                                               name="password"
+                                               id="passwordField"
+                                               placeholder="密码(大于八位,需包含大小写字母以及数字)"
+                                               minlength="6"
+                                               required>
                                     </div>
                                     <div class="form-group">
                                         <input type="text"
@@ -121,13 +129,34 @@
     window.onload = function () {
         $('#header').load("../pages/header.html", loadPersonDetail,changeLoginPage);
         $('#footer').load("../pages/footer.html", insertCreateTime);
-    };
 
+    };
+    // 强密码校验
+    const passwordField = document.getElementById('passwordField');
+    passwordField.addEventListener('input',passwordCheck);
 
     function forgot() {
         alert("忘了我有啥子办法？微信找我重置吧")
     }
+    function passwordCheck() {
+        const password = passwordField.value;
 
+        // Password strength criteria
+        const hasUppercase = /[A-Z]/.test(password);
+        const hasLowercase = /[a-z]/.test(password);
+        const hasNumber = /\d/.test(password);
+
+        // Check if password meets the criteria for strong password
+        if (password.length < 8 ) {
+            document.getElementById("register-notice").innerHTML = "密码需要大于八位"
+            return false;
+        } else if(!(hasUppercase && hasLowercase && hasNumber)){
+            document.getElementById("register-notice").innerHTML = "密码需要包含大写字母,小写字母,数字";
+            return false;
+        }
+        document.getElementById("register-notice").innerHTML = "";
+        return true;
+    }
     function copyText() {
         var text = document.getElementById("conflux-address").innerText;
         navigator.clipboard.writeText(text)
@@ -139,11 +168,14 @@
             });
     }
 
-
     $(document).ready(function () {
         $('#register-form').submit(function (e) {
+
+            if (!passwordCheck()) {
+                return
+            }
             e.preventDefault(); // Prevent form submission
-            var formData = $(this).serialize(); // Serialize form data
+            const formData = $(this).serialize(); // Serialize form data
             $.ajax({
                 url: '/base/anakki/user/register', // Replace with your server URL
                 type: 'POST',
