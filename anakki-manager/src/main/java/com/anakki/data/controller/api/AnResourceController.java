@@ -5,6 +5,7 @@ import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.bean.common.ResponseDTO;
 import com.anakki.data.bean.constant.CosBucketNameConst;
 import com.anakki.data.entity.AnResource;
+import com.anakki.data.entity.request.IdNotNullRequest;
 import com.anakki.data.entity.request.ListResourceRequest;
 import com.anakki.data.entity.request.RemoveResourceRequest;
 import com.anakki.data.entity.request.UploadResourceRequest;
@@ -64,5 +65,18 @@ public class AnResourceController {
     public ResponseDTO<String> resourceRemove(@RequestBody RemoveResourceRequest request) {
         anResourceService.removeResource(request);
         return ResponseDTO.succData("删除成功");
+    }
+    @ApiOperation(value = "公开资源")
+    @PostMapping("/open")
+    public ResponseDTO<String> open(@RequestBody IdNotNullRequest request) {
+        anResourceService.openResource(request);
+        return ResponseDTO.succData("操作成功");
+    }
+
+    @ApiOperation(value = "仅自己可见资源")
+    @PostMapping("/close")
+    public ResponseDTO<String> close(@RequestBody IdNotNullRequest request) {
+        anResourceService.closeResource(request);
+        return ResponseDTO.succData("操作成功");
     }
 }

@@ -304,9 +304,12 @@ function loadPersonDetail() {
                     </div>`;
                     userAvatar.innerHTML = `<img src="${avatar}" alt="x" style="width: 3rem; border-radius: 50%;" onclick="showAvatarModal()">`;
                     document.getElementById('breathing-light').style.display = 'inline-block';
+                }else{
+                    localStorage.removeItem('user-token')
                 }
             },
             error: function (xhr, status, error) {
+                localStorage.removeItem('user-token')
                 console.error(error);
             }
         });
@@ -503,7 +506,7 @@ function alert(data, callback) { //回调函数
         'left': '0',
         'right': '0',
         'bottom': '0',
-        'background-color': 'rgba(0, 0, 0, 0.1)',
+        'background-color': 'rgba(0, 0, 0, 0.59)',
         'z-index': '999999999',
         'color' : '#000'
     });
@@ -513,12 +516,13 @@ function alert(data, callback) { //回调函数
         'max-width': '90%',
         'font-size': '16px',
         'text-align': 'center',
-        'background-color': '#fff',
+        'background-color': 'rgba(255, 255, 255, 0.66)',
         'border-radius': '15px',
         'position': 'absolute',
         'top': '50%',
         'left': '50%',
-        'transform': 'translate(-50%, -50%)'
+        'transform': 'translate(-50%, -50%)',
+        'box-shadow': '0 0.5rem 3rem rgba(0, 0, 0, 0.5)'
     });
 
     css(alert_text, {

@@ -14,6 +14,13 @@ import lombok.Data;
 @Data
 @ApiModel("分页参数")
 public class Pagination {
+    public long getSize() {
+        if (size>20){
+            return 20;
+        }
+        return size;
+    }
+
     @ApiModelProperty("分页大小")
     private long size;
     @ApiModelProperty("当前页")

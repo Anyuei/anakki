@@ -6,6 +6,7 @@ import com.anakki.data.bean.constant.CosBucketNameConst;
 import com.anakki.data.bean.constant.CosPathConst;
 import com.anakki.data.entity.AnResource;
 import com.anakki.data.entity.AnUser;
+import com.anakki.data.entity.request.IdNotNullRequest;
 import com.anakki.data.entity.request.ListResourceRequest;
 import com.anakki.data.entity.request.RemoveResourceRequest;
 import com.anakki.data.entity.request.UploadResourceRequest;
@@ -56,10 +57,10 @@ public class AnResourceServiceImpl extends ServiceImpl<AnResourceMapper, AnResou
                 "expiration_date",
                 LocalDateTime.now());
         List<AnResource> list = list(resourceQueryWrapper);
-        list.forEach(anResource ->{
+        list.forEach(anResource -> {
             String fileUrl = anResource.getFileUrl();
-            COSUtil.deleteObject(CosBucketNameConst.BUCKET_NAME_IMAGES,fileUrl);
-            log.info("文件已定时删除："+fileUrl);
+            COSUtil.deleteObject(CosBucketNameConst.BUCKET_NAME_IMAGES, fileUrl);
+            log.info("文件已定时删除：" + fileUrl);
             anResource.setStatus("DELETE");
             updateById(anResource);
         });
@@ -118,7 +119,7 @@ public class AnResourceServiceImpl extends ServiceImpl<AnResourceMapper, AnResou
         String type = listResourceRequest.getType();
         String description = listResourceRequest.getDescription();
         String title = listResourceRequest.getTitle();
-
+        Boolean isPublic = listResourceRequest.getIsPublic();
         IPage<AnResource> resourceIPage = new Page<>(
                 listResourceRequest.getCurrent(),
                 listResourceRequest.getSize());
@@ -127,14 +128,15 @@ public class AnResourceServiceImpl extends ServiceImpl<AnResourceMapper, AnResou
         anRecordQueryWrapper.like(null != description, "description", description);
         anRecordQueryWrapper.like(null != title, "title", title);
         anRecordQueryWrapper.eq("status", "COMMON");
-        if (null!=user){
-            anRecordQueryWrapper.eq(!user.getNickname().equals("Anakki"),"upload_user_id", user.getId());
-        }else{
-            anRecordQueryWrapper.eq("is_public", 1);
+        anRecordQueryWrapper.eq(isPublic,"is_public", true);
+
+        if(null == user&&!isPublic){
+            throw new RuntimeException("请登录");
         }
 
-
-
+        if(null != user&&!isPublic){
+            anRecordQueryWrapper.eq("upload_user_id", user.getId());
+        }
         anRecordQueryWrapper.orderByDesc("create_time");
         IPage<AnResource> page = page(resourceIPage, anRecordQueryWrapper);
         List<ListResourceResponse> listResourceResponses
@@ -148,11 +150,37 @@ public class AnResourceServiceImpl extends ServiceImpl<AnResourceMapper, AnResou
         Long id = request.getId();
         AnUser user = anUserService.getByNickname(currentNickname);
         AnResource resource = getById(id);
-        if (!user.getIsSuper()&&!user.getId().equals(resource.getUploadUserId())){
+        if (!user.getIsSuper() && !user.getId().equals(resource.getUploadUserId())) {
             throw new RuntimeException("没有权限！用户只能删除自己上传的文件");
         }
-        COSUtil.deleteObject(CosBucketNameConst.BUCKET_NAME_IMAGES,resource.getFileUrl());
+        COSUtil.deleteObject(CosBucketNameConst.BUCKET_NAME_IMAGES, resource.getFileUrl());
         return removeById(id);
+    }
+
+    @Override
+    public void openResource(IdNotNullRequest request) {
+        String currentNickname = BaseContext.getCurrentNickname(false);
+        Long id = request.getId();
+        AnUser user = anUserService.getByNickname(currentNickname);
+        AnResource resource = getById(id);
+        if (!user.getIsSuper() && !user.getId().equals(resource.getUploadUserId())) {
+            throw new RuntimeException("没有权限！用户只能删除自己上传的文件");
+        }
+        resource.setIsPublic(true);
+        updateById(resource);
+    }
+
+    @Override
+    public void closeResource(IdNotNullRequest request) {
+        String currentNickname = BaseContext.getCurrentNickname(false);
+        Long id = request.getId();
+        AnUser user = anUserService.getByNickname(currentNickname);
+        AnResource resource = getById(id);
+        if (!user.getIsSuper() && !user.getId().equals(resource.getUploadUserId())) {
+            throw new RuntimeException("没有权限！用户只能操作自己上传的文件");
+        }
+        resource.setIsPublic(false);
+        updateById(resource);
     }
 
     public static void main(String[] args) {

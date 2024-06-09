@@ -2,7 +2,7 @@ package com.anakki.data.bean.common;
 
 public class BaseContext {
  
-    public static ThreadLocal<String> threadLocal = new ThreadLocal<>();
+    private static ThreadLocal<String> threadLocal = new ThreadLocal<>();
  
     public static void setCurrentNickname(String nickname) {
         threadLocal.set(nickname);

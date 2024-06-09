@@ -15,8 +15,7 @@ import lombok.EqualsAndHashCode;
 @Data
 public class ListResourceRequest extends Pagination {
     private String type;
-
-    private String resourceName;
+    private Boolean isPublic=false;
     private String description;
     private String title;
 }

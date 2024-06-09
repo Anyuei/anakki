@@ -29,7 +29,8 @@ public class ListResourceResponse extends BaseEntity {
 
     @ApiModelProperty("文件大小（KB）")
     private Long fileSize;
-
+    @ApiModelProperty("是否公开")
+    private Boolean isPublic;
     @ApiModelProperty("浏览量")
     private Long viewCount;
 

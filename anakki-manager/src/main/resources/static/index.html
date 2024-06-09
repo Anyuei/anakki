@@ -99,7 +99,16 @@
         margin-top: 0;
         margin-bottom: 0;
     }
-
+    .loadDataBtn{
+        opacity: 1.05;
+        background-color: #7fffd400;
+        width: 3rem;
+        color: #c4c4c4;
+        transition: transform 0.3s ease-in-out;
+    }
+    .loadDataBtn:hover {
+        transform: scale(1.1);
+    }
 </style>
 <body>
 <!--通用顶部导航-->
@@ -156,7 +165,12 @@
                 <!--半透明的加载按钮-->
                 <div class="row justify-content-center">
                     <div class="col-12 text-center">
-                        <button id="loadMoreButton" class="btn btn-primary btn-lg" style="opacity: 0.55;padding: .55rem 1rem;">加载更多</button>
+                        <button id="loadMoreButton" class="btn loadDataBtn" >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-down" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                <path fill-rule="evenodd" d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                            </svg>
+                        </button>
                     </div>
                 </div>
             </div>

@@ -47,13 +47,16 @@
     .row input {
         width: 100%;
     }
+
     body {
         color: #353535;
         background-color: #003e0fad;
     }
+
     .btn {
         background-color: #0ff0;
     }
+
     .page-item.active .page-link {
         z-index: 1;
         color: #595959;
@@ -63,8 +66,21 @@
 
     .changePageBtn {
         background-color: #fff0 !important;
-        border-color: #577da200  !important;
+        border-color: #577da200 !important;
     }
+
+    .btn:hover {
+        background-color: rgba(12, 12, 12, 0.51); /* darker color on hover */
+    }
+
+    .btn:active {
+        background-color: rgba(10, 10, 10, 0.18); /* even darker color when clicked */
+    }
+
+    .btn:focus {
+        box-shadow: 0 0 10px #333;
+    }
+
 </style>
 <body>
 <!--通用顶部导航-->
@@ -73,18 +89,37 @@
     <div class="container" style="height: 48rem;">
         <div class="card" style="margin-top: 4rem">
             <div class="card-header d-flex justify-content-between align-items-center" style="padding: 0.3rem 0.8rem;">
-                <h5 style="margin-bottom: 0;">资源下载</h5>
+                <div class="d-flex justify-content-between align-items-center" id="searchArea"></div>
                 <span>
+                     <button type="button" class="btn" onclick="listAllResource(1,10)">
+                        公共资源
+                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                          class="bi bi-people-fill" viewBox="0 0 16 16">
+                          <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                          <path fill-rule="evenodd"
+                                d="M5.216 14A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216z"/>
+                          <path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
+                    </svg>
+                    </button>
+
+                    <button type="button" class="btn" onclick="list(1,10)">
+                        我的资源
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             class="bi bi-person-up" viewBox="0 0 16 16">
+                          <path fill-rule="evenodd"
+                                d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.354-5.854a.5.5 0 0 0-.708 0l-1.5 1.5a.5.5 0 0 0 .708.708l.646-.647V14.5a.5.5 0 0 0 1 0v-2.793l.646.647a.5.5 0 0 0 .708-.708l-1.5-1.5ZM11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/>
+                          <path d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1h5.256Z"/>
+                        </svg>
+                    </button>
                      <button type="button" class="btn" data-toggle="modal"
                              data-target="#uploadModal">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                             fill="currentColor" class="bi bi-upload" viewBox="0 0 16 16">
+                             fill="currentColor" class="bi bi-upload" viewBox="0 0 16 16" style="width: 3rem;">
                           <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
                           <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
                         </svg>
                     </button>
                 </span>
-
             </div>
             <div class="card-table table-responsive">
                 <table class="table table-vcenter">
@@ -96,7 +131,8 @@
                         <th>下载量</th>
                         <th>文件大小</th>
                         <th>上传用户</th>
-                        <th>上传时间</th>
+                        <th style="min-width: 151px;">上传时间</th>
+                        <th style="min-width: 133px;" ></th>
                     </tr>
                     </thead>
                     <tbody id="list">
@@ -171,8 +207,8 @@
                             <div class="invalid-feedback">请输入描述</div>
                         </div>
                         <div class="row justify-content-between">
-                            <label class="col-sm-6 col-form-label">是否全站公开可见</label>
-                            <div class="col-sm-2 d-flex align-items-center">
+                            <label class="col-sm-6 col-form-label" style="padding-left: 0px;">是否全站公开可见</label>
+                            <div class="col-sm-2 d-flex align-items-center" style="padding-right: 0px;">
                                 <label class="toggle-switch">
                                     <input type="checkbox" id="isPublic">
                                     <span class="toggle-switch-slider"></span>
@@ -180,8 +216,8 @@
                             </div>
                         </div>
                         <div class="row justify-content-between">
-                            <label class="col-sm-6 col-form-label">是否临时文件(保存7天)</label>
-                            <div class="col-sm-2 d-flex align-items-center">
+                            <label class="col-sm-6 col-form-label" style="padding-left: 0px;">是否临时文件(保存7天)</label>
+                            <div class="col-sm-2 d-flex align-items-center" style="padding-right: 0px;">
                                 <label class="toggle-switch">
                                     <input type="checkbox" id="isTemporary">
                                     <span class="toggle-switch-slider"></span>
@@ -196,24 +232,40 @@
                             </div>
                             <small class="form-text text-muted">支持1GB以内资源上传</small>
                         </div>
-                        <div class="justify-content-between align-items-center">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">返回</button>
-                            <button type="button" class="btn btn-primary" onclick="submitForm()">提交</button>
+                        <div class="justify-content-between align-items-center row">
+                            <div class="col-md-6">
+                                <button type="button" class="btn" data-dismiss="modal" style="width: 100%;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                         class="bi bi-x-lg" viewBox="0 0 16 16">
+                                        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="col-md-6">
+                                <button type="button" class="btn" onclick="submitForm()" style="width: 100%;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                         class="bi bi-check-lg" viewBox="0 0 16 16">
+                                        <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
+                                    </svg>
+                                    <div id="progress" class="progress" style="margin-bottom: 0;display: none" role="progressbar" aria-label="Example with label"
+                                         aria-valuenow="0"
+                                         aria-valuemin="0" aria-valuemax="100">
+                                        <div class="progress-bar" style="width: 0%" id="progressBar">0%</div>
+                                    </div>
+                                </button>
+                            </div>
                         </div>
+
+
+
                     </div>
                 </form>
 
-                <div class="progress" style="margin-bottom: 0;" role="progressbar" aria-label="Example with label"
-                     aria-valuenow="0"
-                     aria-valuemin="0" aria-valuemax="100">
-                    <div class="progress-bar" style="width: 0%" id="progressBar">0%</div>
-                </div>
+
             </div>
         </div>
     </div>
 </main>
-<!-- 页面底部 -->
-<div id="footer"></div>
 
 <!-- Core -->
 <script src="../assets/vendor/jquery/jquery.min.js"></script>
@@ -234,7 +286,7 @@
     window.onload = function () {
         $('#header').load("../pages/header.html", loadPersonDetail);
         $('#footer').load("../pages/footer.html", insertCreateTime);
-        list(1, 1)
+        listAllResource(1, 10)
     }
 
     // 进度条更新
@@ -246,6 +298,7 @@
     }
 
     function submitForm() {
+
 
         checkFileSize()
         if (null == localStorage.getItem('user-token')) {
@@ -292,6 +345,8 @@
         };
         get.setRequestHeader('authorization', localStorage.getItem('user-token'));
         if (get.upload) {
+            const progress = document.getElementById("progress");
+            progress.style.display="block";
             //处理进度条的事件
             get.upload.addEventListener("progress", progressHandle,
                 false);
@@ -304,81 +359,169 @@
         // 重置进度条
         var progressBar = document.getElementById("progressBar");
         progressBar.value = 0;
+        const progress = document.getElementById("progress");
+        progress.style.display="none";
+    }
+
+    function searchPublicButton() {
+        const input = document.getElementById("searchPublicInputText").value;
+        listAllResource(1, 10, input);
+    }
+
+    function searchPersonButton() {
+        const input = document.getElementById("searchPersonInputText").value;
+        let searchInputUrl = "";
+        if (null != input && "" !== input) {
+            searchInputUrl = "&title=" + input;
+        }
+        list(1, 10, searchInputUrl);
+    }
+
+    function listAllResource(current, pageSize, searchInput) {
+        let searchInputUrl = "";
+        if (null != searchInput) {
+            searchInputUrl = "&title=" + searchInput;
+        }
+        list(current, pageSize, "&isPublic=true" + searchInputUrl)
     }
 
     function list(current, pageSize, searchInput) {
+        let searchInputUrl = "";
+        if (null != searchInput) {
+            searchInputUrl = searchInput;
+        }
         const url = window.location.href;
         const get = new XMLHttpRequest();
-        get.open("GET", "/base/anakki/resource/list?current=" + current + "&size=" + pageSize, true);
+        let base;
+        if (null != localStorage.getItem('user-token')) {
+            base = "/api";
+        } else {
+            base = "/base";
+        }
+        get.open("GET", base + "/anakki/resource/list?current=" + current + "&size=" + pageSize + searchInputUrl, true);
+        get.setRequestHeader('authorization', localStorage.getItem('user-token'));
         get.onreadystatechange = function () {
             if (get.readyState === 4 && get.status === 200) {
+
                 let html = "";
                 const response = JSON.parse(get.responseText);
+                if (200 === response.code) {
+                    const itemList = response.data.data;
+                    const totalNum = response.data.totalNum;
+                    let personSearchHtml;
+                    if (null != searchInput && searchInput.includes("isPublic")) {
+                        if (searchInput.split("isPublic")[1].split("")[1]) {
+                            personSearchHtml =
+                                "<div class=\"input-group mb-1  mt-1\">\n" +
+                                "<input id=\"searchPublicInputText\" type=\"text\" class=\"form-control\" placeholder=\"全站搜索\"\n" +
+                                "                           aria-label=\"全站资源搜索\" aria-describedby=\"button-addon2\">\n" +
+                                "                    <button class=\"btn search-button\" type=\"button\" id=\"button-addon2\" onclick=\"searchPublicButton()\">\n" +
+                                "                        <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-search\"\n" +
+                                "                             viewBox=\"0 0 16 16\">\n" +
+                                "                            <path d=\"M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z\"/>\n" +
+                                "                        </svg>\n" +
+                                "                    </button>"+
+                                 "</div>\n"
+                        }
+                    } else {
+                        personSearchHtml =
+                            "<div class=\"input-group mb-1 mt-1\">\n" +
+                            "<input id=\"searchPersonInputText\" type=\"text\" class=\"form-control\" placeholder=\"个人搜索\"\n" +
+                            "                           aria-label=\"个人资源搜索\" aria-describedby=\"button-addon2\">\n" +
+                            "                    <button class=\"btn search-button\" type=\"button\" id=\"button-addon2\" onclick=\"searchPersonButton()\">\n" +
+                            "                        <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-search\"\n" +
+                            "                             viewBox=\"0 0 16 16\">\n" +
+                            "                            <path d=\"M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z\"/>\n" +
+                            "                        </svg>\n" +
+                            "                    </button>"+
+                            "</div>\n"
+                    }
+                    document.getElementById("searchArea").innerHTML = personSearchHtml;
+                    for (let i = 0; i < itemList.length; i++) {
+                        const item = itemList[i];
+                        const id = item.id;
+                        const type = item.type;
+                        const resourceName = item.resourceName;
+                        const title = item.title;
+                        const downloadCount = item.downloadCount;
+                        const description = item.description;
+                        const isPublic = item.isPublic;
+                        let fileSize;
+                        if (item.fileSize < 1024) {
+                            fileSize = (item.fileSize).toFixed(2) + "KB"
+                        } else if (item.fileSize > 1024 && item.fileSize < 1024 * 1024) {
+                            fileSize = (item.fileSize / 1024).toFixed(2) + "MB"
+                        } else if (item.fileSize > 1024 * 1024 * 1024) {
+                            fileSize = (item.fileSize / (1024 * 1024)).toFixed(2) + "GB"
+                        }
 
-                const itemList = response.data.data;
-                const totalNum = response.data.totalNum;
+                        const createTime = item.createTime.replace("T", " ");
+                        const uploadUser = item.uploadUser;
+                        let isPublicHTML = ""
+                        if (isPublic) {
+                            isPublicHTML = " <button class=\"btn\" onclick=\"closeResource(" + id + ")\">" +
+                                "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-eye-fill\" viewBox=\"0 0 16 16\">\n" +
+                                "  <path d=\"M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z\"/>\n" +
+                                "  <path d=\"M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z\"/>\n" +
+                                "</svg>" +
+                                "</button>\n"
+                        } else {
+                            isPublicHTML = " <button class=\"btn\" onclick=\"openResource(" + id + ")\">" +
+                                "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-eye-slash-fill\" viewBox=\"0 0 16 16\">\n" +
+                                "  <path d=\"m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z\"/>\n" +
+                                "  <path d=\"M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12-.708.708z\"/>\n" +
+                                "</svg>" +
+                                "</button>\n"
+                        }
 
-                for (let i = 0; i < itemList.length; i++) {
-                    const item = itemList[i];
-                    const id = item.id;
-                    const type = item.type;
-                    const resourceName = item.resourceName;
-                    const title = item.title;
-                    const downloadCount = item.downloadCount;
-                    const description = item.description;
-                    let fileSize;
-                    if (item.fileSize < 1024) {
-                        fileSize = (item.fileSize).toFixed(2) + "KB"
-                    } else if (item.fileSize > 1024 && item.fileSize < 1024 * 1024) {
-                        fileSize = (item.fileSize / 1024).toFixed(2) + "MB"
-                    } else if (item.fileSize > 1024 * 1024 * 1024) {
-                        fileSize = (item.fileSize / (1024 * 1024)).toFixed(2) + "GB"
+
+                        html = html + "                           <tr>\n" +
+                            "                                    <td>" + resourceName + "</td>\n" +
+                            "                                    <td class=\"truncate\">" + description + "</td>\n" +
+                            "                                    <td>" + downloadCount + "</td>\n" +
+                            "                                    <td>" + fileSize + "</td>\n" +
+                            "                                    <td>" + uploadUser + "</td>\n" +
+                            "                                    <td>" + createTime + "</td>\n" +
+                            "    <td class='text-center'>\n" +
+                            "        <button class=\"btn\" onclick=\"downloadResource(" + id + ")\">" +
+                            "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-cloud-download\" viewBox=\"0 0 16 16\">\n" +
+                            "  <path d=\"M4.406 1.342A5.53 5.53 0 0 1 8 0c2.69 0 4.923 2 5.166 4.579C14.758 4.804 16 6.137 16 7.773 16 9.569 14.502 11 12.687 11H10a.5.5 0 0 1 0-1h2.688C13.979 10 15 8.988 15 7.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 2.825 10.328 1 8 1a4.53 4.53 0 0 0-2.941 1.1c-.757.652-1.153 1.438-1.153 2.055v.448l-.445.049C2.064 4.805 1 5.952 1 7.318 1 8.785 2.23 10 3.781 10H6a.5.5 0 0 1 0 1H3.781C1.708 11 0 9.366 0 7.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383z\"/>\n" +
+                            "  <path d=\"M7.646 15.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 14.293V5.5a.5.5 0 0 0-1 0v8.793l-2.146-2.147a.5.5 0 0 0-.708.708l3 3z\"/>\n" +
+                            "</svg>" +
+                            "</button>\n" +
+                            " <button class=\"btn\" onclick=\"deleteResource(" + id + ")\">" +
+                            "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-trash-fill\" viewBox=\"0 0 16 16\">\n" +
+                            "  <path d=\"M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z\"/>\n" +
+                            "</svg>" +
+                            "</button>\n" +
+                            isPublicHTML +
+                            "    </td>\n" +
+                            "</tr>"
                     }
 
-                    const createTime = item.createTime.replace("T", " ");
-                    const uploadUser = item.uploadUser;
-                    html = html + "                           <tr>\n" +
-                        "                                    <td>" + resourceName + "</td>\n" +
-                        "                                    <td class=\"truncate\">" + description + "</td>\n" +
-                        "                                    <td>" + downloadCount + "</td>\n" +
-                        "                                    <td>" + fileSize + "</td>\n" +
-                        "                                    <td>" + uploadUser + "</td>\n" +
-                        "                                    <td>" + createTime + "</td>\n" +
-                        "    <td class='text-center'>\n" +
-                        "        <button class=\"btn\" onclick=\"downloadResource(" + id + ")\">" +
-                        "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-cloud-download\" viewBox=\"0 0 16 16\">\n" +
-                        "  <path d=\"M4.406 1.342A5.53 5.53 0 0 1 8 0c2.69 0 4.923 2 5.166 4.579C14.758 4.804 16 6.137 16 7.773 16 9.569 14.502 11 12.687 11H10a.5.5 0 0 1 0-1h2.688C13.979 10 15 8.988 15 7.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 2.825 10.328 1 8 1a4.53 4.53 0 0 0-2.941 1.1c-.757.652-1.153 1.438-1.153 2.055v.448l-.445.049C2.064 4.805 1 5.952 1 7.318 1 8.785 2.23 10 3.781 10H6a.5.5 0 0 1 0 1H3.781C1.708 11 0 9.366 0 7.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383z\"/>\n" +
-                        "  <path d=\"M7.646 15.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 14.293V5.5a.5.5 0 0 0-1 0v8.793l-2.146-2.147a.5.5 0 0 0-.708.708l3 3z\"/>\n" +
-                        "</svg>" +
-                        "</button>\n" +
-                        " <button class=\"btn\" onclick=\"deleteResource(" + id + ")\">" +
-                        "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-trash-fill\" viewBox=\"0 0 16 16\">\n" +
-                        "  <path d=\"M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z\"/>\n" +
-                        "</svg>" +
-                        "</button>\n" +
-                        "    </td>\n" +
-                        "                                </tr>"
+                    document.getElementById("list").innerHTML = html;
+                    let totalPages = Math.ceil(totalNum / pageSize);
+                    initPage(current, pageSize, totalPages, searchInputUrl);
+                    // 拼接分页参数到地址栏
+                    const newUrl = url.split("?")[0] + "?current=" + current + "&size=" + pageSize + searchInputUrl;
+                    window.history.replaceState(null, null, newUrl);
+                } else {
+                    alert(response.data)
                 }
-                document.getElementById("list").innerHTML = html;
-                let totalPages = Math.ceil(totalNum / pageSize);
-                initPage(current, pageSize, totalPages);
-                // 拼接分页参数到地址栏
-                const newUrl = url.split("?")[0] + "?current=" + current + "&size=" + pageSize;
-                window.history.replaceState(null, null, newUrl);
             }
         };
-        get.setRequestHeader('authorization', localStorage.getItem('user-token'));
+
         get.send();
     }
 
 
-    function initPage(currentPage, pageSize, totalPages) {
+    function initPage(currentPage, pageSize, totalPages, searchInputUrl) {
         const paginationContainer = document.getElementById("page-module");
         let html = "";
         // Previous page button
         if (currentPage > 1) {
             let number = currentPage - 1;
-            html += `<li class="page-item"><a class="page-link changePageBtn" href="#" onclick="list(${number}, '${pageSize}')">
+            html += `<li class="page-item"><a class="page-link changePageBtn" href="#" onclick="list(${number}, '${pageSize}','${searchInputUrl}')">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
                           <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
                         </svg>
@@ -397,13 +540,13 @@
             if (i === currentPage) {
                 html += `<li class="page-item active"><a class="page-link" href="#">${i}</a></li>`;
             } else {
-                html += `<li class="page-item"><a class="page-link" href="#" onclick="list(${i}, '${pageSize}')">${i}</a></li>`;
+                html += `<li class="page-item"><a class="page-link" href="#" onclick="list(${i}, '${pageSize}','${searchInputUrl}')">${i}</a></li>`;
             }
         }
         // Next page button
         if (currentPage < totalPages) {
             let number = currentPage + 1;
-            html += `<li class="page-item"><a class="page-link changePageBtn" href="#" onclick="list(${number}, '${pageSize}')">
+            html += `<li class="page-item"><a class="page-link changePageBtn" href="#" onclick="list(${number}, '${pageSize}','${searchInputUrl}')">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
                               <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
                             </svg>
@@ -455,7 +598,7 @@
 
     function deleteResource(id) {
         if (null == localStorage.getItem('user-token')) {
-            alert("需要登录后操作");
+            alert("请登录");
             return; // 防止进一步执行
         }
         var isConfirmed = confirm("确定要删除这个资源吗？");
@@ -481,11 +624,73 @@
                 }
             }
         };
-
         // 发送包含ID的JSON数据
         xhr.send(data);
     }
 
+    function closeResource(id) {
+        if (null == localStorage.getItem('user-token')) {
+            alert("请登录");
+            return; // 防止进一步执行
+        }
+        const isConfirmed = confirm("确定仅自己可见？");
+        if (!isConfirmed) {
+            return; // If the user clicks "Cancel", stop the function
+        }
+        // 创建JSON对象包含资源ID
+        const data = JSON.stringify({"id": id});
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/api/anakki/resource/close", true);
+
+        // 设置请求头以发送JSON数据
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.setRequestHeader('Authorization', localStorage.getItem('user-token'));
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                const response = JSON.parse(xhr.responseText);
+                if (101 === response.code) {
+                    alert(response.data)
+                } else {
+                    location.reload();
+                }
+            }
+        };
+        // 发送包含ID的JSON数据
+        xhr.send(data);
+    }
+
+    function openResource(id) {
+        if (null == localStorage.getItem('user-token')) {
+            alert("请登录");
+            return; // 防止进一步执行
+        }
+        const isConfirmed = confirm("确定要公开这个资源吗？");
+        if (!isConfirmed) {
+            return; // If the user clicks "Cancel", stop the function
+        }
+        // 创建JSON对象包含资源ID
+        const data = JSON.stringify({"id": id});
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/api/anakki/resource/open", true);
+
+        // 设置请求头以发送JSON数据
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.setRequestHeader('Authorization', localStorage.getItem('user-token'));
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                const response = JSON.parse(xhr.responseText);
+                if (101 === response.code) {
+                    alert(response.data)
+                } else {
+                    location.reload();
+                }
+            }
+        };
+        // 发送包含ID的JSON数据
+        xhr.send(data);
+    }
 </script>
 </body>
 </html>

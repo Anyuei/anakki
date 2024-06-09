@@ -41,4 +41,9 @@ public class UserLoginInterceptor implements HandlerInterceptor {
         BaseContext.setCurrentNickname(sub.getNickname());
         return true;
     }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
+        BaseContext.removeCurrentNickname();
+    }
 }

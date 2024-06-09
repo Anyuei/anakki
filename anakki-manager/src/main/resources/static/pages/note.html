@@ -356,7 +356,10 @@
                 console.error('Error:', error);
             });
     }
-
+    function searchButton() {
+        const input = document.getElementById("searchInputText").value;
+        listNotes(1, 5, input);
+    }
     function listNotes(current, pageSize, searchInput) {
         if (null == searchInput || "" === searchInput) {
             searchInput = "";
