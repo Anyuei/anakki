@@ -293,6 +293,14 @@
         $('#header').load("../pages/header.html", loadPersonDetail);
         listNotes(1, 10);
     }
+    window.addEventListener('beforeunload', function (e) {
+        // Cancel the event to prevent the browser from closing immediately
+        e.preventDefault();
+        // Chrome requires the event to be returned
+        e.returnValue = '';
+        // Display a confirmation message
+        return '';
+    });
     // 初始化内容富文本
     $(function () {
         ClassicEditor
