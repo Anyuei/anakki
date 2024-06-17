@@ -34,7 +34,12 @@ public class AnNoteController {
         anNoteService.save(createNoteRequest,request);
         return ResponseDTO.succData(true);
     }
-
+    @ApiOperation(value = "查看笔记草稿")
+    @GetMapping("/listDraftNote")
+    public ResponseDTO<BasePageResult<AnNote>> listDraftNote(ListNoteRequest listNoteRequest){
+        BasePageResult<AnNote> anNoteBasePageResult = anNoteService.listDraftNote(listNoteRequest);
+        return ResponseDTO.succData(anNoteBasePageResult);
+    }
     @ApiOperation(value = "删除笔记")
     @PostMapping("/deleteNote")
     public ResponseDTO<Boolean> deleteNote(@RequestBody @Valid IdNotNullRequest createNoteRequest, HttpServletRequest request){

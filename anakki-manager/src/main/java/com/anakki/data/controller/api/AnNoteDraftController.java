@@ -1,16 +1,15 @@
 package com.anakki.data.controller.api;
 
 
+import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.bean.common.ResponseDTO;
+import com.anakki.data.entity.AnNote;
+import com.anakki.data.entity.request.ListNoteRequest;
 import com.anakki.data.entity.request.SaveNoteDraftRequest;
 import com.anakki.data.service.AnNoteDraftService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -28,6 +27,7 @@ public class AnNoteDraftController {
 
     @Autowired
     private AnNoteDraftService anNoteDraftService;
+
 
 
     @ApiOperation(value = "保存笔记草稿")

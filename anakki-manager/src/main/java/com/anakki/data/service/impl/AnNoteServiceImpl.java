@@ -57,6 +57,9 @@ public class AnNoteServiceImpl extends ServiceImpl<AnNoteMapper, AnNote> impleme
         anNote.setDescription(HtmlUtil.getFirstP(createNoteRequest.getContent()));
         anNote.setStatus("COMMON");
         if (null!=anNote.getId()){
+            if (!anNote.getCreateBy().equals(user.getId())){
+                throw new RuntimeException("无权限修改");
+            }
             updateById(anNote);
         }else{
             save(anNote);
@@ -120,6 +123,30 @@ public class AnNoteServiceImpl extends ServiceImpl<AnNoteMapper, AnNote> impleme
         }
         note.setStatus("INVALID");
         updateById(note);
+    }
+
+    @Override
+    public BasePageResult<AnNote> listDraftNote(ListNoteRequest listNoteRequest) {
+        String currentNickname = BaseContext.getCurrentNickname(false);
+        AnUser user = anUserService.getByNickname(currentNickname);
+
+        IPage<AnNote> listNotePage = new Page<>(
+                listNoteRequest.getCurrent(),
+                listNoteRequest.getSize());
+        String type = listNoteRequest.getType();
+        QueryWrapper<AnNote> anFriendsCommentQueryWrapper = new QueryWrapper<>();
+        anFriendsCommentQueryWrapper.eq(null != type, "type", type);
+        anFriendsCommentQueryWrapper.eq("status","Draft");
+        anFriendsCommentQueryWrapper.eq("create_by",user.getId());
+        anFriendsCommentQueryWrapper.like(null != listNoteRequest.getContent(), "content", listNoteRequest.getContent());
+        anFriendsCommentQueryWrapper.ge(
+                null != listNoteRequest.getCreateTimeStart(), "create_time", listNoteRequest.getCreateTimeStart());
+        anFriendsCommentQueryWrapper.le(
+                null != listNoteRequest.getCreateTimeEnd(), "create_time", listNoteRequest.getCreateTimeEnd());
+        anFriendsCommentQueryWrapper.orderByDesc("create_time");
+        IPage<AnNote> page = page(listNotePage, anFriendsCommentQueryWrapper);
+        List<AnNote> records = page.getRecords();
+        return new BasePageResult<>(records, page.getTotal());
     }
 
 

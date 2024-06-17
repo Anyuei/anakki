@@ -11,6 +11,7 @@ import com.anakki.data.service.AnNoteDraftService;
 import com.anakki.data.service.AnNoteService;
 import com.anakki.data.service.AnUserService;
 import com.anakki.data.utils.IPUtils;
+import com.anakki.data.utils.common.HtmlUtil;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.swagger.annotations.ApiModelProperty;
@@ -55,7 +56,9 @@ public class AnNoteDraftServiceImpl extends ServiceImpl<AnNoteDraftMapper, AnNot
             String ipAddr = IPUtils.getIpAddr(request);
             AnNote anNote = new AnNote();
             anNote.setContent(saveNoteDraftRequest.getContent());
-            anNote.setDescription(saveNoteDraftRequest.getDescription());
+            anNote.setCoverImage(HtmlUtil.getFirstImg(saveNoteDraftRequest.getContent()));
+            anNote.setTitle(HtmlUtil.getFirstH1(saveNoteDraftRequest.getContent()));
+            anNote.setDescription(HtmlUtil.getFirstP(saveNoteDraftRequest.getContent()));
             anNote.setAuthor(user.getNickname());
             anNote.setLocation(ipAddr);
             anNote.setType(ipAddr);
