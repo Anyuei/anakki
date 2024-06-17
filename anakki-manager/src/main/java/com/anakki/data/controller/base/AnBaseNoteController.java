@@ -37,4 +37,11 @@ public class AnBaseNoteController {
         BasePageResult<AnNote> anNoteBasePageResult = anNoteService.listNotes(listNoteRequest);
         return ResponseDTO.succData(anNoteBasePageResult);
     }
+    @ApiOperation(value = "查看笔记")
+    @GetMapping("/note-detail")
+    public ResponseDTO<AnNote> noteDetail(@RequestParam("id") Long id, HttpServletRequest request){
+
+        AnNote note = anNoteService.getById(id);
+        return ResponseDTO.succData(note);
+    }
 }

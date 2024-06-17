@@ -91,8 +91,12 @@
     .note-node-title {
         font-weight: bold;
         margin-top: 0.5rem;
+        display: flex; /* 使用Flexbox布局 */
+        justify-content: space-between; /* 两端对齐子元素 */
     }
-
+    .note-node-content {
+        margin-bottom: 0.5rem;
+    }
     #toggleButton {
         background: #95959500;
         box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.33);
@@ -131,6 +135,18 @@
     textarea {
         width: 80%;
         height: 80vh;
+    }
+    .dropdown-menu .dropdown-item > i, .dropdown-menu .dropdown-item > svg {
+        margin-right: 0rem;
+        font-size: 1rem;
+        vertical-align: -17%;
+    }
+    .dropdown-menu {
+        min-width: 3rem;
+    }
+    .modal-dialog {
+        max-width: 999px;
+        margin: 1.75rem auto;
     }
 </style>
 <body>
@@ -224,6 +240,22 @@
 </main>
 
 
+<!-- Add a modal to display the fetched data -->
+<div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true" style="padding-right: 0px;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="viewModalBody">
+                <!-- Data fetched from backend will be displayed here -->
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Core -->
 <script src="../assets/vendor/jquery/jquery.min.js"></script>
 <script src="../assets/vendor/popper/popper.min.js"></script>
@@ -279,6 +311,30 @@
                 console.error(error);
             });
     });
+    function viewNote(id) {
+        fetch('/base/anakki/note/note-detail?id='+id, {
+            method: 'GET'
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json(); // Parse JSON data
+            } else {
+                // Handle error response
+                console.error('网络错误，请联系管理员');
+            }
+        })
+        .then(data => {
+            if (data.code === 200) {
+                document.getElementById("viewModalBody").innerHTML = data.data.content;
+                $('#viewModal').modal('show');
+            } else {
+                alert(data.data)
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
     function scrollToBottom() {
         var textarea = document.getElementById('adContent');
         textarea.scrollTop = textarea.scrollHeight - textarea.clientHeight;
@@ -390,21 +446,48 @@
                     let coverImgHtml="";
                     if (null!=item.coverImage){
                         coverImgHtml=
-                            "                <div class=\"note-node-cover col-2\">\n" +
                             "                    <img class=\"cover-img\"\n" +
-                            "                         src="+item.coverImage+"></div>"
+                            "                         src="+item.coverImage+">"
                     }
 
                     html +=
                         "<span class=\"note-node row\">\n" +
+                        "                <div class=\"note-node-cover col-2\">\n" +
                         coverImgHtml+
+                        "</div>"+
                         "                <div class=\"note-node-content col-10\">\n" +
                         "                    <div class=\"note-node-title\">\n" +
                         "                        <h4>"+item.title+"</h4>\n" +
+                        "        <div class=\"dropdown\">\n" +
+                        "            <div class=\"\" type=\"button\" id=\"dropdownMenuButton\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\n" +
+                                        "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-grid-3x2-gap-fill\" viewBox=\"0 0 16 16\">\n" +
+                                        "  <path d=\"M1 4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V4zM1 9a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V9zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V9zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V9z\"/>\n" +
+                                        "</svg>"+
+                        "            </div>\n" +
+                        "            <div class=\"dropdown-menu\" aria-labelledby=\"dropdownMenuButton\">\n" +
+                        "                <a class=\"dropdown-item\" href=\"#\" onclick='viewNote("+item.id+")'>" +
+                                            "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-view-list\" viewBox=\"0 0 16 16\">\n" +
+                                            "  <path d=\"M3 4.5h10a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1H3zM1 2a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 2zm0 12a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 14z\"/>\n" +
+                                            "</svg>"+
+                        "                </a>\n" +
+                        "                <a class=\"dropdown-item\" href=\"#\">" +
+                                            "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-pencil-square\" viewBox=\"0 0 16 16\">\n" +
+                                            "  <path d=\"M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z\"/>\n" +
+                                            "  <path fill-rule=\"evenodd\" d=\"M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z\"/>\n" +
+                                            "</svg>"+
+                        "                </a>\n" +
+                        "                <a class=\"dropdown-item\" href=\"#\">" +
+                                             "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-trash\" viewBox=\"0 0 16 16\">\n" +
+                                            "  <path d=\"M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z\"/>\n" +
+                                            "  <path fill-rule=\"evenodd\" d=\"M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z\"/>\n" +
+                                            "</svg>"+
+                        "                </a>\n" +
+                        "            </div>\n" +
+                        "        </div>"+
                         "                    </div>\n" +
-                        "                    <div class=\"note-node-description\">"+item.description+"</div>\n" +
+                        "                    <div class=\"note-node-description\" onclick='viewNote("+item.id+")'>"+item.description+"</div>\n" +
                         "                </div>\n" +
-                        "            </span>"; // Construct HTML content for each item
+                        "            </span>";
                 }
                 document.getElementById("noteList").innerHTML = html;
             })

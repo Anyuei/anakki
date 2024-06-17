@@ -9257,7 +9257,7 @@ figcaption, figure, main {
     width: 100%;
     height: 100%;
     cursor: pointer;
-    z-index: 1040
+    z-index: 998
 }
 
 .bg-blue {
