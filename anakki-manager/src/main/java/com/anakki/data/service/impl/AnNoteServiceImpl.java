@@ -56,7 +56,12 @@ public class AnNoteServiceImpl extends ServiceImpl<AnNoteMapper, AnNote> impleme
         anNote.setTitle(HtmlUtil.getFirstH1(createNoteRequest.getContent()));
         anNote.setDescription(HtmlUtil.getFirstP(createNoteRequest.getContent()));
         anNote.setStatus("COMMON");
-        return save(anNote);
+        if (null!=anNote.getId()){
+            updateById(anNote);
+        }else{
+            save(anNote);
+        }
+        return true;
     }
 
 

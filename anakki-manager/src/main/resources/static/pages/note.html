@@ -207,6 +207,7 @@
             <form id="thisForm" class="form-horizontal">
                 <div class="form-group">
                     <div class="col-xs-12">
+                            <div id="noteId" style="display:none;"></div>
                             <textarea id="adContent" oninput="scrollToBottom()">
 
                             </textarea>
@@ -417,7 +418,32 @@
             console.error('Error:', error);
         });
     }
-
+    function editNote(id) {
+        fetch('/base/anakki/note/note-detail?id='+id, {
+            method: 'GET'
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json(); // Parse JSON data
+                } else {
+                    // Handle error response
+                    console.error('网络错误，请联系管理员');
+                }
+            })
+            .then(data => {
+                if (data.code === 200) {
+                    const content = data.data.content;
+                    thisAdEditor.setData(content);
+                    document.getElementById("noteId").innerHTML = data.data.id;
+                    editDraftNoteButton();
+                } else {
+                    alert(data.data)
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
     function viewDraftNote(id) {
         fetch('/base/anakki/note/note-detail?id='+id, {
             method: 'GET'
@@ -483,7 +509,7 @@
 
     function publish() {
         const data = thisAdEditor.getData()
-
+        const noteId = document.getElementById("noteId").innerHTML;
         const token = localStorage.getItem('user-token'); // Get the JWT token from localStorage
         // Make an AJAX POST request
         fetch('/api/anakki/note/createNote', {
@@ -494,8 +520,8 @@
             },
             body: JSON.stringify(
                 {
-                    content: data,
-                    isDraft: true
+                    id: noteId,
+                    content: data
                 }
             ),
         })
@@ -526,16 +552,13 @@
             listNotes(1, 10, input);
         }
         if (noteListDiv.style.display === 'block') {
-            listNotes(1, 10, input,"DRAFT");
+            listDrafts(1, 10, input);
         }
     }
-    function listNotes(current, pageSize, searchInput,status) {
+    function listNotes(current, pageSize, searchInput) {
         let searchUrl="";
         if (null != searchInput && "" !== searchInput) {
             searchUrl = searchUrl+"&content=" + searchInput;
-        }
-        if (null != status && "" !== status) {
-            searchUrl = searchUrl+"&status=" + status;
         }
         const url = window.location.href;
         const token = localStorage.getItem('user-token'); // Get the JWT token from localStorage
@@ -586,7 +609,7 @@
                                                         "  <path d=\"M3 4.5h10a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1H3zM1 2a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 2zm0 12a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 14z\"/>\n" +
                                                         "</svg>"+
                                     "                </a>\n" +
-                                    "                <a class=\"dropdown-item\" href=\"#\">" +
+                                    "                <a class=\"dropdown-item\" href=\"#\" onclick='editNote("+item.id+")'>" +
                                                         "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-pencil-square\" viewBox=\"0 0 16 16\">\n" +
                                                         "  <path d=\"M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z\"/>\n" +
                                                         "  <path fill-rule=\"evenodd\" d=\"M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z\"/>\n" +
@@ -607,7 +630,7 @@
                 }
                 document.getElementById("noteList").innerHTML = html;
                 // 拼接分页参数到地址栏
-                const newUrl = url.split("?")[0] + "?current=" + current + "&size=" + pageSize + searchInput;
+                const newUrl = url.split("?")[0] + "?current=" + current + "&size=" + pageSize + searchUrl;
                 window.history.replaceState(null, null, newUrl);
             })
             .catch(error => {
@@ -668,7 +691,7 @@
                         "  <path d=\"M3 4.5h10a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1H3zM1 2a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 2zm0 12a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 14z\"/>\n" +
                         "</svg>"+
                         "                </a>\n" +
-                        "                <a class=\"dropdown-item\" href=\"#\">" +
+                        "                <a class=\"dropdown-item\" href=\"#\" >" +
                         "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-pencil-square\" viewBox=\"0 0 16 16\">\n" +
                         "  <path d=\"M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z\"/>\n" +
                         "  <path fill-rule=\"evenodd\" d=\"M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z\"/>\n" +
@@ -689,7 +712,7 @@
                 }
                 document.getElementById("draftList").innerHTML = html;
                 // 拼接分页参数到地址栏
-                const newUrl = url.split("?")[0] + "?current=" + current + "&size=" + pageSize + searchInput;
+                const newUrl = url.split("?")[0] + "?current=" + current + "&size=" + pageSize + searchUrl;
                 window.history.replaceState(null, null, newUrl);
             })
             .catch(error => {
@@ -816,13 +839,15 @@
     });
     editDraftButton.addEventListener('click', function () {
         if (createDraftDiv.style.display === 'none') {
-            createDraftDiv.style.display = 'block';
-            document.getElementById('publish-area').style.display= '';
-            noteListDiv.style.display = 'none';
-            draftListDiv.style.display = 'none';
+            editDraftNoteButton()
         }
     });
-
+    function editDraftNoteButton(){
+        createDraftDiv.style.display = 'block';
+        document.getElementById('publish-area').style.display= '';
+        noteListDiv.style.display = 'none';
+        draftListDiv.style.display = 'none';
+    }
 
 </script>
 </body>
