@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.io.IOException;
 
 /**
@@ -34,7 +35,12 @@ public class AnNoteController {
         return ResponseDTO.succData(true);
     }
 
-
+    @ApiOperation(value = "删除笔记")
+    @PostMapping("/deleteNote")
+    public ResponseDTO<Boolean> deleteNote(@RequestBody @Valid IdNotNullRequest createNoteRequest, HttpServletRequest request){
+        anNoteService.remove(createNoteRequest,request);
+        return ResponseDTO.succData(true);
+    }
     @ApiOperation(value = "上传媒体文件")
     @PostMapping("/uploadFiles")
     public ResponseDTO<String> uploadFiles(UploadNoteMediaRequest uploadNoteMediaRequest) throws IOException {

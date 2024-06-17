@@ -18,6 +18,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -67,7 +68,12 @@ public class AnNoteServiceImpl extends ServiceImpl<AnNoteMapper, AnNote> impleme
         String type = listNoteRequest.getType();
         QueryWrapper<AnNote> anFriendsCommentQueryWrapper = new QueryWrapper<>();
         anFriendsCommentQueryWrapper.eq(null != type, "type", type);
-        anFriendsCommentQueryWrapper.eq("status","COMMON");
+        if (StringUtils.isEmpty(listNoteRequest.getStatus())){
+            anFriendsCommentQueryWrapper.eq("status","COMMON");
+        }else{
+            anFriendsCommentQueryWrapper.eq("status",listNoteRequest.getStatus());
+        }
+
         anFriendsCommentQueryWrapper.like(null != listNoteRequest.getContent(), "content", listNoteRequest.getContent());
         anFriendsCommentQueryWrapper.ge(
                 null != listNoteRequest.getCreateTimeStart(), "create_time", listNoteRequest.getCreateTimeStart());
@@ -94,6 +100,21 @@ public class AnNoteServiceImpl extends ServiceImpl<AnNoteMapper, AnNote> impleme
         String url = deleteNoteMediaRequest.getUrl();
         COSUtil.deleteObject(CosBucketNameConst.BUCKET_NAME_IMAGES, url);
         return true;
+    }
+
+    @Override
+    public void remove(IdNotNullRequest createNoteRequest, HttpServletRequest request) {
+        String currentNickname = BaseContext.getCurrentNickname(false);
+        AnUser user = anUserService.getByNickname(currentNickname);
+        AnNote note = getById(createNoteRequest.getId());
+        if (null==note){
+            return;
+        }
+        if (!note.getCreateBy().equals(user.getId())) {
+            throw new RuntimeException("作者本人可以删除");
+        }
+        note.setStatus("INVALID");
+        updateById(note);
     }
 
 

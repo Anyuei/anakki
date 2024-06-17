@@ -26,4 +26,5 @@ public interface AnNoteService extends IService<AnNote> {
 
     Boolean deleteFiles(DeleteNoteMediaRequest deleteNoteMediaRequest) throws IOException;
 
+    void remove(IdNotNullRequest createNoteRequest, HttpServletRequest request);
 }

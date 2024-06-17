@@ -17,7 +17,8 @@ import java.time.LocalDateTime;
 public class ListNoteRequest extends Pagination {
     @ApiModelProperty("笔记类型")
     private String type;
-
+    @ApiModelProperty("笔记状态")
+    private String status;
     @ApiModelProperty("内容")
     private String content;
 
