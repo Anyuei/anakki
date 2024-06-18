@@ -109,6 +109,18 @@
     .loadDataBtn:hover {
         transform: scale(1.1);
     }
+
+    #scrollReminder {
+        position: fixed;
+        bottom: 20px;
+        transform: translateX(-50%); /* Center the icon horizontally */
+        left: 50%; /* Set left position to 50% */
+        transition: opacity 1s;
+    }
+
+    .hidden {
+        opacity: 0;
+    }
 </style>
 <body>
 <!--通用顶部导航-->
@@ -122,25 +134,35 @@
                     <div class="row cols-xs-space align-items-center text-center text-md-left justify-content-center">
                         <div class="col-7">
                             <div class="text-center mt-5">
-                                <img src="assets/images/brand/icon.png" style="width: 20%;" class="img-fluid animated"
-                                     data-animation-in="jackInTheBox" data-animation-delay="1000">
+                                    <img src="assets/images/brand/icon.png" style="width: 20%;" class="img-fluid animated"
+                                         data-animation-in="jackInTheBox" data-animation-delay="1000">
+
                                 <h2 class="heading font-weight-400 text-white mt-5 animated"
                                     data-animation-in="fadeInUp" data-animation-delay="2000">
                                     <span class="font-weight-700">ANAKKI</span> X
                                 </h2>
+                                <span class="font-weight-200" style="color: #bdcbdb">封面摄于2022年站长川藏线骑行-新都桥段</span>
                                 <p class="lead text-white mt-3 lh-180 c-white animated" data-animation-in="fadeInUp"
                                    data-animation-delay="2500">
                                     <strong class="text-white">
 
                                     </strong>
                                 </p>
+
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <div id="scrollReminder">
+                <svg style="color: white;" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-double-up" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M7.646 2.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 3.707 2.354 9.354a.5.5 0 1 1-.708-.708l6-6z"/>
+                    <path fill-rule="evenodd" d="M7.646 6.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 7.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"/>
+                </svg>
+            </div>
         </div>
     </section>
+
     <hr>
     <section class="slice">
         <div class="row justify-content-center">
@@ -204,10 +226,21 @@
         $('#footer').load("../pages/footer.html", insertCreateTime);
         localImgData(currentPage);
         mainPageHead();
+        window.addEventListener('scroll', function() {
+            const scrollReminder = document.getElementById('scrollReminder');
+            const scrollPosition = window.scrollY;
+
+            if (scrollPosition > 0) {
+                scrollReminder.classList.add('hidden');
+            } else {
+                scrollReminder.classList.remove('hidden');
+            }
+        });
     };
     document.getElementById("loadMoreButton").addEventListener("click", function() {
         localImgData(currentPage)
     });
+
     function localImgData(current){
         loading=true;
         var mainPageImageFlow = new XMLHttpRequest();

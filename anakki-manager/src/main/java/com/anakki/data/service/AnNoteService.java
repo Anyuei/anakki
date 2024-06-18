@@ -29,4 +29,8 @@ public interface AnNoteService extends IService<AnNote> {
     void remove(IdNotNullRequest createNoteRequest, HttpServletRequest request);
 
     BasePageResult<AnNote> listDraftNote(ListNoteRequest listNoteRequest);
+
+    AnNote getNoteDetail(Long id);
+
+    void likeNote(Long id, HttpServletRequest request);
 }

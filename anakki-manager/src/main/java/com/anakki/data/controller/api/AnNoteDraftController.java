@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * <p>
- *  前端控制器
+ * 前端控制器
  * </p>
  *
  * @author Anakki
@@ -28,11 +28,9 @@ public class AnNoteDraftController {
     @Autowired
     private AnNoteDraftService anNoteDraftService;
 
-
-
     @ApiOperation(value = "保存笔记草稿")
     @PostMapping("/saveNoteDraft")
-    public ResponseDTO<Long> saveNoteDraft(@RequestBody SaveNoteDraftRequest saveNoteDraftRequest, HttpServletRequest request){
+    public ResponseDTO<Long> saveNoteDraft(@RequestBody SaveNoteDraftRequest saveNoteDraftRequest, HttpServletRequest request) {
         Long noteId = anNoteDraftService.saveDraft(saveNoteDraftRequest, request);
         return ResponseDTO.succData(noteId);
     }

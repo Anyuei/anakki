@@ -4,6 +4,7 @@ import com.anakki.data.bean.common.BaseContext;
 import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.bean.constant.CosBucketNameConst;
 import com.anakki.data.bean.constant.CosPathConst;
+import com.anakki.data.bean.constant.RedisKey;
 import com.anakki.data.entity.AnNote;
 import com.anakki.data.entity.AnUser;
 import com.anakki.data.entity.request.*;
@@ -14,6 +15,8 @@ import com.anakki.data.service.AnUserService;
 import com.anakki.data.utils.IPUtils;
 import com.anakki.data.utils.common.COSUtil;
 import com.anakki.data.utils.common.HtmlUtil;
+import com.anakki.data.utils.common.RedisUtil;
+import com.anakki.data.utils.common.TimeUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -21,11 +24,13 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -42,6 +47,8 @@ public class AnNoteServiceImpl extends ServiceImpl<AnNoteMapper, AnNote> impleme
     @Autowired
     private AnIpAddressService anIpAddressService;
 
+    @Autowired
+    private AnNoteMapper anNoteMapper;
     @Override
     public Boolean save(CreateNoteRequest createNoteRequest, HttpServletRequest request) {
         String ipAddr = IPUtils.getIpAddr(request);
@@ -56,12 +63,12 @@ public class AnNoteServiceImpl extends ServiceImpl<AnNoteMapper, AnNote> impleme
         anNote.setTitle(HtmlUtil.getFirstH1(createNoteRequest.getContent()));
         anNote.setDescription(HtmlUtil.getFirstP(createNoteRequest.getContent()));
         anNote.setStatus("COMMON");
-        if (null!=anNote.getId()){
-            if (!anNote.getCreateBy().equals(user.getId())){
+        if (null != anNote.getId()) {
+            if (!anNote.getCreateBy().equals(user.getId())) {
                 throw new RuntimeException("无权限修改");
             }
             updateById(anNote);
-        }else{
+        } else {
             save(anNote);
         }
         return true;
@@ -76,10 +83,10 @@ public class AnNoteServiceImpl extends ServiceImpl<AnNoteMapper, AnNote> impleme
         String type = listNoteRequest.getType();
         QueryWrapper<AnNote> anFriendsCommentQueryWrapper = new QueryWrapper<>();
         anFriendsCommentQueryWrapper.eq(null != type, "type", type);
-        if (StringUtils.isEmpty(listNoteRequest.getStatus())){
-            anFriendsCommentQueryWrapper.eq("status","COMMON");
-        }else{
-            anFriendsCommentQueryWrapper.eq("status",listNoteRequest.getStatus());
+        if (StringUtils.isEmpty(listNoteRequest.getStatus())) {
+            anFriendsCommentQueryWrapper.eq("status", "COMMON");
+        } else {
+            anFriendsCommentQueryWrapper.eq("status", listNoteRequest.getStatus());
         }
 
         anFriendsCommentQueryWrapper.like(null != listNoteRequest.getContent(), "content", listNoteRequest.getContent());
@@ -115,7 +122,7 @@ public class AnNoteServiceImpl extends ServiceImpl<AnNoteMapper, AnNote> impleme
         String currentNickname = BaseContext.getCurrentNickname(false);
         AnUser user = anUserService.getByNickname(currentNickname);
         AnNote note = getById(createNoteRequest.getId());
-        if (null==note){
+        if (null == note) {
             return;
         }
         if (!note.getCreateBy().equals(user.getId())) {
@@ -136,8 +143,8 @@ public class AnNoteServiceImpl extends ServiceImpl<AnNoteMapper, AnNote> impleme
         String type = listNoteRequest.getType();
         QueryWrapper<AnNote> anFriendsCommentQueryWrapper = new QueryWrapper<>();
         anFriendsCommentQueryWrapper.eq(null != type, "type", type);
-        anFriendsCommentQueryWrapper.eq("status","Draft");
-        anFriendsCommentQueryWrapper.eq("create_by",user.getId());
+        anFriendsCommentQueryWrapper.eq("status", "Draft");
+        anFriendsCommentQueryWrapper.eq("create_by", user.getId());
         anFriendsCommentQueryWrapper.like(null != listNoteRequest.getContent(), "content", listNoteRequest.getContent());
         anFriendsCommentQueryWrapper.ge(
                 null != listNoteRequest.getCreateTimeStart(), "create_time", listNoteRequest.getCreateTimeStart());
@@ -149,5 +156,30 @@ public class AnNoteServiceImpl extends ServiceImpl<AnNoteMapper, AnNote> impleme
         return new BasePageResult<>(records, page.getTotal());
     }
 
+    @Override
+    public AnNote getNoteDetail(Long id) {
+        AnNote anNote = getById(id);
+        if (null == anNote) {
+            throw new RuntimeException("内容不存在！");
+        }
+        incrNoteViewCount(id);
+        anNote.setViewCount(anNote.getViewCount()+1);
+        return anNote;
+    }
 
+    @Override
+    public void likeNote(Long id, HttpServletRequest request) {
+        String ipAddr = IPUtils.getIpAddr(request);
+        boolean success = RedisUtil.StringOps.setIfAbsent(RedisKey.USER_NOTE_LIKE_REPEAT_CACHE_KEY + ipAddr+id, "1", 1, TimeUnit.DAYS);
+        if (success){
+            anNoteMapper.likeNote(id);
+        }else {
+            throw new RuntimeException("24小时内只能点赞一次(*￣︶￣)");
+        }
+    }
+
+    @Async
+    public void incrNoteViewCount(Long id){
+        anNoteMapper.incrNoteViewCount(id);
+    }
 }

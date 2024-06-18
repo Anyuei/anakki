@@ -104,7 +104,9 @@
 
     .note-node {
         border-radius: 10px;
-        box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.34);
+        box-shadow: 0 4px 15px 10px rgba(0, 0, 0, 0.34);
+        background-color: #20202078;
+        color: #a0a0a0;
     }
 
     #toggleButton:hover {
@@ -150,7 +152,19 @@
     .note-node-time {
         text-align: right;
     }
+    h4{
+        color: #fff;
+    }
     .ck-editor__editable { min-height: 400px; }
+
+    .breathing-icon {
+        animation: breathe 2s infinite alternate;
+    }
+
+    @keyframes breathe {
+        0% { transform: scale(1); }
+        100% { transform: scale(1.1); }
+    }
 </style>
 <body>
 <!--通用顶部导航-->
@@ -202,7 +216,7 @@
         </div>
 
         <!--        笔记列表-->
-        <div class="noteList" id="noteList" style="margin-top: 1rem;">
+        <div class="noteList note-node row" id="noteList" style="margin-top: 1rem;">
 
         </div>
         <!--        草稿列表-->
@@ -252,6 +266,7 @@
 <div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true" style="padding-right: 0 !important;">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
+            <div style="display: none" id="noteDetailId"></div>
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -262,7 +277,24 @@
             </div>
             <div class="modal-footer justify-content-between">
                 <div  id="viewModalNoteAuthor"></div>
-                <div  id="viewModalNoteTime"></div>
+                <div id="foot-right">
+                    <span  id="viewModalNoteTime"></span> |
+                    <span class="justify-content-between" id="viewCountView">
+                        <a href="#" onclick="likeNote()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-suit-heart-fill" viewBox="0 0 16 12">
+                              <path d="M4 1c2.21 0 4 1.755 4 3.92C8 2.755 9.79 1 12 1s4 1.755 4 3.92c0 3.263-3.234 4.414-7.608 9.608a.513.513 0 0 1-.784 0C3.234 9.334 0 8.183 0 4.92 0 2.755 1.79 1 4 1z"/>
+                            </svg>
+                        </a>
+                        <span id="noteLikeCount">
+                        </span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 11">
+                            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+                            <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
+                        </svg>
+                        <span id="viewCount">
+                        </span>
+                    </span>
+                </div>
             </div>
         </div>
     </div>
@@ -349,6 +381,46 @@
                 console.error(error);
             });
     });
+
+    function likeNote(){
+        const noteId = document.getElementById("noteDetailId").innerHTML;
+        if (noteId) {
+            fetch('/base/anakki/note/likeNote', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(
+                    {
+                        id: noteId
+                    }
+                ),
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json(); // Parse JSON data
+                } else {
+                    // Handle error response
+                    console.error('网络错误，请联系管理员');
+                }
+            })
+            .then(data => {
+                if (data.code === 200) {
+                    incrNoteLikeCount()
+                } else {
+                    alert(data.data)
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    }
+    function incrNoteLikeCount(){
+        let likeCountElement = document.getElementById("noteLikeCount");
+        let currentCount = parseInt(likeCountElement.innerHTML);
+        likeCountElement.innerHTML = currentCount + 1;
+    }
     function deleteNote(id) {
         const token = localStorage.getItem('user-token');
         fetch('/api/anakki/note/deleteNote', {
@@ -432,6 +504,9 @@
                 document.getElementById("viewModalBody").innerHTML = data.data.content;
                 document.getElementById("viewModalNoteTime").innerHTML = data.data.createTime.replace("T"," ");
                 document.getElementById("viewModalNoteAuthor").innerHTML = data.data.author;
+                document.getElementById("viewCount").innerHTML = data.data.viewCount;
+                document.getElementById("noteLikeCount").innerHTML = data.data.likeCount;
+                document.getElementById("noteDetailId").innerHTML = data.data.id;
                 $('#viewModal').modal('show');
             } else {
                 alert(data.data)
@@ -609,13 +684,17 @@
                     }
 
                     html +=
-                        "<span class=\"note-node row\">\n" +
-                        "                <div class=\"note-node-cover col-2\">\n" +
-                        coverImgHtml+
-                        "</div>"+
-                        "                <div class=\"note-node-content col-10\">\n" +
+                        // "                <div class=\"note-node-cover col-2\">\n" +
+                        //                     coverImgHtml+
+                        //                 "</div>"+
+                        "                <div class=\"note-node-content col-12\">\n" +
                         "                    <div class=\"note-node-title\">\n" +
-                        "                        <h4>"+item.title+"</h4>\n" +
+                        "                        <h4 style=\"margin-top: 0.5rem;\">" +
+                                                        "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-grip-vertical breathing-icon\" viewBox=\"0 0 16 16\">\n" +
+                                                        "  <path d=\"M7 2a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zM7 5a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zM7 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm-3 3a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm-3 3a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z\"/>\n" +
+                                                        "</svg>" +
+                                                ""+item.title+"" +
+                                                "</h4>\n" +
                                     "        <div class=\"dropdown\">\n" +
                                     "            <div class=\"\" type=\"button\" id=\"dropdownMenuButton\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\n" +
                                                     "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-grid-3x2-gap-fill\" viewBox=\"0 0 16 16\">\n" +
@@ -649,11 +728,16 @@
                                     "                </a>\n" +
                                     "            </div>\n" +
                                     "        </div>"+
-                        "                    </div>\n" +
-                        "                    <div class=\"note-node-description\">"+item.description+"<a href='#' onclick='viewNote("+item.id+")'>...查看更多</a></div>\n" +
-                        "                    <div class=\"note-node-time\">"+item.createTime.replace("T"," ")+"</div>\n" +
-                        "                </div>\n" +
-                        "            </span>";
+                        "                    </div><hr style='margin-bottom: 0.5rem;margin-top: 0.5rem;'>\n" +
+                        "                    <div class=\"note-node-description\">"+item.description+"<a href='#' onclick='viewNote("+item.id+")'>...查看更多</a></div><hr style='margin-bottom: 0.5rem;'>\n" +
+                        "                    <div class=\"note-node-time\">" +
+                                                "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-eye-fill\" viewBox=\"0 0 16 12\">\n" +
+                                                "  <path d=\"M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z\"/>\n" +
+                                                "  <path d=\"M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z\"/>\n" +
+                                                "</svg>"+
+                        "                            "+item.viewCount+" | "+item.createTime.replace("T"," ")+
+                                            "</div>\n" +
+                        "                </div>\n"
                 }
                 document.getElementById("noteList").innerHTML = html;
                 // 拼接分页参数到地址栏

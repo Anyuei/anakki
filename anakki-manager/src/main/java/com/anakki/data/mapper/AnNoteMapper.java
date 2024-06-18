@@ -15,4 +15,8 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface AnNoteMapper extends BaseMapper<AnNote> {
 
+   void incrNoteViewCount(Long id);
+
+    void likeNote(Long id);
+
 }
