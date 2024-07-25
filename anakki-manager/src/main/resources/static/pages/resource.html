@@ -580,9 +580,6 @@
     }
 
     function downloadResource(id) {
-        if (null == localStorage.getItem('user-token')) {
-            alert("需要登录后下载")
-        }
         const get = new XMLHttpRequest();
         get.open("GET", "/api/anakki/resource/download?key=" + id, true);
         get.onreadystatechange = function () {

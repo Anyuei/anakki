@@ -95,7 +95,7 @@
         justify-content: space-between; /* 两端对齐子元素 */
     }
     .note-node-content {
-        margin-bottom: 0.5rem;
+        margin-bottom: 1.5rem;
     }
     #toggleButton {
         background: #95959500;
@@ -151,6 +151,7 @@
     }
     .note-node-time {
         text-align: right;
+        padding: 0rem 0rem 0.5rem 0rem;
     }
     h4{
         color: #fff;
@@ -164,6 +165,13 @@
     @keyframes breathe {
         0% { transform: scale(1); }
         100% { transform: scale(1.1); }
+    }
+
+    .modal-content {
+        background-color: #c8c8c8d1;
+    }
+    .note-node-title-dropdown-icon{
+        margin-top: 1rem;
     }
 </style>
 <body>
@@ -216,7 +224,7 @@
         </div>
 
         <!--        笔记列表-->
-        <div class="noteList note-node row" id="noteList" style="margin-top: 1rem;">
+        <div class="noteList " id="noteList" style="margin-top: 1rem;">
 
         </div>
         <!--        草稿列表-->
@@ -687,7 +695,7 @@
                         // "                <div class=\"note-node-cover col-2\">\n" +
                         //                     coverImgHtml+
                         //                 "</div>"+
-                        "                <div class=\"note-node-content col-12\">\n" +
+                        "                <div class=\"note-node-content col-12 note-node\">\n" +
                         "                    <div class=\"note-node-title\">\n" +
                         "                        <h4 style=\"margin-top: 0.5rem;\">" +
                                                         "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-grip-vertical breathing-icon\" viewBox=\"0 0 16 16\">\n" +
@@ -696,9 +704,9 @@
                                                 ""+item.title+"" +
                                                 "</h4>\n" +
                                     "        <div class=\"dropdown\">\n" +
-                                    "            <div class=\"\" type=\"button\" id=\"dropdownMenuButton\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\n" +
-                                                    "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-grid-3x2-gap-fill\" viewBox=\"0 0 16 16\">\n" +
-                                                    "  <path d=\"M1 4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V4zM1 9a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V9zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V9zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V9z\"/>\n" +
+                                    "            <div class=\"note-node-title-dropdown-icon\" type=\"button\" id=\"dropdownMenuButton\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\n" +
+                                                    "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-grid-fill\" viewBox=\"0 0 16 16\">\n" +
+                                                    "  <path d=\"M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zm8 0A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm-8 8A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm8 0A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3z\"/>\n" +
                                                     "</svg>"+
                                     "            </div>\n" +
                                     "            <div class=\"dropdown-menu\" aria-labelledby=\"dropdownMenuButton\">\n" +
