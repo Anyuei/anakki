@@ -30,7 +30,7 @@ public class AnBaseManagerController {
 
     @ApiOperation(value = "登录")
     @PostMapping("/login")
-    public ResponseDTO<String> managerLogin(ManagerLoginRequest managerLoginRequest) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+    public ResponseDTO<String> managerLogin(@RequestBody ManagerLoginRequest managerLoginRequest) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         String token = anManagerService.login(managerLoginRequest);
         return ResponseDTO.succData(token);
     }

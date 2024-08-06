@@ -13,10 +13,13 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class ListResourceRequest extends Pagination {
+public class ListResourceManageRequest extends Pagination {
+
+    private String createBy;
+
     private String type;
 
-    private Boolean isPublic=false;
+    private Boolean isPublic;
 
     private String description;
 

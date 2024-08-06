@@ -1,8 +1,10 @@
 package com.anakki.data.entity.request;
 
 import com.anakki.data.entity.common.ManageToken;
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
@@ -14,6 +16,7 @@ import java.time.LocalDateTime;
  * @author Anakki
  * @date 2023/11/8 22:55
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class CreateUserRequest extends ManageToken {
 
@@ -38,5 +41,4 @@ public class CreateUserRequest extends ManageToken {
     @ApiModelProperty("邮箱")
     @NotBlank(message = "邮箱不能为空")
     private String mail;
-
 }

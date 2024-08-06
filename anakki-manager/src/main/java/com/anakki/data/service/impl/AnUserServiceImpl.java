@@ -124,6 +124,7 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
 
         AnUser anUser = new AnUser();
         BeanUtils.copyProperties(createUserRequest, anUser);
+        anUser.setExp(0L);
         return save(anUser);
     }
 

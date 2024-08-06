@@ -5,10 +5,7 @@ import com.anakki.data.bean.common.ResponseDTO;
 import com.anakki.data.entity.AnGiftLog;
 import com.anakki.data.entity.request.RandomNameRequest;
 import com.anakki.data.entity.request.SendMailRequest;
-import com.anakki.data.service.AnGiftLogService;
-import com.anakki.data.service.AnRecordService;
-import com.anakki.data.service.AnStatisticService;
-import com.anakki.data.service.AnSystemConfigService;
+import com.anakki.data.service.*;
 import com.anakki.data.utils.IPUtils;
 import com.anakki.data.utils.common.EmailUtil;
 import com.anakki.data.util.RandomNameUtil;
@@ -47,6 +44,9 @@ public class SystemController {
 
     @Autowired
     private AnGiftLogService anGiftLogService;
+
+    @Autowired
+    private AnPathStatisticLogService anPathStatisticLogService;
     @ApiOperation(value = "发送邮件")
     @PostMapping("/send-mail")
     public ResponseDTO<Boolean> sendMail(@RequestBody SendMailRequest sendMailRequest) {
@@ -131,5 +131,17 @@ public class SystemController {
     public ResponseDTO<List<AnGiftLog>> getRandomName() {
         List<AnGiftLog> randomNames = anGiftLogService.getRandomNames();
         return ResponseDTO.succData(randomNames);
+    }
+
+    @ApiOperation(value = "网页访问量统计")
+    @GetMapping("/siteViewData")
+    public ResponseDTO<Boolean> getSiteViewData() {
+        return ResponseDTO.succData(true);
+    }
+
+    @ApiOperation(value = "网页访问量总计")
+    @GetMapping("/siteViewCount")
+    public ResponseDTO<Integer> siteViewCount() {
+        return ResponseDTO.succData(anPathStatisticLogService.count());
     }
 }

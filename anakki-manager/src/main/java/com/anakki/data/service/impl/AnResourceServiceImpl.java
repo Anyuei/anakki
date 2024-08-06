@@ -6,10 +6,8 @@ import com.anakki.data.bean.constant.CosBucketNameConst;
 import com.anakki.data.bean.constant.CosPathConst;
 import com.anakki.data.entity.AnResource;
 import com.anakki.data.entity.AnUser;
-import com.anakki.data.entity.request.IdNotNullRequest;
-import com.anakki.data.entity.request.ListResourceRequest;
-import com.anakki.data.entity.request.RemoveResourceRequest;
-import com.anakki.data.entity.request.UploadResourceRequest;
+import com.anakki.data.entity.request.*;
+import com.anakki.data.entity.response.ListResourceManageResponse;
 import com.anakki.data.entity.response.ListResourceResponse;
 import com.anakki.data.mapper.AnResourceMapper;
 import com.anakki.data.service.AnResourceService;
@@ -141,6 +139,31 @@ public class AnResourceServiceImpl extends ServiceImpl<AnResourceMapper, AnResou
         IPage<AnResource> page = page(resourceIPage, anRecordQueryWrapper);
         List<ListResourceResponse> listResourceResponses
                 = com.anakki.data.utils.common.BeanUtils.copyBeanList(page.getRecords(), ListResourceResponse.class);
+        return new BasePageResult<>(listResourceResponses, page.getTotal());
+    }
+
+    @Override
+    public BasePageResult<ListResourceManageResponse> listResource(ListResourceManageRequest listResourceManageRequest) {
+        String currentNickname = BaseContext.getCurrentNickname(false);
+
+        String type = listResourceManageRequest.getType();
+        String description = listResourceManageRequest.getDescription();
+        String title = listResourceManageRequest.getTitle();
+        Boolean isPublic = listResourceManageRequest.getIsPublic();
+        IPage<AnResource> resourceIPage = new Page<>(
+                listResourceManageRequest.getCurrent(),
+                listResourceManageRequest.getSize());
+        QueryWrapper<AnResource> anRecordQueryWrapper = new QueryWrapper<>();
+        anRecordQueryWrapper.like(null != type, "type", type);
+        anRecordQueryWrapper.like(null != description, "description", description);
+        anRecordQueryWrapper.like(null != title, "title", title);
+        anRecordQueryWrapper.eq("status", "COMMON");
+        anRecordQueryWrapper.eq(null != isPublic,"is_public", isPublic);
+
+        anRecordQueryWrapper.orderByDesc("create_time");
+        IPage<AnResource> page = page(resourceIPage, anRecordQueryWrapper);
+        List<ListResourceManageResponse> listResourceResponses
+                = com.anakki.data.utils.common.BeanUtils.copyBeanList(page.getRecords(), ListResourceManageResponse.class);
         return new BasePageResult<>(listResourceResponses, page.getTotal());
     }
 

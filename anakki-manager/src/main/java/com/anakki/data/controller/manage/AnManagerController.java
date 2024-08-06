@@ -2,6 +2,8 @@ package com.anakki.data.controller.manage;
 
 import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.bean.common.ResponseDTO;
+import com.anakki.data.bean.common.request.IdListRequest;
+import com.anakki.data.bean.common.request.IdNotNullRequest;
 import com.anakki.data.entity.request.*;
 import com.anakki.data.entity.response.ListManagerResponse;
 import com.anakki.data.service.AnManagerService;
@@ -44,4 +46,6 @@ public class AnManagerController {
     public ResponseDTO<Boolean> updateManager(@RequestBody UpdateManagerRequest updateManagerRequest) {
         return ResponseDTO.succData(anManagerService.updateManager(updateManagerRequest));
     }
+
+
 }

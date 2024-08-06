@@ -53,7 +53,7 @@ public class AnRecordManageController {
         return ResponseDTO.succData(true);
     }
     @ApiOperation(value = "修改图文状态")
-    @PostMapping("/delete")
+    @DeleteMapping("/delete")
     public ResponseDTO<Boolean> deleteRecord(@RequestBody DeleteRecordRequest deleteRecordRequest) {
         anRecordService.removeById(deleteRecordRequest.getId());
         return ResponseDTO.succData(true);
