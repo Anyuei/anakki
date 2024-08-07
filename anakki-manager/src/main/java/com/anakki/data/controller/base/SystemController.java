@@ -5,6 +5,7 @@ import com.anakki.data.bean.common.ResponseDTO;
 import com.anakki.data.entity.AnGiftLog;
 import com.anakki.data.entity.request.RandomNameRequest;
 import com.anakki.data.entity.request.SendMailRequest;
+import com.anakki.data.entity.response.DailyVisitCountResponse;
 import com.anakki.data.service.*;
 import com.anakki.data.utils.IPUtils;
 import com.anakki.data.utils.common.EmailUtil;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -143,5 +145,16 @@ public class SystemController {
     @GetMapping("/siteViewCount")
     public ResponseDTO<Integer> siteViewCount() {
         return ResponseDTO.succData(anPathStatisticLogService.count());
+    }
+
+    @GetMapping("/daily-visit-counts")
+    public List<DailyVisitCountResponse> getDailyVisitCounts(
+            @RequestParam("startDate") String startDateStr,
+            @RequestParam("endDate") String endDateStr) {
+
+        LocalDate startDate = LocalDate.parse(startDateStr);
+        LocalDate endDate = LocalDate.parse(endDateStr);
+
+        return anPathStatisticLogService.getDailyVisitCounts(startDate, endDate);
     }
 }

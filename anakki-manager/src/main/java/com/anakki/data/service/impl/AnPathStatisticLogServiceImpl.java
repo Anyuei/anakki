@@ -1,18 +1,18 @@
 package com.anakki.data.service.impl;
 
-import com.anakki.data.bean.common.enums.StatisticEnum;
 import com.anakki.data.entity.AnIpAddress;
 import com.anakki.data.entity.AnPathStatisticLog;
-import com.anakki.data.entity.AnStatistic;
-import com.anakki.data.entity.AnStatisticLog;
+import com.anakki.data.entity.response.DailyVisitCountResponse;
 import com.anakki.data.mapper.AnPathStatisticLogMapper;
 import com.anakki.data.service.AnIpAddressService;
 import com.anakki.data.service.AnPathStatisticLogService;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.List;
 
 /**
  * <p>
@@ -26,6 +26,9 @@ import org.springframework.stereotype.Service;
 public class AnPathStatisticLogServiceImpl extends ServiceImpl<AnPathStatisticLogMapper, AnPathStatisticLog> implements AnPathStatisticLogService {
     @Autowired
     private AnIpAddressService anIpAddressService;
+
+    @Autowired
+    private AnPathStatisticLogMapper anPathStatisticLogMapper;
     @Override
     public synchronized Boolean log(String path, String ipAddr) {
             AnIpAddress addressByIp = anIpAddressService.getAddressByIp(ipAddr);
@@ -38,5 +41,10 @@ public class AnPathStatisticLogServiceImpl extends ServiceImpl<AnPathStatisticLo
                 save(anPathStatisticLog);
             }
             return true;
+    }
+
+    @Override
+    public List<DailyVisitCountResponse> getDailyVisitCounts(LocalDate startDate, LocalDate endDate) {
+        return anPathStatisticLogMapper.findDailyVisitCounts(startDate, endDate);
     }
 }

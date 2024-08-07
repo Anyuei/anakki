@@ -2,6 +2,7 @@ package com.anakki.data.controller.manage;
 
 import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.bean.common.ResponseDTO;
+import com.anakki.data.bean.common.request.IdListRequest;
 import com.anakki.data.entity.AnRecord;
 import com.anakki.data.entity.request.*;
 import com.anakki.data.service.AnRecordService;
@@ -52,10 +53,10 @@ public class AnRecordManageController {
         anRecordService.changeRecordStatus(changeRecordRequest);
         return ResponseDTO.succData(true);
     }
-    @ApiOperation(value = "修改图文状态")
-    @DeleteMapping("/delete")
-    public ResponseDTO<Boolean> deleteRecord(@RequestBody DeleteRecordRequest deleteRecordRequest) {
-        anRecordService.removeById(deleteRecordRequest.getId());
+    @ApiOperation(value = "删除图文状态")
+    @DeleteMapping("/delete-batch")
+    public ResponseDTO<Boolean> deleteRecord(@RequestBody IdListRequest idListRequest) {
+        anRecordService.removeByIds(idListRequest.getIdList());
         return ResponseDTO.succData(true);
     }
 }

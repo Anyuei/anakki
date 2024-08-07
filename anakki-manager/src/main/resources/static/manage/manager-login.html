@@ -145,31 +145,39 @@
     $(document).ready(function() {
         $('#manager-login-form').submit(function(e) {
             e.preventDefault(); // Prevent form submission
-            var formData = $(this).serialize(); // Serialize form data
+
+            // Convert form data to JSON
+            var formDataArray = $(this).serializeArray();
+            var formData = {};
+            $.each(formDataArray, function() {
+                formData[this.name] = this.value;
+            });
+
             $.ajax({
                 url: '/base/anakki/manager/login', // Replace with your server URL
                 type: 'POST',
-                data: formData,
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
                 success: function(response) {
-                    if (response.code=== 200) {
-                        const token=response.data;
+                    if (response.code === 200) {
+                        const token = response.data;
                         localStorage.setItem('jwtManageToken', token);
                         // Redirect to another page
                         window.location.href = '/manage/manager-manage.html'; // Replace with the desired page URL
-                    }else{
-                        if (response.code===101){
+                    } else {
+                        if (response.code === 101) {
                             document.getElementById("manager-login-notice").innerHTML = response.data;
                         }
                     }
-
                 },
                 error: function(xhr, status, error) {
-                        alert("登录失败："+error)
+                    console.error("登录失败：", xhr.responseText);
+                    alert("登录失败：" + error);
                 }
             });
         });
     });
-</script>
+
 </script>
 </body>
 </html>
