@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from 'src/axiosInstance';
-import { Modal, Button, Form, Input, DatePicker, Upload, Spin, Select , Row, Col } from 'antd';
+import {Modal, Button, Form, Input, DatePicker, Upload, Spin, Select, Row, Col, Progress} from 'antd';
 import Pagination from 'src/components/common/Pagination';
 import { UploadOutlined } from '@ant-design/icons';
 import { HandleBatchDelete } from 'src/components/common/HandleBatchDelete';
@@ -48,7 +48,20 @@ const RecordList = () => {
     const [fullscreenImage, setFullscreenImage] = useState(null);
     const [isLoading, setIsLoading] = useState(false); // 添加加载状态
     const [form] = Form.useForm();
+    const [uploadedFileNames, setUploadedFileNames] = useState([]);
 
+    const [isUploading, setIsUploading] = useState(false);
+    const [uploadPercent, setUploadPercent] = useState(0);
+    const [uploadSpeed, setUploadSpeed] = useState(0);
+
+    const handleUploadStatusChange = (uploading) => {
+        setIsUploading(uploading);
+    };
+
+    const handleUploadProgress = (percentCompleted, speed) => {
+        setUploadPercent(percentCompleted);
+        setUploadSpeed(speed);
+    };
     useEffect(() => {
         fetchData();
         fetchImageTypes();
@@ -145,8 +158,9 @@ const RecordList = () => {
         setIsImageModalVisible(false);
         setFullscreenImage(null);
     };
-    const handleUploadSuccess = (fileUrls) => {
+    const handleUploadSuccess = (fileUrls, fileNames) => {
         form.setFieldsValue({ fileUrls: fileUrls });
+        setUploadedFileNames((prevFileNames) => [...prevFileNames, ...fileNames]); // 更新文件名状态
     };
 
     const handleUploadError = (error) => {
@@ -287,15 +301,32 @@ const RecordList = () => {
                                 <FileUpload
                                     onUploadSuccess={handleUploadSuccess}
                                     onUploadError={handleUploadError}
+                                    onUploadStatusChange={handleUploadStatusChange}
+                                    onUploadProgress={handleUploadProgress}
                                 />
                             </Form.Item>
                         </Col>
                     </Row>
-
+                    {/* 显示上传的文件名 */}
+                    {uploadedFileNames.length > 0 && (
+                        <Form.Item label="已上传文件">
+                            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                {uploadedFileNames.map((fileName, index) => (
+                                    <div key={index}>{fileName}</div>
+                                ))}
+                            </div>
+                        </Form.Item>
+                    )}
                     <Form.Item>
-                        <Button type="primary" htmlType="submit">
-                            上传
+                        <Button type="primary" htmlType="submit" disabled={isUploading}>
+                            {isUploading ? '上传中' : '上传'}
                         </Button>
+                        {isUploading && (
+                            <div style={{ marginTop: '20px' }}>
+                                <Progress percent={uploadPercent} />
+                                <p>Speed: {uploadSpeed} KB/s</p>
+                            </div>
+                        )}
                     </Form.Item>
                 </Form>
             </Modal>
