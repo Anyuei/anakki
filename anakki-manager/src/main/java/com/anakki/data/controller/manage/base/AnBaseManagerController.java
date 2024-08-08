@@ -34,4 +34,7 @@ public class AnBaseManagerController {
         String token = anManagerService.login(managerLoginRequest);
         return ResponseDTO.succData(token);
     }
+
+
+
 }

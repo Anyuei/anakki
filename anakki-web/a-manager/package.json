@@ -37,6 +37,7 @@
     "cos-js-sdk-v5": "^1.8.3",
     "echarts": "^5.5.1",
     "prop-types": "^15.8.1",
+    "qcloud-cos": "^2.1.0",
     "react": "^18.3.1",
     "react-datepicker": "^7.3.0",
     "react-dom": "^18.3.1",

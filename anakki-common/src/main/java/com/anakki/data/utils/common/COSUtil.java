@@ -29,6 +29,7 @@ import java.util.UUID;
  * @date 2023/5/30 2:29
  */
 public class COSUtil {
+
     public static String HOST = "https://anakki-1258150206.cos.ap-nanjing.myqcloud.com/";
     //地域
     public static String region = "ap-nanjing";
@@ -159,14 +160,14 @@ public class COSUtil {
             ObjectMetadata objectMetadata = new ObjectMetadata();
             objectMetadata.setContentLength(inputStream.available());
             objectMetadata.setCacheControl("no-cache");
-            objectMetadata.setContentType("image/jpeg");
-            // 上传压缩后的图片
-            PutObjectResult putResult = cosClient.putObject(bucketName, key, inputStream, objectMetadata);
+            objectMetadata.setContentType(file.getContentType());
+            objectMetadata.setHeader("Content-Disposition","attachment");
+            cosClient.putObject(bucketName, key, inputStream, objectMetadata);
             String url;
-            if (isRaw) {
-                url = HOST + key;
-            } else {
+            if (isRaw&&(file.getContentType() != null && file.getContentType().startsWith("image/"))) {
                 url = HOST + key + "?imageMogr2/thumbnail/400x";
+            }else{
+                url = HOST + key;
             }
             // 关闭COS客户端
             cosClient.shutdown();

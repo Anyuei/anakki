@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * ClassName: GetContentRequest
@@ -39,7 +40,7 @@ public class UploadRecordRequest {
     private String description;
 
     @ApiModelProperty("图片地址")
-    private MultipartFile[] file;
+    private List<String> fileUrls;
 
     @ApiModelProperty("拍摄时间")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")

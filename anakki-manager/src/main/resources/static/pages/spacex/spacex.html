@@ -1,56 +1,53 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description"
-          content="时光胶囊,Anakki的个人网站,摄影,博客,技术分享。                             ">
+    <meta name="description" content="时光胶囊,Anakki的个人网站,摄影,博客,技术分享。">
     <meta name="author" content="Anakki">
     <title>Anakki-World</title>
-    <!-- Fonts -->
-
     <link type="text/css" href="../../assets/css/theme.css" rel="stylesheet">
     <link type="text/css" href="../../assets/css/demo.css" rel="stylesheet">
 </head>
 <style>
     .row {
         display: flex;
-        flex-wrap: wrap;
-        margin-right: 0px;
-        margin-left: 0px;
-        margin-top: 0.5rem;
+        flex-direction: column;
+        align-items: center;
+        margin: 0.5rem 0;
     }
 
     .image-item {
         display: flex;
-        justify-content: center;
-        align-items: center;
         flex-direction: column;
+        align-items: center;
         text-align: center;
     }
 
     .image-spacex-list {
-        height: auto; /* Automatically adjust the height based on the image proportion */
+        height: auto;
+        border-radius: 1rem;
     }
 
     .image-info {
         font-size: 0.775rem;
-        text-align: center; /* Center align the image info */
-        text-align: -moz-center; /* Center align the image info */
-        text-align: -webkit-center; /* Center align the image info */
+        text-align: center;
+        margin-top: 0.5rem;
     }
 
     .modal-spacex {
-        background-color: rgba(0, 0, 0, 0.8); /* Darken the background */
+        background-color: rgba(0, 0, 0, 0.8);
         justify-content: center;
         align-items: center;
         z-index: 9999;
-        text-align: left;
+        text-align: center;
         position: fixed;
         inset: 0;
         margin: auto;
         width: 100%;
         height: 100vh;
+        display: flex;
+        flex-direction: column;
     }
 
     .image-open {
@@ -79,18 +76,21 @@
         color: #aeaeae;
         background-color: #000000b8;
     }
+
+    video {
+        max-width: 100%;
+        max-height: 100%;
+        border-radius: 1rem;
+    }
 </style>
 <body>
 <!--通用顶部导航-->
 <div id="header"></div>
 <main class="main">
     <section style="padding-top: 4rem;">
-
         <div class="container-fluid text-center justify-content-center" id="spacexFlow">
         </div>
-
     </section>
-
 </main>
 <!-- 页面底部 -->
 <div id="footer"></div>
@@ -127,25 +127,23 @@
                     if (item.photoTime) {
                         const dateTime = new Date(item.photoTime);
                         const year = dateTime.getFullYear();
-                        const month = dateTime.getMonth() + 1; // Months are zero-based, so we add 1
+                        const month = dateTime.getMonth() + 1;
                         const day = dateTime.getDate();
                         formattedDate = year + "-" + month + "-" + day;
                     } else {
                         formattedDate = "未知";
                     }
+
                     // 展示图片列表
-                    // 创建图片元素
                     html += '<div class="row">';
-                        html += '<div class="image-item col-sm-7">';
-                            html += '<img src="' + item.imgUrl + '?imageMogr2/thumbnail/400x" class="image-spacex-list img-fluid" alt="' + item.id + '" onclick="showModal(this)" style="border-radius: 1rem;">';
-                        html += '</div>';
-                        html += '<div class="image-item col-sm-4">';
-                            html += '<div class="image-info">';
-                                html += '<span class="photo-time">拍摄时间: ' + formattedDate + '  |  </span>';
-                                html += '<span class="view-count"><i class="fas fa-eye"></i> ' + viewCount + '</span><br>';
-                                html += '<span>' + "点击图片查看原图"+ '</span><br>';
-                            html += '</div>';
-                        html += '</div>';
+                    html += '<div class="image-item">';
+                    html += '<img src="' + item.imgUrl + '?imageMogr2/thumbnail/400x" class="image-spacex-list img-fluid" alt="' + item.id + '" onclick="showModal(this, \'' + item.imgUrl + '\')">';
+                    html += '<div class="image-info">';
+                    html += '<span class="photo-time">拍摄时间: ' + formattedDate + '  |  </span>';
+                    html += '<span class="view-count"><i class="fas fa-eye"></i> ' + viewCount + '</span><br>';
+                    html += '<span>' + "点击图片查看原图或播放视频" + '</span><br>';
+                    html += '</div>';
+                    html += '</div>';
                     html += '</div>';
                 }
                 document.getElementById("spacexFlow").innerHTML = html;
@@ -154,7 +152,7 @@
         imageXHR.send();
     };
 
-    function showModal(image) {
+    function showModal(image, url) {
         var get = new XMLHttpRequest();
         get.open("GET", "/base/anakki/record/flowById?id=" + image.alt, true);
         get.onreadystatechange = function () {
@@ -164,47 +162,47 @@
                 var imgUrl = item.imgUrl;
                 var dateTime = new Date(item.photoTime);
                 var year = dateTime.getFullYear();
-                var month = dateTime.getMonth() + 1; // Months are zero-based, so we add 1
+                var month = dateTime.getMonth() + 1;
                 var day = dateTime.getDate();
                 var formattedDate = year + "-" + month + "-" + day;
-                //获取图片信息后，显示巨幕图片，图片高度和宽度都不超过浏览器视口
-                // 创建巨幕元素
+
                 var modal = document.createElement("div");
                 modal.classList.add("modal-spacex");
-                // 创建图片元素
-                var img = document.createElement("img");
-                img.src = imgUrl;
-                img.style.maxWidth = "100%"; // 图片宽度不超过浏览器视口宽度
-                img.style.maxHeight = "100%"; // 图片高度不超过浏览器视口高度
-                // 创建图片信息元素
+
+                var mediaElement;
+                if (url.endsWith(".mp4")) {
+                    mediaElement = document.createElement("video");
+                    mediaElement.controls = true;
+                    mediaElement.src = url;
+                } else {
+                    mediaElement = document.createElement("img");
+                    mediaElement.src = imgUrl;
+                }
+
+                mediaElement.style.maxWidth = "100%";
+                mediaElement.style.maxHeight = "100%";
+
                 var imageInfo = document.createElement("div");
                 imageInfo.classList.add("image-open");
                 imageInfo.innerHTML = "<span class='photo-time'>拍摄时间: " + formattedDate + "</span><hr>" +
                     "<span class='view-count'><i class='fas fa-eye'></i> " + item.viewCount + "</span>";
-                // 将图片元素添加到巨幕中
-                modal.appendChild(img);
+
+                modal.appendChild(mediaElement);
                 modal.appendChild(imageInfo);
-                // 将巨幕添加到页面中
                 document.body.appendChild(modal);
-                // 隐藏footer
+
                 document.querySelector("footer").style.display = "none";
-                //添加关闭模态框事件
                 document.addEventListener("click", closeModal);
             }
         };
         get.send();
     }
 
-    //关闭模态框事件
     function closeModal() {
-        // Get the modal element
         var modal = document.querySelector(".modal-spacex");
-        // Remove the modal element from the document
         modal.parentNode.removeChild(modal);
-        // 显示footer
         document.querySelector("footer").style.display = "block";
     }
-
 </script>
 </body>
 </html>

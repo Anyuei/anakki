@@ -124,36 +124,11 @@ public class AnRecordServiceImpl extends ServiceImpl<AnRecordMapper, AnRecord> i
 
     @Override
     public Boolean uploadRecord(UploadRecordRequest uploadRecordRequest) throws IOException, ImageProcessingException {
-        for (MultipartFile multipartFile : uploadRecordRequest.getFile()) {
+        for (String url : uploadRecordRequest.getFileUrls()) {
             AnRecord anRecord = new AnRecord();
-            BufferedImage image = ImageIO.read(multipartFile.getInputStream());
-            int width = image.getWidth();
-            int height = image.getHeight();
-
             BeanUtils.copyProperties(uploadRecordRequest, anRecord);
-            anRecord.setImageSize(width+" x "+height);
-            BasicSessionCredentials sessionCredential = COSUtil.getSessionCredential();
-
-            Metadata metadata = ImageMetadataReader.readMetadata(multipartFile.getInputStream());
-            for (Directory directory : metadata.getDirectories()) {
-                for (Tag tag : directory.getTags()) {
-                    if (tag.getTagName().equals("Date/Time Original")&&null!=tag.getDescription()) {
-                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy:MM:dd HH:mm:ss");
-                        LocalDateTime dateTime = LocalDateTime.parse(tag.getDescription(), formatter);
-                        anRecord.setPhotoTime(dateTime);
-                    }
-                }
-            }
-
-            String url = COSUtil.uploadImage(
-                    multipartFile,
-                    sessionCredential,
-                    COSUtil.region,
-                    CosBucketNameConst.BUCKET_NAME_IMAGES,
-                    CosPathConst.BUCKET_NAME_IMAGES,
-                    uploadRecordRequest.getIsRaw());
             anRecord.setImgUrl(url);
-            anRecord.setFileSize(multipartFile.getSize() / 1024);
+            anRecord.setFileSize(0L);
             save(anRecord);
         }
         return true;
