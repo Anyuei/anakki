@@ -173,6 +173,7 @@
                 if (url.endsWith(".mp4")) {
                     mediaElement = document.createElement("video");
                     mediaElement.controls = true;
+                    mediaElement.poster = imgUrl; // 使用视频封面
                     mediaElement.src = url;
                 } else {
                     mediaElement = document.createElement("img");

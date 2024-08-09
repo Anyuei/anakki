@@ -2,6 +2,7 @@ package com.anakki.data.config;
 
 import com.anakki.data.bean.common.ManagerToken;
 import com.anakki.data.bean.common.UserToken;
+import com.anakki.data.bean.common.exception.TokenException;
 import com.anakki.data.utils.common.JwtUtil;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -22,14 +23,12 @@ public class ManagerLoginInterceptor implements HandlerInterceptor {
         // 从 request 的 header 中获得 token 值
         String token = request.getHeader("authorization");
         if (token == null || token.isEmpty()) {
-            response.sendRedirect("/manage/manager-login.html");
-            return false;
+            throw new TokenException();
         }
         // 验证 token, JwtUtil 是自己定义的类，里面有个方法验证 token 
         ManagerToken sub = JwtUtil.validateManagerToken(token);
-        if (sub == null || sub.getNickname().isEmpty()) {
-            response.sendRedirect("/manage/manager-login.html");
-            return false;
+        if (sub == null || null==sub.getNickname()||sub.getNickname().isEmpty()) {
+            throw new TokenException();
         }
         // 更新 token 有效时间 
         if (JwtUtil.isNeedUpdateManager(token)) {

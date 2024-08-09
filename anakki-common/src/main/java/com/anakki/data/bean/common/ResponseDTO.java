@@ -75,6 +75,9 @@ public class ResponseDTO<T> {
     public static <T> ResponseDTO<T> errorData(T data) {
         return new ResponseDTO<>(ResponseCodeConst.ERROR_PARAM, data);
     }
+    public static <T> ResponseDTO<T> errorToken(T data) {
+        return new ResponseDTO<>(ResponseCodeConst.TOKEN_EXPIRED, data);
+    }
 
     public static <T> ResponseDTO succMsg(String msg) {
         return new ResponseDTO(ResponseCodeConst.SUCCESS, msg);

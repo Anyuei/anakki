@@ -147,14 +147,15 @@ public class SystemController {
         return ResponseDTO.succData(anPathStatisticLogService.count());
     }
 
+    @ApiOperation(value = "每日访问量")
     @GetMapping("/daily-visit-counts")
-    public List<DailyVisitCountResponse> getDailyVisitCounts(
+    public ResponseDTO<List<DailyVisitCountResponse>> getDailyVisitCounts(
             @RequestParam("startDate") String startDateStr,
             @RequestParam("endDate") String endDateStr) {
 
         LocalDate startDate = LocalDate.parse(startDateStr);
         LocalDate endDate = LocalDate.parse(endDateStr);
 
-        return anPathStatisticLogService.getDailyVisitCounts(startDate, endDate);
+        return ResponseDTO.succData(anPathStatisticLogService.getDailyVisitCounts(startDate, endDate));
     }
 }
