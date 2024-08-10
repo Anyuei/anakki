@@ -2,6 +2,7 @@ package com.anakki.data.service.impl;
 
 import com.anakki.data.bean.common.BaseContext;
 import com.anakki.data.bean.common.BasePageResult;
+import com.anakki.data.bean.common.request.IdListRequest;
 import com.anakki.data.bean.constant.CosBucketNameConst;
 import com.anakki.data.bean.constant.CosPathConst;
 import com.anakki.data.entity.AnResource;
@@ -178,6 +179,38 @@ public class AnResourceServiceImpl extends ServiceImpl<AnResourceMapper, AnResou
         }
         COSUtil.deleteObject(CosBucketNameConst.BUCKET_NAME_IMAGES, resource.getFileUrl());
         return removeById(id);
+    }
+    @Override
+    public Boolean removeResourcesByManage(IdListRequest request) {
+        for (Long id : request.getIdList()) {
+            AnResource resource = getById(id);
+            COSUtil.deleteObject(CosBucketNameConst.BUCKET_NAME_IMAGES, resource.getFileUrl());
+            log.info("[资源删除]:"+resource.getFileUrl());
+        }
+        removeByIds(request.getIdList());
+        return true;
+    }
+
+    @Override
+    public Boolean disableResourcesByManage(IdListRequest request) {
+        for (Long id : request.getIdList()) {
+            AnResource resource = getById(id);
+            resource.setStatus("INVALID");
+            updateById(resource);
+            log.info("[资源失效]:"+resource.getFileUrl());
+        }
+        return true;
+    }
+
+    @Override
+    public Boolean enableResourcesByManage(IdListRequest request) {
+        for (Long id : request.getIdList()) {
+            AnResource resource = getById(id);
+            resource.setStatus("COMMON");
+            updateById(resource);
+            log.info("[资源生效]:"+resource.getFileUrl());
+        }
+        return true;
     }
 
     @Override

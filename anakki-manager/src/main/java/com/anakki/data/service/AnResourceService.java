@@ -1,6 +1,7 @@
 package com.anakki.data.service;
 
 import com.anakki.data.bean.common.BasePageResult;
+import com.anakki.data.bean.common.request.IdListRequest;
 import com.anakki.data.entity.AnResource;
 import com.anakki.data.entity.request.*;
 import com.anakki.data.entity.response.ListResourceManageResponse;
@@ -28,6 +29,12 @@ public interface AnResourceService extends IService<AnResource> {
     BasePageResult<ListResourceManageResponse> listResource(ListResourceManageRequest listResourceManageRequest);
 
     Boolean removeResource(RemoveResourceRequest request);
+
+    Boolean removeResourcesByManage(IdListRequest request);
+
+    Boolean disableResourcesByManage(IdListRequest request);
+
+    Boolean enableResourcesByManage(IdListRequest request);
 
     void openResource(IdNotNullRequest request);
 
