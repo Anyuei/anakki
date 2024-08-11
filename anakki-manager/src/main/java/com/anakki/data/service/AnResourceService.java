@@ -24,6 +24,8 @@ public interface AnResourceService extends IService<AnResource> {
 
     void upload(UploadResourceRequest uploadResourceRequest) throws IOException;
 
+    void uploadForManage(UploadResourceManageRequest uploadResourceManageRequest) throws IOException;
+
     BasePageResult<ListResourceResponse> listResource(ListResourceRequest listResourceRequest);
 
     BasePageResult<ListResourceManageResponse> listResource(ListResourceManageRequest listResourceManageRequest);

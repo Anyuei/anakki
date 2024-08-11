@@ -42,8 +42,8 @@ public class AnRecordManageController {
 
     @ApiOperation(value = "上传图文")
     @PostMapping("/upload")
-    public ResponseDTO<Boolean> upload(UploadRecordRequest uploadRecordRequest) throws IOException, ImageProcessingException {
-        Boolean status=anRecordService.uploadRecord(uploadRecordRequest);
+    public ResponseDTO<Boolean> upload(@RequestBody UploadRecordForManageRequest uploadRecordRequest) throws IOException, ImageProcessingException {
+        Boolean status=anRecordService.uploadRecordForManage(uploadRecordRequest);
         return ResponseDTO.succData(status);
     }
 

@@ -6,6 +6,7 @@ import com.anakki.data.bean.common.TempCredential;
 import com.anakki.data.bean.common.request.IdListRequest;
 import com.anakki.data.bean.common.request.IdNotNullRequest;
 import com.anakki.data.entity.request.*;
+import com.anakki.data.entity.response.CurrentManagerLoginInfoResponse;
 import com.anakki.data.entity.response.ListManagerResponse;
 import com.anakki.data.service.AnManagerService;
 import com.anakki.data.utils.common.COSUtil;
@@ -35,6 +36,12 @@ import java.security.NoSuchAlgorithmException;
 public class AnManagerController {
     @Autowired
     private AnManagerService anManagerService;
+
+    @ApiOperation(value = "获取当前管理员信息")
+    @PostMapping("/current-login-info")
+    public ResponseDTO<CurrentManagerLoginInfoResponse> currentLoginInfo() {
+        return ResponseDTO.succData(anManagerService.currentLoginInfo());
+    }
 
     @ApiOperation(value = "获取管理员列表")
     @GetMapping("/list")

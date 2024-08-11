@@ -1,9 +1,12 @@
 package com.anakki.data.entity.response;
 
 import com.anakki.data.entity.common.BaseEntity;
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.time.LocalDateTime;
 
 /**
  * ClassName: ListCommentsRequest
@@ -25,6 +28,16 @@ public class ListResourceManageResponse extends BaseEntity {
 
     @ApiModelProperty("文件介绍")
     private String description;
+
+    @ApiModelProperty("文件地址")
+    private String fileUrl;
+
+    @ApiModelProperty("过期时间")
+    private LocalDateTime expirationDate;
+
+    @ApiModelProperty("模型状态（正常：COMMON，失效 INVALID")
+    @TableField("status")
+    private String status;
 
     @ApiModelProperty("文件大小（KB）")
     private Long fileSize;

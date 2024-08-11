@@ -4,12 +4,8 @@ import com.anakki.data.bean.common.BaseContext;
 import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.bean.constant.CosBucketNameConst;
 import com.anakki.data.entity.AnRecord;
-import com.anakki.data.bean.constant.CosPathConst;
 import com.anakki.data.entity.AnUser;
-import com.anakki.data.entity.request.ChangeRecordRequest;
-import com.anakki.data.entity.request.GetContentRequest;
-import com.anakki.data.entity.request.ListRecordRequest;
-import com.anakki.data.entity.request.UploadRecordRequest;
+import com.anakki.data.entity.request.*;
 import com.anakki.data.mapper.AnRecordMapper;
 import com.anakki.data.service.*;
 import com.anakki.data.utils.common.COSUtil;
@@ -17,23 +13,14 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
-import com.drew.metadata.Directory;
-import com.drew.metadata.Metadata;
-import com.drew.metadata.Tag;
-import com.qcloud.cos.auth.BasicSessionCredentials;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -134,7 +121,20 @@ public class AnRecordServiceImpl extends ServiceImpl<AnRecordMapper, AnRecord> i
         return true;
     }
 
+    @Override
+    public Boolean uploadRecordForManage(UploadRecordForManageRequest uploadRecordRequest) throws IOException, ImageProcessingException {
 
+        for (FileInfoRequest fileInfoRequest : uploadRecordRequest.getFiles()) {
+            AnRecord anRecord = new AnRecord();
+            BeanUtils.copyProperties(uploadRecordRequest, anRecord);
+            BeanUtils.copyProperties(fileInfoRequest, anRecord);
+            anRecord.setImgUrl(fileInfoRequest.getUrl());
+            anRecord.setFileSize(fileInfoRequest.getSize());
+            anRecord.setTitle(fileInfoRequest.getName());
+            save(anRecord);
+        }
+        return true;
+    }
 
 
     @Override

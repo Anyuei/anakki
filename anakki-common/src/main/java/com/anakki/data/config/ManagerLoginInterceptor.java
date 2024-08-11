@@ -1,5 +1,7 @@
 package com.anakki.data.config;
 
+import com.anakki.data.bean.common.BaseContext;
+import com.anakki.data.bean.common.BaseContextForManage;
 import com.anakki.data.bean.common.ManagerToken;
 import com.anakki.data.bean.common.UserToken;
 import com.anakki.data.bean.common.exception.TokenException;
@@ -38,7 +40,12 @@ public class ManagerLoginInterceptor implements HandlerInterceptor {
         }
 
         getTokenFromRequest(request);
-
+        BaseContextForManage.setCurrentNickname(sub.getNickname());
         return true;
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
+        BaseContextForManage.removeCurrentNickname();
     }
 }

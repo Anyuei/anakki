@@ -1,11 +1,13 @@
 package com.anakki.data.service.impl;
 
+import com.anakki.data.bean.common.BaseContext;
 import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.bean.common.ManagerToken;
 import com.anakki.data.bean.common.UserToken;
 import com.anakki.data.entity.AnManager;
 import com.anakki.data.entity.AnUser;
 import com.anakki.data.entity.request.*;
+import com.anakki.data.entity.response.CurrentManagerLoginInfoResponse;
 import com.anakki.data.entity.response.ListManagerResponse;
 import com.anakki.data.mapper.AnManagerMapper;
 import com.anakki.data.service.AnManagerService;
@@ -96,5 +98,11 @@ public class AnManagerServiceImpl extends ServiceImpl<AnManagerMapper, AnManager
         QueryWrapper<AnManager> userQueryWrapper = new QueryWrapper<>();
         userQueryWrapper.eq("nickname", nickname);
         return anManagerMapper.selectOne(userQueryWrapper);
+    }
+
+    @Override
+    public CurrentManagerLoginInfoResponse currentLoginInfo() {
+        String currentNickname = BaseContext.getCurrentNickname(false);
+        return null;
     }
 }

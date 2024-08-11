@@ -6,12 +6,16 @@ import com.anakki.data.bean.common.ResponseDTO;
 import com.anakki.data.bean.common.request.IdListRequest;
 import com.anakki.data.entity.request.ListResourceManageRequest;
 import com.anakki.data.entity.request.ListResourceRequest;
+import com.anakki.data.entity.request.UploadResourceManageRequest;
+import com.anakki.data.entity.request.UploadResourceRequest;
 import com.anakki.data.entity.response.ListResourceManageResponse;
 import com.anakki.data.entity.response.ListResourceResponse;
 import com.anakki.data.service.AnResourceService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 /**
  * <p>
@@ -27,6 +31,13 @@ public class AnResourceManageController {
 
     @Autowired
     private AnResourceService anResourceService;
+
+    @ApiOperation(value = "上传资源")
+    @PostMapping("/upload")
+    public ResponseDTO<String> resourceUpload(@RequestBody UploadResourceManageRequest uploadResourceManageRequest) throws IOException {
+        anResourceService.uploadForManage(uploadResourceManageRequest);
+        return ResponseDTO.succData("上传成功");
+    }
 
     @ApiOperation(value = "获取资源列表")
     @GetMapping("/list")

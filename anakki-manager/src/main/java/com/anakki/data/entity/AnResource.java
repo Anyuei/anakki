@@ -61,7 +61,7 @@ public class AnResource extends BaseEntity implements Serializable {
     @TableField("file_url")
     private String fileUrl;
 
-    @ApiModelProperty("模型状态（正常：COMMON，失效 INVALID")
+    @ApiModelProperty("资源状态（正常：COMMON，失效 INVALID")
     @TableField("status")
     private String status;
 

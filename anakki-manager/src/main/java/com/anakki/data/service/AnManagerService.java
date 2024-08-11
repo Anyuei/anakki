@@ -6,6 +6,7 @@ import com.anakki.data.entity.AnUser;
 import com.anakki.data.entity.request.CreateManagerRequest;
 import com.anakki.data.entity.request.ListManagerRequest;
 import com.anakki.data.entity.request.ManagerLoginRequest;
+import com.anakki.data.entity.response.CurrentManagerLoginInfoResponse;
 import com.anakki.data.entity.response.ListManagerResponse;
 import com.anakki.data.entity.request.UpdateManagerRequest;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -32,4 +33,6 @@ public interface AnManagerService extends IService<AnManager> {
     String login(ManagerLoginRequest managerLoginRequest) throws UnsupportedEncodingException, NoSuchAlgorithmException;
 
     AnManager getByNickname(String nickname);
+
+    CurrentManagerLoginInfoResponse currentLoginInfo();
 }

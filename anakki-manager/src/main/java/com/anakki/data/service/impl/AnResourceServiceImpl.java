@@ -1,16 +1,19 @@
 package com.anakki.data.service.impl;
 
 import com.anakki.data.bean.common.BaseContext;
+import com.anakki.data.bean.common.BaseContextForManage;
 import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.bean.common.request.IdListRequest;
 import com.anakki.data.bean.constant.CosBucketNameConst;
 import com.anakki.data.bean.constant.CosPathConst;
+import com.anakki.data.entity.AnManager;
 import com.anakki.data.entity.AnResource;
 import com.anakki.data.entity.AnUser;
 import com.anakki.data.entity.request.*;
 import com.anakki.data.entity.response.ListResourceManageResponse;
 import com.anakki.data.entity.response.ListResourceResponse;
 import com.anakki.data.mapper.AnResourceMapper;
+import com.anakki.data.service.AnManagerService;
 import com.anakki.data.service.AnResourceService;
 import com.anakki.data.service.AnUserService;
 import com.anakki.data.utils.common.COSUtil;
@@ -46,7 +49,8 @@ public class AnResourceServiceImpl extends ServiceImpl<AnResourceMapper, AnResou
 
     @Autowired
     private AnUserService anUserService;
-
+    @Autowired
+    private AnManagerService anManagerService;
     @Override
     @Scheduled(cron = "0 * * * * *") // 每分钟的0秒执行一次
     public void removeTemporaryFiles() {
@@ -109,7 +113,31 @@ public class AnResourceServiceImpl extends ServiceImpl<AnResourceMapper, AnResou
             save(anResource);
         }
     }
+    @Override
+    public void uploadForManage(UploadResourceManageRequest uploadResourceManageRequest) throws IOException {
+        String currentNickname = BaseContextForManage.getCurrentNickname(false);
+        AnManager byNickname = anManagerService.getByNickname(currentNickname);
+        if (null == uploadResourceManageRequest.getFiles()) {
+            throw new RuntimeException("未选择文件");
+        }
 
+        for (FileInfoRequest file : uploadResourceManageRequest.getFiles()) {
+            AnResource anResource = new AnResource();
+            BeanUtils.copyProperties(uploadResourceManageRequest, anResource);
+            if (uploadResourceManageRequest.getIsTemporary()) {
+                anResource.setExpirationDate(uploadResourceManageRequest.getAvailableTime());
+            }
+            anResource.setFileUrl(file.getUrl());
+            anResource.setFileSize(file.getSize());
+            anResource.setResourceName(file.getName());
+            anResource.setType(file.getResourceType());
+
+            anResource.setUploadUser(currentNickname);
+            anResource.setUploadUserId(byNickname.getId());
+            anResource.setIsPublic(uploadResourceManageRequest.getIsPublic());
+            save(anResource);
+        }
+    }
     @Override
     public BasePageResult<ListResourceResponse> listResource(ListResourceRequest listResourceRequest) {
         String currentNickname = BaseContext.getCurrentNickname(false);
