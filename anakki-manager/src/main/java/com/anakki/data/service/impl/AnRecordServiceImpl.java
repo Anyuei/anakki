@@ -123,13 +123,12 @@ public class AnRecordServiceImpl extends ServiceImpl<AnRecordMapper, AnRecord> i
 
     @Override
     public Boolean uploadRecordForManage(UploadRecordForManageRequest uploadRecordRequest) throws IOException, ImageProcessingException {
-
         for (FileInfoRequest fileInfoRequest : uploadRecordRequest.getFiles()) {
             AnRecord anRecord = new AnRecord();
             BeanUtils.copyProperties(uploadRecordRequest, anRecord);
             BeanUtils.copyProperties(fileInfoRequest, anRecord);
             anRecord.setImgUrl(fileInfoRequest.getUrl());
-            anRecord.setFileSize(fileInfoRequest.getSize());
+            anRecord.setFileSize(fileInfoRequest.getSize()/1024);
             anRecord.setTitle(fileInfoRequest.getName());
             save(anRecord);
         }
