@@ -572,3 +572,33 @@ function scrollFunction() {
         document.querySelector('.navbar').style.backgroundColor = 'rgba(0, 0, 0, 0)'; /* Initial transparency level */
     }
 }
+function like(id){
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", "/api/anakki/record/like?id="+id, true);
+    xhr.setRequestHeader('authorization', localStorage.getItem('user-token')); // Include the token in the Authorization header
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            const response = JSON.parse(xhr.responseText);
+            const item = response.data;
+            document.getElementById("likeId_"+id).innerHTML="<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-heart-fill\" viewBox=\"0 0 16 16\">\n" +
+                "  <path fill-rule=\"evenodd\" d=\"M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z\"/>\n" +
+                "</svg>" + item;
+        }
+    };
+    xhr.send();
+}
+function unLike(id){
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", "/api/anakki/record/unLike?id="+id, true);
+    xhr.setRequestHeader('authorization', localStorage.getItem('user-token')); // Include the token in the Authorization header
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            const response = JSON.parse(xhr.responseText);
+            const item = response.data;
+            document.getElementById("unLikeId_"+id).innerHTML="<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-heartbreak-fill\" viewBox=\"0 0 16 16\">\n" +
+                "  <path d=\"M8.931.586 7 3l1.5 4-2 3L8 15C22.534 5.396 13.757-2.21 8.931.586ZM7.358.77 5.5 3 7 7l-1.5 3 1.815 4.537C-6.533 4.96 2.685-2.467 7.358.77Z\"/>\n" +
+                "</svg>" + item;
+        }
+    };
+    xhr.send();
+}

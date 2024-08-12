@@ -9,130 +9,108 @@
     <link type="text/css" href="../../assets/css/theme.css" rel="stylesheet">
     <link type="text/css" href="../../assets/css/demo.css" rel="stylesheet">
     <style>
-        .row {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 0.5rem 0;
-        }
-
-        .image-item {
-            position: relative; /* 使 .view-count 可以相对于 .image-item 定位 */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            margin: 0.2rem; /* 控制图片之间的间距 */
-        }
-
-        .image-spacex-list {
-            border-radius: 1rem;
-            cursor: pointer; /* 显示为可点击 */
-            width: 100px; /* 图片宽度 */
-            height: 100px; /* 图片高度 */
-            object-fit: cover;
-        }
-
-        .image-info {
-            justify-content: center;
-            font-size: 0.875rem;
-            color: #fff;
-            position: relative;
-        }
-
-        .view-count {
-            position: absolute; /* 绝对定位 */
-            bottom: 5px; /* 距离底部 5px */
-            right: 5px; /* 距离右边 5px */
-            background-color: rgba(0, 0, 0, 0.2); /* 半透明背景，确保文字可读 */
-            color: #fff; /* 白色字体 */
-            padding: 0.3rem 0.5rem; /* 内边距 */
-            border-radius: 0.8rem; /* 圆角边框 */
-            font-size: 0.75rem; /* 小字体 */
-            display: flex;
-            align-items: center; /* 垂直居中对齐图标和文字 */
-        }
-        .timeline-header {
-            justify-content: flex-start;
-        }
-
-        .timeline-date {
-            font-size: 1.5rem;
-            color: #ddd;
-            left: 15px;
-            background-color: rgba(0, 0, 0, 0);
-            padding: 0.5rem;
-            border-radius: 0 0 0.5rem 0;
-        }
-
-        .timeline-description {
-            font-size: 1rem;
-            color: #ddd;
-            left: 15px;
-            background-color: rgba(0, 0, 0, 0);
-            padding: 0.5rem;
-            border-radius: 0 0 0.5rem 0;
-        }
-
-        .modal-spacex {
-            background-color: rgba(0, 0, 0, 0.8);
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            text-align: center;
-            position: fixed;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .modal-spacex .modal-content {
-            background-color: rgba(255, 255, 255, 0.06);
-            border-radius: 1rem;
-            padding: 1rem;
-            position: relative;
-            max-width: 90%;
-            max-height: 90%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-spacex .modal-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            cursor: pointer;
-        }
-
-        .modal-spacex img, .modal-spacex video {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
-
-        .image-open {
-            text-align: right;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: rgba(0, 0, 0, 0);
-            color: white;
-            padding: 5px;
-            cursor: pointer;
-        }
-
         body {
             color: #aeaeae;
             background-color: #000000b8;
         }
 
-        video {
-            max-width: 100%;
-            max-height: 100%;
+        .image-item {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin: 0.2rem;
+        }
+
+        .image-spacex-list {
             border-radius: 1rem;
+            cursor: pointer;
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+        }
+
+        .view-count {
+            position: absolute;
+            bottom: 2px;
+            right: 1px;
+            background-color: rgba(0, 0, 0, 0);
+            color: #fff;
+            padding: 0.3rem 0.5rem;
+            border-radius: 0.8rem;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+        }
+        .view-count svg {
+            width: 20px;
+            height: 20px;
+        }
+        /*别删*/
+        .modal-spacex {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.72);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content-my {
+            position: relative;
+            background-color: rgba(255, 255, 255, 0);
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+        .modal-content-my img, .modal-content-my video {
+            border-radius: 1rem;
+            max-width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+        }
+
+
+        .modal-header-my {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            z-index: 1; /* 确保关闭按钮在其他内容之上 */
+        }
+
+        .modal-header-my i {
+            font-size: 24px;
+            color: #fff;
+        }
+
+        .heart-icons {
+            position: absolute;
+            bottom: 1px;
+            left: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0);
+            border-radius: 4px;
+            padding: 5px;
+            z-index: 1;
+        }
+
+        .heart-icon {
+            cursor: pointer;
+            color: #fff;
+            background: rgba(255, 255, 255, 0);
+            border-radius: 50%;
+        }
+
+        .heart-icon svg {
+            width: 20px;
+            height: 20px;
         }
 
         .timeline {
@@ -156,15 +134,15 @@
         .timeline-item {
             position: relative;
             margin: 20px 20px;
-            width: calc(100% - 0rem);
+            width: calc(100% - 2rem);
             text-align: left;
         }
 
         .timeline-item .image-grid {
             width: 100%;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(30%, 1fr));
-            gap: 0.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(33%, 1fr));
+            gap: 0.2rem;
         }
 
         .timeline-item .image-grid img {
@@ -173,31 +151,16 @@
             object-fit: cover;
         }
 
-        .timeline-item:nth-child {
-            left: 0;
+        .timeline-header {
+            font-size: 1.5rem;
+            color: #ddd;
         }
 
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            top: 10px;
-            right: 100%;
-            width: 20px;
-            height: 2px;
-            background-color: #aeaeae;
+        .timeline-description {
+            font-size: 0.8rem;
+            color: #ddd;
         }
 
-        .timeline-item:nth-child(even)::before {
-            right: auto;
-            left: -20px;
-        }
-
-        .timeline-content {
-            position: relative;
-            background-color: rgba(255, 255, 255, 0);
-            border-radius: 20px;
-            overflow: hidden; /* 确保内容不超出边界 */
-        }
         .load-more {
             display: flex;
             justify-content: center;
@@ -205,7 +168,7 @@
         }
 
         .load-more button {
-            background-color: rgba(189, 189, 189, 0.1);
+            background-color: rgba(189, 189, 189, 0);
             color: #ffffffb8;
             border: none;
             padding: 0.5rem 1rem;
@@ -251,8 +214,6 @@
     var current = 1; // 当前页数
     var size = 10; // 每页数据量
 
-
-
     function loadData() {
         var imageXHR = new XMLHttpRequest();
         imageXHR.open("GET", "/base/anakki/record/flow?imageType=SPACEX&current=" + current + "&size=" + size, true);
@@ -279,8 +240,31 @@
 
                     items.forEach(item => {
                         gridHtml += '<div class="image-item">';
-                        gridHtml += '<img src="' + item.imgUrl + '?imageMogr2/thumbnail/400x" class="image-spacex-list img-fluid" alt="' + item.id + '" onclick="showModal(this, \'' + item.imgUrl + '\')">';
-                        gridHtml += '<div class="view-count"><i class="fas fa-eye"></i> ' + item.viewCount + '</div>';
+                        gridHtml += '<img src="' + item.imgUrl + '?imageMogr2/thumbnail/400x" class="image-spacex-list img-fluid" alt="'
+                            + item.id + '" onclick="showModal(this)">';
+                        gridHtml +=
+                                `
+                                <div class="heart-icons">
+                                    <div class="heart-icon" onclick="like(${item.id}, this)">
+                                        <div class="justify-content-lg-between" style="display: flex">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-suit-heart" viewBox="0 0 16 16">
+                                              <path d="m8 6.236-.894-1.789c-.222-.443-.607-1.08-1.152-1.595C5.418 2.345 4.776 2 4 2 2.324 2 1 3.326 1 4.92c0 1.211.554 2.066 1.868 3.37.337.334.721.695 1.146 1.093C5.122 10.423 6.5 11.717 8 13.447c1.5-1.73 2.878-3.024 3.986-4.064.425-.398.81-.76 1.146-1.093C14.446 6.986 15 6.131 15 4.92 15 3.326 13.676 2 12 2c-.777 0-1.418.345-1.954.852-.545.515-.93 1.152-1.152 1.595L8 6.236zm.392 8.292a.513.513 0 0 1-.784 0c-1.601-1.902-3.05-3.262-4.243-4.381C1.3 8.208 0 6.989 0 4.92 0 2.755 1.79 1 4 1c1.6 0 2.719 1.05 3.404 2.008.26.365.458.716.596.992a7.55 7.55 0 0 1 .596-.992C9.281 2.049 10.4 1 12 1c2.21 0 4 1.755 4 3.92 0 2.069-1.3 3.288-3.365 5.227-1.193 1.12-2.642 2.48-4.243 4.38z"/>
+                                            </svg>
+                                            <div id="likeCount">${item.likeCount}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                `
+                        gridHtml +=
+                                '<div class="view-count">' +
+                                             `
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+                                              <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
+                                              <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+                                            </svg>
+                                            `
+                                        + item.viewCount
+                                + '</div>';
                         gridHtml += '</div>';
                     });
 
@@ -325,26 +309,69 @@
         document.getElementById("loadMoreBtn").addEventListener("click", loadData);
     };
 
-    function showModal(item,url) {
-        const imageXHR = new XMLHttpRequest();
-        imageXHR.open("GET", "/base/anakki/record/increaseViewCount?id="+item.alt,true)
-        imageXHR.send();
-        let modalHtml = '<div class="modal-spacex" id="modal">';
-        modalHtml += '<div class="modal-content">';
-        modalHtml += '<img src="' + url + '" alt="图片" />';
-        modalHtml += '<div class="image-open" onclick="closeModal()"><i class="fas fa-times"></i></div>';
-        modalHtml += '</div>';
-        modalHtml += '<div class="modal-overlay" onclick="closeModal()"></div>';
-        modalHtml += '</div>';
-
-        document.body.insertAdjacentHTML('beforeend', modalHtml);
+    function showModal(img) {
+        let item;
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", "/base/anakki/record/flowById?id=" + img.alt, true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                item = JSON.parse(xhr.responseText).data;
+                const modal = document.createElement("div");
+                modal.className = "modal-spacex";
+                modal.innerHTML = `
+                <div class="modal-content-my">
+                    <div class="modal-header-my" onclick="this.parentElement.parentElement.remove()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
+                        </svg>
+                    </div>
+                    ${item.isVideo ? `
+                        <video controls>
+                            <source src="${item.imgUrl}" type="video/mp4">
+                            您的浏览器不支持播放该视频。
+                        </video>
+                    ` : `
+                        <img src="${item.imgUrl}" alt="${item.id}" onclick="this.parentElement.parentElement.remove()">
+                    `}
+                    <div class="heart-icons">
+                        <div class="heart-icon" onclick="like(${item.id}, this)">
+                            <div class="justify-content-lg-between" style="display: flex">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-suit-heart" viewBox="0 0 16 16">
+                                  <path d="m8 6.236-.894-1.789c-.222-.443-.607-1.08-1.152-1.595C5.418 2.345 4.776 2 4 2 2.324 2 1 3.326 1 4.92c0 1.211.554 2.066 1.868 3.37.337.334.721.695 1.146 1.093C5.122 10.423 6.5 11.717 8 13.447c1.5-1.73 2.878-3.024 3.986-4.064.425-.398.81-.76 1.146-1.093C14.446 6.986 15 6.131 15 4.92 15 3.326 13.676 2 12 2c-.777 0-1.418.345-1.954.852-.545.515-.93 1.152-1.152 1.595L8 6.236zm.392 8.292a.513.513 0 0 1-.784 0c-1.601-1.902-3.05-3.262-4.243-4.381C1.3 8.208 0 6.989 0 4.92 0 2.755 1.79 1 4 1c1.6 0 2.719 1.05 3.404 2.008.26.365.458.716.596.992a7.55 7.55 0 0 1 .596-.992C9.281 2.049 10.4 1 12 1c2.21 0 4 1.755 4 3.92 0 2.069-1.3 3.288-3.365 5.227-1.193 1.12-2.642 2.48-4.243 4.38z"/>
+                                </svg>
+                                <div id="likeCount">${item.likeCount}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+                document.body.appendChild(modal);
+            }
+        };
+        xhr.send();
     }
 
-    function closeModal() {
-        var modal = document.getElementById("modal");
-        if (modal) {
-            modal.remove();
-        }
+
+    function like(id, element) {
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "/base/anakki/record/like", true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                newCount = JSON.parse(xhr.responseText).data;
+                // 更新图标状态
+                element.innerHTML = `
+                    <div class="justify-content-lg-between" style="display: flex">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-suit-heart-fill" viewBox="0 0 16 16">
+                          <path d="M4 1c2.21 0 4 1.755 4 3.92C8 2.755 9.79 1 12 1s4 1.755 4 3.92c0 3.263-3.234 4.414-7.608 9.608a.513.513 0 0 1-.784 0C3.234 9.334 0 8.183 0 4.92 0 2.755 1.79 1 4 1z"/>
+                        </svg>
+                        <div id="likeCount">${newCount}</div>
+                    </div>
+                `;
+
+            }
+        };
+        xhr.send(JSON.stringify({ id }));
     }
 </script>
 </body>
