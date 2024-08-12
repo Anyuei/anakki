@@ -62,6 +62,16 @@ public class AnRecordController {
         byId.setImgUrl(byId.getImgUrl().split("\\?")[0]);
         return ResponseDTO.succData(byId);
     }
+    @ApiOperation(value = "增加浏览量")
+    @GetMapping("/increaseViewCount")
+    public ResponseDTO<Boolean> increaseViewCount(Long id) {
+        AnRecord byId = anRecordService.getById(id);
+        if (null!=byId){
+           anRecordService.increaseViewCount(id);
+            return ResponseDTO.succData(true);
+        }
+        return ResponseDTO.succData(false);
+    }
     @ApiOperation(value = "修改错误的地址")
     @PostMapping("/updateFaultAddress")
     public ResponseDTO<Boolean> updateAddress() {
