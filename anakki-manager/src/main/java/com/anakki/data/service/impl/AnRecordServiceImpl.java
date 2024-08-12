@@ -130,6 +130,7 @@ public class AnRecordServiceImpl extends ServiceImpl<AnRecordMapper, AnRecord> i
             anRecord.setImgUrl(fileInfoRequest.getUrl());
             anRecord.setFileSize(fileInfoRequest.getSize()/1024);
             anRecord.setTitle(fileInfoRequest.getName());
+            anRecord.setStatus(uploadRecordRequest.getStatus()?"COMMON":"INVALID");
             save(anRecord);
         }
         return true;

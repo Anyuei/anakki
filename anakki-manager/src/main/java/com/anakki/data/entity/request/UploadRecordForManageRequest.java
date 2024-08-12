@@ -43,5 +43,5 @@ public class UploadRecordForManageRequest {
     private LocalDateTime photoTime;
 
     @ApiModelProperty("照片状态(立即发布：COMMON，)")
-    private String status;
+    private Boolean status;
 }
