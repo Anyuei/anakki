@@ -8,6 +8,7 @@
     <title>Anakki-World</title>
     <link type="text/css" href="../../assets/css/theme.css" rel="stylesheet">
     <link type="text/css" href="../../assets/css/demo.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.css" />
     <style>
         body {
             color: #aeaeae;
@@ -237,12 +238,19 @@
 <script src="../../assets/vendor/input-mask/input-mask.min.js"></script>
 <script src="../../assets/vendor/nouislider/js/nouislider.min.js"></script>
 <script src="../../assets/vendor/textarea-autosize/textarea-autosize.min.js"></script>
+<!-- Plyr JS -->
+<script src="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.js"></script>
 <!-- Theme JS -->
 <script src="../../assets/js/theme.js"></script>
 <script>
     var current = 1; // 当前页数
     var size = 10; // 每页数据量
-
+    const player = new Plyr('#player', {
+        controls: ['play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
+        settings: ['quality', 'speed', 'loop'],
+        autoplay: false,
+        muted: true,
+    });
     function loadData() {
         var imageXHR = new XMLHttpRequest();
         imageXHR.open("GET", "/base/anakki/record/flow?imageType=SPACEX&current=" + current + "&size=" + size, true);
@@ -277,10 +285,10 @@
                             gridHtml += '<div class="image-item" style="grid-column: span 3;">';
                             // 如果是视频资源，点击播放视频
                             gridHtml += `
-                                <video controls class="video-spacex-list img-fluid" onclick="playVideo(this)">
+                                  <video id="player" controls onclick="handleVideoClick(${item.id})" class="video-spacex-list" >
                                     <source src="${item.imgUrl}" type="video/mp4">
-                                    Your browser does not support the video tag.
-                                </video>
+                                    你的浏览器不支持此格式
+                                  </video>
                             `;
                         } else {
                             gridHtml += '<div class="image-item">';
@@ -370,6 +378,7 @@
         imageXHR.send();
     }
 
+
     window.onload = function () {
         $('#header').load("../../pages/header.html");
         $('#footer').load("../../pages/footer.html");
@@ -379,15 +388,25 @@
 
         // 绑定“加载更多”按钮的点击事件
         document.getElementById("loadMoreBtn").addEventListener("click", loadData);
+
+// 为所有视频元素添加播放事件监听器
+        document.querySelectorAll('video').forEach(video => {
+            video.onplay = function() {
+                // 获取当前播放的视频元素
+                var currentVideo = this;
+
+                // 获取该视频元素的 id
+                var videoId = currentVideo.id;
+
+                // 输出 id 到控制台
+                console.log('播放的视频 ID:', videoId);
+
+                // 您可以在这里进行其他操作，例如发送请求或记录信息
+            };
+        });
     };
     // 用于播放视频的函数
-    function playVideo(videoElement) {
-        if (videoElement.paused) {
-            videoElement.play();
-        } else {
-            videoElement.pause();
-        }
-    }
+
     function showModal(img) {
         let item;
         const xhr = new XMLHttpRequest();
@@ -451,6 +470,10 @@
             }
         };
         xhr.send(JSON.stringify({ id }));
+    }
+    // 处理视频点击事件并发送请求
+    function handleVideoClick(id) {
+        fetch(`/base/anakki/record/increaseViewCount?id`+id, { method: 'GET' });
     }
 </script>
 </body>
