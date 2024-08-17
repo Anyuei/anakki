@@ -21,7 +21,7 @@ public interface AnFriendsCommentService extends IService<AnFriendsComment> {
 
     BasePageResult<AnFriendsComment> listCommentsManage(ListCommentsManageRequest listCommentsManageRequest);
 
-    Boolean createComment(String currentNickname, CreateCommentsRequest createCommentsRequest);
+    Boolean createComment(CreateCommentsRequest createCommentsRequest);
 
     void updateCommentState(UpdateCommentStateRequest updateCommentStateRequest);
 }

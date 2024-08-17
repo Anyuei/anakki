@@ -5,7 +5,7 @@ spring:
   application:
     name: anakki-manager
   mvc:
-    # 这个mvc的配置是springboot2.6.1不支持swagger3的折衷配置，后面考虑升级Springboot版本或降级版本
+    #  这个mvc的配置是springboot2.6.1不支持swagger3的折衷配置，后面考虑升级Springboot版本或降级版本
     pathmatch:
       matching-strategy: ant_path_matcher
     view:
@@ -29,11 +29,11 @@ spring:
   # 配置 smtp 服务器地址
   mail:
     port: 587
-    username: your-email@example.com   # 替换为你的邮箱
-    password: your-email-password       # 替换为你的邮箱密码
-    from: your-email@example.com        # 替换为你的邮箱
+    username: ayp199645aabb@qq.com
+    password: afmyfpdbcnykbbbd
+    from: ayp199645aabb@qq.com
     protocol: smtp
-    host: smtp.example.com              # 替换为你的SMTP服务器地址
+    host: smtp.qq.com
     default-encoding: UTF-8
     properties:
       mail:
@@ -43,23 +43,25 @@ spring:
 
   # redis 配置
   redis:
-    host: your-redis-host              # 替换为你的Redis主机地址
-    port: 6379                         # Redis默认端口
-    password: your-redis-password      # 替换为你的Redis密码
+    host: 119.45.1.61
+    # 端口，默认为6379
+    port: 6379
+    # 密码
+    password: ayp43520!@#
+    # 连接超时时间
     timeout: 10s
     lettuce:
       pool:
-        max-active: 8   # 最大连接数据库连接数, 设0为没有限制
-        max-idle: 8     # 最大等待连接中的数量, 设0为没有限制
-        max-wait: -1ms  # 最大建立连接等待时间。如果超过此时间将接到异常。设为-1表示无限制。
-        min-idle: 0     # 最小等待连接中的数量, 设0为没有限制
-
+        max-active: 8   #最大连接数据库连接数,设 0 为没有限制
+        max-idle: 8     #最大等待连接中的数量,设 0 为没有限制
+        max-wait: -1ms  #最大建立连接等待时间。如果超过此时间将接到异常。设为-1表示无限制。
+        min-idle: 0     #最小等待连接中的数量,设 0 为没有限制
 mybatis-plus:
   configuration:
-    # 在映射实体或者属性时，将数据库中表名和字段名中的下划线去掉，按照驼峰命名法映射 address_book ---> addressBook
+    #在映射实体或者属性时，将数据库中表名和字段名中的下划线去掉，按照驼峰命名法映射 address_book ---> addressBook
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-    # log-impl: NO_LOGGING
+    #log-impl: NO_LOGGING
 
 dynamicDataSource.default:
   hikari:
@@ -72,14 +74,13 @@ dynamicDataSource.default:
     idle-timeout: 60000
     connection-init-sql: SET NAMES utf8mb4
   driverClassName: com.mysql.cj.jdbc.Driver
-  url: jdbc:mysql://your-mysql-host:3306/anakki?autoReconnect=true&useServerPreparedStmts=false&rewriteBatchedStatements=true&characterEncoding=UTF-8&useSSL=false&allowMultiQueries=true&serverTimezone=UTC
+  url: jdbc:mysql://119.45.1.61:3306/anakki?autoReconnect=true&useServerPreparedStmts=false&rewriteBatchedStatements=true&characterEncoding=UTF-8&useSSL=false&allowMultiQueries=true&serverTimezone=UTC
   username: root
-  password: your-mysql-password      # 替换为你的MySQL密码
-
+  password: ayp43520!@#
 jwt:
-  header: "Authorization"             # token 返回头部
-  tokenPrefix: "Bearer "              # token 前缀
-  secret: your-jwt-secret             # 替换为你的JWT私钥
-  managerSecret: your-manager-secret  # 替换为你的管理JWT私钥
-  expireTime: 3600000                 # token 的有效时间，单位是毫秒
-  expireManagerTime: 259200000        # token 的有效时间，单位是毫秒
+  header: "Authorization"     # token 返回头部
+  tokenPrefix: "Bearer "      # token 前缀
+  secret: "qwertyuiop1214156" # 私钥
+  managerSecret: "qwertyuiop1214156" # 私钥
+  expireTime: 3600000 # token 的有效时间，单位是毫秒
+  expireManagerTime: 259200000 # token 的有效时间，单位是毫秒

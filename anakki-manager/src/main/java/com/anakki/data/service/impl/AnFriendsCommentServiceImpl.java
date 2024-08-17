@@ -1,5 +1,6 @@
 package com.anakki.data.service.impl;
 
+import com.anakki.data.bean.common.BaseContext;
 import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.entity.AnFriendsComment;
 import com.anakki.data.entity.AnUser;
@@ -85,13 +86,14 @@ public class AnFriendsCommentServiceImpl extends ServiceImpl<AnFriendsCommentMap
     }
 
     @Override
-    public Boolean createComment(String currentNickname, CreateCommentsRequest createCommentsRequest) {
+    public Boolean createComment(CreateCommentsRequest createCommentsRequest) {
         AnFriendsComment anFriendsComment = new AnFriendsComment();
-        if (null==currentNickname){
-            anFriendsComment.setNickname(createCommentsRequest.getNickname());
+        if (createCommentsRequest.getIsAnonymous()){
+            anFriendsComment.setNickname("匿名用户");
             anFriendsComment.setComment(createCommentsRequest.getComment());
             anFriendsComment.setStatus("false");
         }else{
+            String currentNickname = BaseContext.getCurrentNickname();
             AnUser byNickname = anUserService.getByNickname(currentNickname);
             BeanUtils.copyProperties(createCommentsRequest,anFriendsComment);
             anFriendsComment.setAvatar(byNickname.getAvatar());

@@ -25,6 +25,9 @@ public class CreateCommentsRequest {
     @ApiModelProperty("评论模块类型")
     private String type="COMMON";
 
+    @ApiModelProperty("是否匿名,默认不匿名")
+    private Boolean isAnonymous=false;
+
     @ApiModelProperty("评论")
     @TableField("comment")
     private String comment;

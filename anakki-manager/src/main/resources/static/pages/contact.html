@@ -3,8 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description"
-          content="时光胶囊,Anakki的个人网站,摄影,博客,技术分享。                             ">
+    <meta name="description" content="时光胶囊,Anakki的个人网站,摄影,博客,技术分享。">
     <meta name="author" content="Anakki">
     <title>Anakki-World</title>
     <!-- Fonts -->
@@ -17,7 +16,6 @@
         body {
             color: #495751b8;
             background-color: #035e0082;
-
         }
 
         .card {
@@ -34,6 +32,67 @@
             flex: 1 1 auto;
             padding: 1.1rem;
         }
+
+        .modal-title {
+            line-height: 1.6;
+            margin: 1.0rem 1.5rem;
+        }
+
+        @media (min-width: 576px) {
+            .modal-dialog {
+                max-width: 580px;
+                margin: 6.75rem auto;
+            }
+        }
+
+        .comment-card {
+            border: 0px 1px solid #020202;
+            border-radius: 15px;
+            background-color: #0000004f;
+        }
+
+        .avatar-size {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+        }
+
+        .comment-card .card-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .comment-card .card-text {
+            font-size: 0.9rem;
+            color: #b3b3b3;
+            font-weight: bold;
+        }
+
+        .comment-card .btn {
+            font-size: 0.8rem;
+        }
+
+        .comment-card .btn-outline-primary {
+            color: #1da1f2;
+            border-color: #1da1f2;
+        }
+
+        .comment-card .btn-outline-primary:hover {
+            background-color: #e1ecf4;
+        }
+
+        .comment-card .btn-outline-secondary {
+            color: #c8c8c8;
+            border-color: #e1e8ed;
+        }
+
+        .comment-card .btn-outline-secondary:hover {
+            background-color: #f5f8fa;
+        }
+
+        .comment-open-button:hover {
+            transform: scale(1.1); /* 放大1.1倍，你可以根据需要调整 */
+        }
     </style>
 </head>
 <body>
@@ -46,86 +105,57 @@
             <div class="row justify-content-center">
                 <div class="col-lg-7">
                     <div class="text-center pt-lg-md">
-                        <h2 class="heading h1 mb-4">
+                        <h2 class="heading h1 mb-2">
                             说点什么
                         </h2>
-                        <p class="lead lh-180">
-                            加密留言将会加密存储，站长也需密钥才能查看。公开留言所有人可见。普通留言只能站长查看。
-                        </p>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-    <section class="slice">
-        <div class="container-fluid">
-            <div class="row align-items-center cols-xs-space cols-sm-space cols-md-space">
-                <div class="col-lg-6">
-                    <h3 class="heading h3 mb-4">留言板(审核后展示)</h3>
-                    <form id="commentForm">
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <input class="form-control" placeholder="你的昵称(可不填)" type="text" name="nickname" id="nicknameInput" style="display: none;">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <input class="form-control" placeholder="邮箱(可不填)" type="email" name="email" id="emailInput" style="display: none;">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <textarea class="form-control" rows="5" placeholder="留言内容" name="comment" required></textarea>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mt-4">
-                            <button type="button" class="btn btn-primary px-4" id="anonymousButton" onclick="toggleAnonymousFields()">
-                                匿名留言
-                            </button>
-                            <button type="submit" class="btn btn-primary px-4">
-                                飞鸽传书
-                            </button>
-                        </div>
-                    </form>
-                </div>
-                <div class="col-lg-5 ml-lg-auto">
-                    <h3 class="heading heading-3 strong-300">
-                        留言永久保存
-                        <br>
-                        支持时空漂流瓶，自定义送达时间。
-                    </h3>
-                    <p>朝辞白帝彩云间</p>
-                    <p>千里江陵一日还</p>
-                    <p>两岸猿声啼不住</p>
-                    <p>轻舟已过万重山</p>
-                </div>
-            </div>
-        </div>
-    </section>
-    <section class="slice">
-        <div class="container-fluid">
-            <div class="row align-items-center cols-xs-space cols-sm-space cols-md-space">
-                <div class="col-lg-8">
-                    <h3 class="heading h3 mb-4">好友留言</h3>
-                    <div id="friend-comment" class="list-group">
-                        <!--留言填充-->
+            <div class="col-lg-12">
+                <div class="heading h3 mb-2">
+                    <div class="comment-open-button" type="button" data-toggle="modal" data-target="#commentModal" style="width: 4rem">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-envelope-plus" viewBox="0 0 16 16">
+                            <path d="M2 2a2 2 0 0 0-2 2v8.01A2 2 0 0 0 2 14h5.5a.5.5 0 0 0 0-1H2a1 1 0 0 1-.966-.741l5.64-3.471L8 9.583l7-4.2V8.5a.5.5 0 0 0 1 0V4a2 2 0 0 0-2-2H2Zm3.708 6.208L1 11.105V5.383l4.708 2.825ZM1 4.217V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v.217l-7 4.2-7-4.2Z"/>
+                            <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Zm-3.5-2a.5.5 0 0 0-.5.5v1h-1a.5.5 0 0 0 0 1h1v1a.5.5 0 0 0 1 0v-1h1a.5.5 0 0 0 0-1h-1v-1a.5.5 0 0 0-.5-.5Z"/>
+                        </svg>
                     </div>
                 </div>
-                <div class="col-lg-4 ml-lg-auto">
-                    <h3 class="heading heading-3 strong-300">
-                        善语结良缘，恶言伤人心
-                    </h3>
+                <div id="friend-comment" class="list-group align-items-center">
+                    <!--留言填充-->
                 </div>
             </div>
         </div>
     </section>
+    背景摄于2022年川藏线骑行
+            <!-- 模态框结构 -->
+            <div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="commentModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header d-flex justify-content-between align-items-center">
+                            <h5 class="modal-title" id="commentModalLabel">留言板(审核后展示)</h5>
+                            <div class="form-check form-switch" style="margin-right: 1.5rem;">
+                                <input class="form-check-input" type="checkbox" id="anonymousSwitch"
+                                       onclick="toggleAnonymousFields()">
+                                <label class="form-check-label" for="anonymousSwitch">匿名留言</label>
+                            </div>
+                        </div>
+                        <div class="modal-body">
+                            <!-- 原始表单内容 -->
+                            <form id="commentForm">
+                                <div class="form-group">
+                                    <textarea class="form-control" rows="5" placeholder="留言内容" name="comment"
+                                              required></textarea>
+                                </div>
+                                <div class="mt-4">
+                                    <button type="submit" class="btn btn-primary px-4">发送</button>
+                                </div>
+                            </form>
 
+                        </div>
+                    </div>
+                </div>
+            </div>
 </main>
 <!-- 页面底部 -->
 <div id="footer"></div>
@@ -145,10 +175,10 @@
 <script src="../assets/js/theme.js"></script>
 
 <script>
-
     window.onload = function () {
         $('#header').load("../pages/header.html", loadPersonDetail);
-        $('#footer').load("../pages/footer.html",insertCreateTime);
+        $('#footer').load("../pages/footer.html", insertCreateTime);
+
         const mainPageImageFlow = new XMLHttpRequest();
         mainPageImageFlow.open("GET", "/base/anakki/friends-comment/list-comments", true);
         mainPageImageFlow.onreadystatechange = function () {
@@ -163,60 +193,36 @@
                     //计算距离现在时间
                     const targetDate = new Date(time);
                     const currentDate = new Date();
-                    // Calculate the difference in milliseconds
                     const timeDiff = currentDate.getTime() - targetDate.getTime();
-                    // Convert milliseconds to days
                     const daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-                    let daysBefore = "";
-                    if (0 === daysDiff) {
-                        daysBefore = "今天";
-                    } else {
-                        daysBefore = daysDiff + "天以前";
-                    }
-                    // html = html + "<div class=\"list-group-item list-group-item-action\">" +
-                    //     "<div class=\"d-flex w-100 justify-content-between\">" +
-                    //     "<h5 class=\"mb-1\">" + item.nickname + "</h5>" +
-                    //     "<small>" + daysBefore + "</small>" +
-                    //     "</div>" +
-                    //     "<p class=\"mb-1\">" + item.comment + "</p>" +
-                    //     "<small>" + formattedDateTime + "</small>" +
-                    //     "</div>";
+                    let daysBefore = (daysDiff === 0) ? "今天" : daysDiff + "天以前";
 
-                    html = html +
-                        "<div class=\"card mb-3 \" style=\"max-width: 1000px; padding-left: 1rem;\">" +
-                            "<div class=\"row\">\n" +
-                                "<div class=\"\">\n" +
-                                    "<div class=\"card-body\">\n" +
-                                        "<img src=\"" + (item.avatar ? item.avatar : "../assets/images/default-avatar.jpg") + "\" class=\"img-fluid rounded-start avatar-size\" alt=\"avatar\">\n" +
-                                    "</div>\n" +
-                                "</div>\n" +
-                                "<div class=\"\">\n" +
-                                     "<div class=\"card-body\">\n" +
-                                        "<div class=\"row\">\n" +
-                                            "<h5 class=\"card-title\">" + item.nickname + "</h5>" +
-                                        "</div>" +
-                                        "<div class=\"row\">\n" +
-                                            "<p>" + item.exp + "</p>" +
-                                        "</div>" +
-                                    "</div>\n" +
-                                "</div>\n" +
-                            "</div>\n" +
-                            "<hr style='margin-top: 0rem; margin-bottom: 0rem;'>"+
-                            "<div class=\"row g-0\">\n" +
-                                "<div class=\"col-md-12\">\n" +
-                                    "<p class=\"card-text\" \">" + item.comment + "</p>\n" +
-                                "</div>" +
-                            "</div>" +
-                            "<div class=\"row align-self-end text-nowrap\">\n" +
-                        "                    <button type=\"button\" class=\"btn btn-sm btn-secondary btn-action\">\n" +
-                        "                      <svg class=\"svg-inline--fa fa-thumbs-up fa-w-16\" aria-hidden=\"true\" data-prefix=\"fas\" data-icon=\"thumbs-up\" role=\"img\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\" data-fa-i2svg=\"\"><path fill=\"currentColor\" d=\"M104 224H24c-13.255 0-24 10.745-24 24v240c0 13.255 10.745 24 24 24h80c13.255 0 24-10.745 24-24V248c0-13.255-10.745-24-24-24zM64 472c-13.255 0-24-10.745-24-24s10.745-24 24-24 24 10.745 24 24-10.745 24-24 24zM384 81.452c0 42.416-25.97 66.208-33.277 94.548h101.723c33.397 0 59.397 27.746 59.553 58.098.084 17.938-7.546 37.249-19.439 49.197l-.11.11c9.836 23.337 8.237 56.037-9.308 79.469 8.681 25.895-.069 57.704-16.382 74.757 4.298 17.598 2.244 32.575-6.148 44.632C440.202 511.587 389.616 512 346.839 512l-2.845-.001c-48.287-.017-87.806-17.598-119.56-31.725-15.957-7.099-36.821-15.887-52.651-16.178-6.54-.12-11.783-5.457-11.783-11.998v-213.77c0-3.2 1.282-6.271 3.558-8.521 39.614-39.144 56.648-80.587 89.117-113.111 14.804-14.832 20.188-37.236 25.393-58.902C282.515 39.293 291.817 0 312 0c24 0 72 8 72 81.452z\"></path></svg><!-- <i class=\"fas fa-thumbs-up\"></i> -->\n" +
-                        "                      <span>Like</span>\n" +
-                        "                    </button>\n" +
-                        "                    <a href=\"\" class=\"btn btn-sm btn-outline-secondary btn-label\"></a>\n" +
-                                    "<p class=\"card-text\" style=\"padding: 0.5rem 1.5rem; margin: 0.2rem;\"><small class=\"text-body-secondary\">" + formattedDateTime + "</small></p>\n" +
-                            "</div>" +
-                        "</div>";
-                    ;
+                    html += `
+                    <div class="card mb-3 comment-card" style="width: 100%;">
+                        <div class="d-flex align-items-start">
+                            <img src="${item.avatar ? item.avatar : "../assets/images/default-avatar.jpg"}" class="rounded-circle avatar-size" alt="avatar">
+                            <div class="ms-3 w-100" style="margin: 0.5rem;">
+                                <div class="d-flex justify-content-between">
+                                    <h5 class="card-title mb-1">${item.nickname}</h5>
+                                    <p class="card-text text-muted mb-0">${formattedDateTime}</p>
+                                </div>
+                                <p class="card-text">${item.comment}</p>
+                                <div class="d-flex justify-content-between align-items-center mt-2">
+                                    <a href="#">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-suit-heart" viewBox="0 0 16 16">
+                                          <path d="m8 6.236-.894-1.789c-.222-.443-.607-1.08-1.152-1.595C5.418 2.345 4.776 2 4 2 2.324 2 1 3.326 1 4.92c0 1.211.554 2.066 1.868 3.37.337.334.721.695 1.146 1.093C5.122 10.423 6.5 11.717 8 13.447c1.5-1.73 2.878-3.024 3.986-4.064.425-.398.81-.76 1.146-1.093C14.446 6.986 15 6.131 15 4.92 15 3.326 13.676 2 12 2c-.777 0-1.418.345-1.954.852-.545.515-.93 1.152-1.152 1.595L8 6.236zm.392 8.292a.513.513 0 0 1-.784 0c-1.601-1.902-3.05-3.262-4.243-4.381C1.3 8.208 0 6.989 0 4.92 0 2.755 1.79 1 4 1c1.6 0 2.719 1.05 3.404 2.008.26.365.458.716.596.992a7.55 7.55 0 0 1 .596-.992C9.281 2.049 10.4 1 12 1c2.21 0 4 1.755 4 3.92 0 2.069-1.3 3.288-3.365 5.227-1.193 1.12-2.642 2.48-4.243 4.38z"/>
+                                        </svg>
+                                    </a>
+                                    <a href="#">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-chat-right-dots" viewBox="0 0 16 16">
+                                          <path d="M2 1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h9.586a2 2 0 0 1 1.414.586l2 2V2a1 1 0 0 0-1-1H2zm12-1a2 2 0 0 1 2 2v12.793a.5.5 0 0 1-.854.353l-2.853-2.853a1 1 0 0 0-.707-.293H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12z"/>
+                                          <path d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
                 }
                 document.getElementById("friend-comment").innerHTML = html;
             }
@@ -224,69 +230,60 @@
         mainPageImageFlow.send();
     };
 
-    $(document).ready(function() {
-        $('#commentForm').submit(function(e) {
+    $(document).ready(function () {
+        $('#commentForm').submit(function (e) {
             e.preventDefault(); // Prevent form submission
-            var formData = $(this).serialize(); // Serialize form data
+
+            const formDataArray = $(this).serializeArray(); // Serialize form data to array
+            let token = localStorage.getItem('user-token');
+            // 获取匿名留言开关的状态
+            const isAnonymous = $('#anonymousSwitch').is(':checked');
+
+            if (!isAnonymous && null == token) {
+                alert("请登录，游客仅支持匿名评论")
+                return
+            }
+
+            // 将匿名留言状态添加到表单数据中
+            formDataArray.push({name: 'isAnonymous', value: isAnonymous});
+
+            // 将表单数据数组转换为对象
+            var formData = {};
+            $.each(formDataArray, function (i, field) {
+                formData[field.name] = field.value;
+            });
 
             $.ajax({
-                url: '/base/anakki/friends-comment/create-comment', // Replace with your server URL
+                url: '/base/anakki/friends-comment/create-comment',
                 type: 'POST',
-                data: formData,
-                beforeSend: function(xhr) {
+                data: formData, // 直接传递对象形式的数据
+                beforeSend: function (xhr) {
                     xhr.setRequestHeader('authorization', localStorage.getItem('user-token')); // Include the token in the Authorization header
                 },
-                success: function(response) {
-                    // Handle success response
-                    console.log(response);
-                    location.reload(); // Reload the page
+                success: function (response) {
+                    if (response.code === 200) {
+                        location.reload();
+
+                    } else {
+                        alert("系统错误，请联系管理员！")
+                    }
                 },
-                error: function(xhr, status, error) {
+                error: function (xhr, status, error) {
                     // Handle error response
                     console.log(error);
+                    alert("系统错误，请联系管理员！")
                 }
             });
         });
     });
 
-
     function toggleAnonymousFields() {
-        const nicknameInput = document.getElementById("nicknameInput");
-        const emailInput = document.getElementById("emailInput");
-        const submitButton = document.querySelector("#commentForm button[type='submit']");
-        const anonymousButton = document.getElementById("anonymousButton");
-        if (nicknameInput.style.display === "none") {
-            nicknameInput.style.display = "block";
-            emailInput.style.display = "block";
-            anonymousButton.textContent = "取消匿名";
-        } else {
-            nicknameInput.style.display = "none";
-            emailInput.style.display = "none";
-            anonymousButton.textContent = "匿名留言";
-        }
+        const nicknameInput = document.getElementById('nicknameInput');
+        const emailInput = document.getElementById('emailInput');
+        const displayStyle = nicknameInput.style.display === 'none' ? 'block' : 'none';
+        nicknameInput.style.display = displayStyle;
+        emailInput.style.display = displayStyle;
     }
-
-    const generateDefaultAvatar = () => {
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        const size = 200; // 头像尺寸
-        // 设置画布尺寸
-        canvas.width = size;
-        canvas.height = size;
-        // 绘制默认头像
-        context.fillStyle = '#e0e0e0'; // 头像背景颜色
-        context.fillRect(0, 0, size, size);
-        context.fillStyle = '#bdbdbd'; // 头像图案颜色
-        context.beginPath();
-        context.arc(size / 2, size / 2, size / 2 - 5, 0, 2 * Math.PI);
-        context.fill();
-        // 获取Base64编码的头像图片
-        const base64Image = canvas.toDataURL('image/png');
-        return base64Image;
-    };
-    // 使用示例
-    const defaultAvatar = generateDefaultAvatar();
-
 </script>
 </body>
 </html>

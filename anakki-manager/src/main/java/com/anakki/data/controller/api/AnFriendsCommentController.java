@@ -31,8 +31,7 @@ public class AnFriendsCommentController {
     @ApiOperation(value = "评论")
     @PostMapping("/create-comment")
     public ResponseDTO<Boolean> createComment(CreateCommentsRequest createCommentsRequest) {
-        String currentNickname = BaseContext.getCurrentNickname();
-        Boolean comment = anFriendsCommentService.createComment(currentNickname, createCommentsRequest);
+        Boolean comment = anFriendsCommentService.createComment(createCommentsRequest);
         return ResponseDTO.succData(comment);
     }
 }
