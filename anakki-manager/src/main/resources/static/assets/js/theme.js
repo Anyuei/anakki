@@ -304,6 +304,7 @@ function loadPersonDetail() {
                     </div>`;
                     userAvatar.innerHTML = `<img src="${avatar}" alt="x" style="width: 3rem; border-radius: 50%;" onclick="showAvatarModal()">`;
                     document.getElementById('breathing-light').style.display = 'inline-block';
+                    localStorage.setItem("nickname",nickname);
                 }else{
                     localStorage.removeItem('user-token')
                 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -27,6 +27,7 @@
             height: 100vh;
         }
 
+        /* Your existing CSS styles */
         .chat-header {
             background-color: rgba(0, 204, 126, 0);
             color: white;
@@ -37,7 +38,16 @@
             position: fixed;
             top: 60px;
             width: 100%;
-            z-index: 1; /* Ensure it stays on top */
+            z-index: 1;
+        }
+
+        .chat-header h4 {
+            margin: 0;
+        }
+
+        .chat-header h2 {
+            margin-left: 10px;
+            color: #f0f0f0;
         }
 
         .chat-body {
@@ -48,6 +58,7 @@
             padding: 15px;
             background-color: rgba(249, 249, 249, 0);
         }
+
         /* 头像和聊天气泡靠右 */
         .chat-message.me {
             justify-content: flex-end;
@@ -62,6 +73,11 @@
 
         .chat-message.me img {
             order: 1; /* 确保头像在聊天气泡后面 */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin-left: 10px;
+            margin-right: 0 !important;
         }
 
         /* 其他聊天消息的样式保持不变 */
@@ -122,152 +138,26 @@
 <div id="header"></div>
 <main class="main">
     <div class="bg-cover bg-size--cover" data-spotlight="fullscreen"
-             style="background-image: url('https://securex-1258150206.cos.ap-beijing.myqcloud.com/backend/DSC07694.jpg')">
+         style="background-image: url('https://securex-1258150206.cos.ap-beijing.myqcloud.com/backend/DSC07694.jpg')">
         <div class="chat-section">
             <!-- Chat Header -->
             <div class="chat-header">
                 <h4>聊天室</h4>
+                <h6 id="roomId">房间号</h6>
+                <div class="room-id-input">
+                    <input class="" type="text" id="roomInput" placeholder="请输入房间号">
+                    <button id="setRoomIdButton" class="btn btn-default" style="padding: 0.2rem 1.3rem;">进入</button>
+                </div>
             </div>
 
             <!-- Chat Body -->
-            <div class="chat-body">
-                <!-- User 1 -->
-                <div class="chat-message">
-                    <img src="https://via.placeholder.com/40?text=U1" alt="User 1">
-                    <div class="chat-message-content">
-                        <p>你好！今天过得怎么样？</p>
-                    </div>
-                </div>
-                <!-- User 2 -->
-                <div class="chat-message me">
-                    <img src="https://via.placeholder.com/40?text=U2" alt="User 2">
-                    <div class="chat-message-content">
-                        <p>还不错，谢谢！刚刚去了一趟超市。</p>
-                    </div>
-                </div>
-                <!-- User 1 -->
-                <div class="chat-message">
-                    <img src="https://via.placeholder.com/40?text=U1" alt="User 1">
-                    <div class="chat-message-content">
-                        <p>哦？买了什么好东西吗？</p>
-                    </div>
-                </div>
-                <!-- User 2 -->
-                <div class="chat-message me">
-                    <img src="https://via.placeholder.com/40?text=U2" alt="User 2">
-                    <div class="chat-message-content">
-                        <p>买了一些新鲜水果和蔬菜，还有几瓶饮料。</p>
-                    </div>
-                </div>
-                <!-- User 1 -->
-                <div class="chat-message">
-                    <img src="https://via.placeholder.com/40?text=U1" alt="User 1">
-                    <div class="chat-message-content">
-                        <p>听起来不错！如果需要帮忙搬运可以告诉我。</p>
-                    </div>
-                </div>
-                <!-- User 2 -->
-                <div class="chat-message me">
-                    <img src="https://via.placeholder.com/40?text=U2" alt="User 2">
-                    <div class="chat-message-content">
-                        <p>哈哈，谢谢！我还挺得意的。</p>
-                    </div>
-                </div>
-                <!-- User 2 -->
-                <div class="chat-message me">
-                    <img src="https://via.placeholder.com/40?text=U2" alt="User 2">
-                    <div class="chat-message-content">
-                        <p>还不错，谢谢！刚刚去了一趟超市。</p>
-                    </div>
-                </div>
-                <!-- User 1 -->
-                <div class="chat-message">
-                    <img src="https://via.placeholder.com/40?text=U1" alt="User 1">
-                    <div class="chat-message-content">
-                        <p>哦？买了什么好东西吗？</p>
-                    </div>
-                </div>
-                <!-- User 2 -->
-                <div class="chat-message me">
-                    <img src="https://via.placeholder.com/40?text=U2" alt="User 2">
-                    <div class="chat-message-content">
-                        <p>买了一些新鲜水果和蔬菜，还有几瓶饮料。</p>
-                    </div>
-                </div>
-                <!-- User 1 -->
-                <div class="chat-message">
-                    <img src="https://via.placeholder.com/40?text=U1" alt="User 1">
-                    <div class="chat-message-content">
-                        <p>听起来不错！如果需要帮忙搬运可以告诉我。</p>
-                    </div>
-                </div>
-                <!-- User 2 -->
-                <div class="chat-message me">
-                    <div class="chat-message-content">
-                        <p>哈哈，谢谢！我还挺得意的。</p>
-                    </div>
-                    <img src="https://via.placeholder.com/40?text=U2" alt="User 2">
-                </div>
-                <div class="chat-message">
-                    <img src="https://via.placeholder.com/40?text=U1" alt="User 1">
-                    <div class="chat-message-content">
-                        <p>你好！今天过得怎么样？</p>
-                    </div>
-                </div>
-                <!-- User 2 -->
-                <div class="chat-message me">
-                    <img src="https://via.placeholder.com/40?text=U2" alt="User 2">
-                    <div class="chat-message-content">
-                        <p>还不错，谢谢！刚刚去了一趟超市。</p>
-                    </div>
-                </div>
-                <!-- User 1 -->
-                <div class="chat-message">
-                    <img src="https://via.placeholder.com/40?text=U1" alt="User 1">
-                    <div class="chat-message-content">
-                        <p>哦？买了什么好东西吗？</p>
-                    </div>
-                </div>
-                <!-- User 2 -->
-                <div class="chat-message me">
-                    <img src="https://via.placeholder.com/40?text=U2" alt="User 2">
-                    <div class="chat-message-content">
-                        <p>买了一些新鲜水果和蔬菜，还有几瓶饮料。</p>
-                    </div>
-                </div>
-                <div class="chat-message">
-                    <img src="https://via.placeholder.com/40?text=U1" alt="User 1">
-                    <div class="chat-message-content">
-                        <p>你好！今天过得怎么样？</p>
-                    </div>
-                </div>
-                <!-- User 2 -->
-                <div class="chat-message me">
-                    <img src="https://via.placeholder.com/40?text=U2" alt="User 2">
-                    <div class="chat-message-content">
-                        <p>还不错，谢谢！刚刚去了一趟超市。</p>
-                    </div>
-                </div>
-                <!-- User 1 -->
-                <div class="chat-message">
-                    <img src="https://via.placeholder.com/40?text=U1" alt="User 1">
-                    <div class="chat-message-content">
-                        <p>哦？买了什么好东西吗？</p>
-                    </div>
-                </div>
-                <!-- User 2 -->
-                <div class="chat-message me">
-                    <img src="https://via.placeholder.com/40?text=U2" alt="User 2">
-                    <div class="chat-message-content">
-                        <p>买了一些新鲜水果和蔬菜，还有几瓶饮料。</p>
-                    </div>
-                </div>
+            <div class="chat-body" id="chatContent">
             </div>
-
+            <button class="load-more-button" id="loadMoreButton">加载更多</button>
             <!-- Chat Footer -->
             <div class="chat-footer">
-                <input type="text" class="form-control" placeholder="输入消息...">
-                <button type="button">发送</button>
+                <input type="text" class="form-control" id="message-input" placeholder="输入消息...">
+                <button type="button" id="send-button">发送</button>
             </div>
         </div>
     </div>
@@ -290,8 +180,155 @@
 <script src="../assets/js/theme.js"></script>
 
 <script>
+
+
+    const setRoomIdButton = document.getElementById('setRoomIdButton');
+    const roomInput = document.getElementById('roomInput');
+    const roomIdElement = document.getElementById('roomId');
+    const chatContent = document.getElementById('chatContent');
+    const loadMoreButton = document.getElementById('loadMoreButton');
+    let roomId = '';
+    let page = 1;
+    let pageSize = 50;
+    document.addEventListener('DOMContentLoaded', function () {
+
+        setRoomIdButton.addEventListener('click', function () {
+            roomId = roomInput.value.trim();
+            if (roomId) {
+                fetchChatData();
+            } else {
+                alert('请输入房间号');
+            }
+        });
+        loadMoreButton.addEventListener('click', function () {
+            fetchChatData();
+        });
+    });
+    function displayChatMessages(messages) {
+        messages.forEach(message => {
+            const messageElement = document.createElement('div');
+            messageElement.className = 'chat-message';
+
+            // 添加用户头像
+            const avatarImg = document.createElement('img');
+            avatarImg.src = message.avatar || 'https://via.placeholder.com/40?text=U';
+            avatarImg.alt = message.nickname || 'User';
+            messageElement.appendChild(avatarImg);
+
+            // 添加消息内容
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'chat-message-content';
+
+            if (message.contentType === 'image') {
+                contentDiv.innerHTML = `<img src="${message.content}" alt="image">`;
+            } else if (message.contentType === 'video') {
+                contentDiv.innerHTML = `<video controls><source src="${message.content}" type="video/mp4">您的浏览器不支持视频标签。</video>`;
+            } else {
+                const textP = document.createElement('p');
+                textP.textContent = message.content;
+                contentDiv.appendChild(textP);
+            }
+
+            messageElement.appendChild(contentDiv);
+
+            // 如果是当前用户的消息，添加 'me' 类
+            if (message.nickname === localStorage.getItem("nickname")) { // `currentUserId` 是你需要定义的当前用户的 ID
+                messageElement.classList.add('me');
+            }
+
+            chatContent.prepend(messageElement);
+        });
+    }
+    function fetchChatData() {
+        if (!roomId) {
+            alert('请设置房间号');
+            return;
+        }
+        const token = localStorage.getItem('user-token');
+        if (null == token) {
+            alert("请登录")
+        }
+        roomIdElement.textContent = roomId;
+        page = 1; // 重置分页
+        chatContent.innerHTML = ''; // 清空聊天内容
+        fetch('/api/anakki/chat/receive-from-room', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'authorization': token
+            },
+            body: JSON.stringify({
+                roomId: roomId,
+                current: page,
+                size: pageSize
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.code === 200 && data.data) {
+                    displayChatMessages(data.data.data);
+                } else {
+                    alert(data.message || '获取数据失败');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
     window.onload = function () {
         $('#header').load("../pages/header.html", loadPersonDetail);
+
+        // 发送消息的按钮和输入框
+        const sendButton = document.getElementById('send-button');
+        const messageInput = document.getElementById('message-input');
+
+        sendButton.addEventListener('click', function () {
+            // 获取输入框的消息内容
+            const messageContent = messageInput.value;
+
+            if (messageContent.trim() === '') {
+                alert('请输入消息内容');
+                return;
+            }
+
+            // 构造请求体
+            const requestPayload = {
+                isTemp: false, // 根据需求设置
+                roomId: roomIdElement.textContent, // 替换为实际的房间ID
+                content: messageContent,
+                contentType: 'text' // 根据需求设置
+            };
+
+            const token = localStorage.getItem('user-token');
+            if (null == token) {
+                alert("请登录")
+            }
+            // 发送请求到后端
+            fetch('/api/anakki/chat/send-to-room', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': token
+                },
+                body: JSON.stringify(requestPayload)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.data) {
+                        // 消息发送成功，清空输入框
+                        messageInput.value = '';
+                        // 处理消息发送成功的逻辑，例如将消息添加到聊天记录中
+                        console.log('消息发送成功');
+                        fetchChatData()
+                    } else {
+                        // 处理消息发送失败的逻辑
+                        console.error('消息发送失败');
+                    }
+                })
+                .catch(error => {
+                    console.error('发送请求失败', error);
+                });
+        });
     }
 </script>
 </body>
