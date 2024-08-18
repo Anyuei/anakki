@@ -15,7 +15,7 @@
     <style>
         body {
             color: #495751b8;
-            background-color: rgba(3, 94, 0, 0.28);
+            background-color: rgba(3, 94, 0, 0.27);
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -28,7 +28,7 @@
         }
 
         .chat-header {
-            background-color: rgba(0, 204, 126, 0.11);
+            background-color: rgba(0, 204, 126, 0);
             color: white;
             padding: 15px;
             display: flex;
@@ -46,9 +46,25 @@
             margin-bottom: 50px; /* Height of the footer */
             overflow-y: auto;
             padding: 15px;
-            background-color: rgba(249, 249, 249, 0.31);
+            background-color: rgba(249, 249, 249, 0);
+        }
+        /* 头像和聊天气泡靠右 */
+        .chat-message.me {
+            justify-content: flex-end;
         }
 
+        .chat-message.me .chat-message-content {
+            background-color: #b2ff75;
+            text-align: right;
+            align-self: flex-end; /* 确保聊天气泡靠右 */
+            border-radius: 9px;
+        }
+
+        .chat-message.me img {
+            order: 1; /* 确保头像在聊天气泡后面 */
+        }
+
+        /* 其他聊天消息的样式保持不变 */
         .chat-message {
             display: flex;
             margin-bottom: 10px;
@@ -58,23 +74,21 @@
             border-radius: 50%;
             width: 40px;
             height: 40px;
-            margin-right: 10px;
+            margin-right: 10px; /* 默认头像在聊天气泡前面 */
         }
 
         .chat-message-content {
             max-width: 80%;
+            border-radius: 9px;
+            color: #131313d9;
+            background-color: whitesmoke;
         }
 
         .chat-message-content p {
-            background-color: rgba(255, 255, 255, 0.12);
+            background-color: rgba(36, 36, 36, 0.24);
             padding: 10px;
             border-radius: 10px;
             margin: 0;
-        }
-
-        .chat-message.me .chat-message-content p {
-            background-color: #dcf8c6; /* 你可以根据需要调整颜色 */
-            text-align: right;
         }
 
         .chat-footer {
@@ -189,10 +203,10 @@
                 </div>
                 <!-- User 2 -->
                 <div class="chat-message me">
-                    <img src="https://via.placeholder.com/40?text=U2" alt="User 2">
                     <div class="chat-message-content">
                         <p>哈哈，谢谢！我还挺得意的。</p>
                     </div>
+                    <img src="https://via.placeholder.com/40?text=U2" alt="User 2">
                 </div>
                 <div class="chat-message">
                     <img src="https://via.placeholder.com/40?text=U1" alt="User 1">
