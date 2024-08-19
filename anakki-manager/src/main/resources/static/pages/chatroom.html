@@ -131,6 +131,57 @@
             border-radius: 5px;
             padding: 10px 20px;
         }
+        .chat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            background-color: #f8f9fa; /* 背景色可以根据需要调整 */
+        }
+
+        .chat-title {
+            margin-right: auto;
+        }
+
+        .room-id {
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .room-id-input {
+            display: flex;
+            align-items: center;
+        }
+
+        #roomInput {
+            margin-right: 10px; /* 输入框和按钮之间的间距 */
+        }
+
+        /* 侧边栏样式 */
+        .sidebar {
+            width: 250px;
+            background-color: #2c3e50;
+            padding: 20px;
+            display: none; /* 初始状态下隐藏 */
+            flex-shrink: 0;
+        }
+
+        .sidebar h3 {
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 10px;
+            color: #ecf0f1;
+            cursor: pointer;
+        }
+
     </style>
 </head>
 <body>
@@ -142,21 +193,29 @@
         <div class="chat-section">
             <!-- Chat Header -->
             <div class="chat-header">
-                <h4>聊天室</h4>
-                <h6 id="roomId">房间号</h6>
+                <h4 class="chat-title toggle-sidebar-button" id="toggleSidebarButton">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-grid" viewBox="0 0 16 16">
+                        <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z"/>
+                    </svg>
+                </h4>
+                <h4 id="roomId" class="room-id"></h4>
                 <div class="room-id-input">
                     <input class="" type="text" id="roomInput" placeholder="请输入房间号">
-                    <button id="setRoomIdButton" class="btn btn-default" style="padding: 0.2rem 1.3rem;">进入</button>
+                    <button id="setRoomIdButton" class="btn btn-default" style="padding: 0.2rem 1.3rem;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+                            <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+                        </svg>
+                    </button>
                 </div>
             </div>
 
             <!-- Chat Body -->
             <div class="chat-body" id="chatContent">
             </div>
-            <button class="load-more-button" id="loadMoreButton">加载更多</button>
             <!-- Chat Footer -->
             <div class="chat-footer">
-                <input type="text" class="form-control" id="message-input" placeholder="输入消息...">
+                <input type="text" id="message-input" class="form-control"  placeholder="输入消息...">
                 <button type="button" id="send-button">发送</button>
             </div>
         </div>
@@ -186,10 +245,11 @@
     const roomInput = document.getElementById('roomInput');
     const roomIdElement = document.getElementById('roomId');
     const chatContent = document.getElementById('chatContent');
-    const loadMoreButton = document.getElementById('loadMoreButton');
+
     let roomId = '';
     let page = 1;
     let pageSize = 50;
+
     document.addEventListener('DOMContentLoaded', function () {
 
         setRoomIdButton.addEventListener('click', function () {
@@ -199,9 +259,6 @@
             } else {
                 alert('请输入房间号');
             }
-        });
-        loadMoreButton.addEventListener('click', function () {
-            fetchChatData();
         });
     });
     function displayChatMessages(messages) {
@@ -330,6 +387,12 @@
                 });
         });
     }
+
+    document.getElementById('message-input').addEventListener('focus', function() {
+        // 让输入框滚动到视图中
+        this.scrollIntoView({ behavior: 'smooth' });
+    });
+
 </script>
 </body>
 </html>

@@ -238,7 +238,10 @@
             let token = localStorage.getItem('user-token');
             // 获取匿名留言开关的状态
             const isAnonymous = $('#anonymousSwitch').is(':checked');
-
+            let base="/base";
+            if (!isAnonymous) {
+                base="/api";
+            }
             if (!isAnonymous && null == token) {
                 alert("请登录，游客仅支持匿名评论")
                 return
@@ -254,7 +257,7 @@
             });
 
             $.ajax({
-                url: '/base/anakki/friends-comment/create-comment',
+                url: base+'/anakki/friends-comment/create-comment',
                 type: 'POST',
                 data: formData, // 直接传递对象形式的数据
                 beforeSend: function (xhr) {
