@@ -65,12 +65,24 @@
         }
 
         .chat-message.me .chat-message-content {
-            background-color: #b2ff75;
+            background-color: rgba(178, 255, 117, 0);
+            text-align: right;
+            align-self: flex-end; /* 确保聊天气泡靠右 */
+            border-radius: 9px;
+        }
+        .chat-message.me .chat-message-content p{
+            background-color: rgba(178, 255, 117, 0.57);
             text-align: right;
             align-self: flex-end; /* 确保聊天气泡靠右 */
             border-radius: 9px;
         }
 
+        .chat-message.me .chat-message-content div{
+            background-color: rgba(178, 255, 117, 0);
+            text-align: right;
+            align-self: flex-end; /* 确保聊天气泡靠右 */
+            border-radius: 9px;
+        }
         .chat-message.me img {
             order: 1; /* 确保头像在聊天气泡后面 */
             border-radius: 50%;
@@ -97,11 +109,16 @@
             max-width: 80%;
             border-radius: 9px;
             color: #131313d9;
-            background-color: whitesmoke;
+            background-color: rgba(245, 245, 245, 0.02);
         }
-
+        .chat-message .chat-message-content div{
+            background-color: rgba(178, 255, 117, 0);
+            text-align: left;
+            align-self: flex-end; /* 确保聊天气泡靠右 */
+            border-radius: 9px;
+        }
         .chat-message-content p {
-            background-color: rgba(36, 36, 36, 0.24);
+            background-color: rgba(0, 0, 0, 0.25);
             padding: 10px;
             border-radius: 10px;
             margin: 0;
@@ -275,6 +292,11 @@
             // 添加消息内容
             const contentDiv = document.createElement('div');
             contentDiv.className = 'chat-message-content';
+            // 添加消息人昵称
+            const nicknameDiv = document.createElement('div');
+            nicknameDiv.className = 'chat-message-nickname';
+            nicknameDiv.textContent = message.nickname || 'User';
+            contentDiv.appendChild(nicknameDiv);
 
             if (message.contentType === 'image') {
                 contentDiv.innerHTML = `<img src="${message.content}" alt="image">`;
