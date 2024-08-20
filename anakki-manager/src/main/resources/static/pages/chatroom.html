@@ -312,22 +312,44 @@
 
 
 <script>
-
+    // 是否正在加载数据的标志
+    let isLoading = false;
     const setRoomIdButton = document.getElementById('setRoomIdButton');
     const roomInput = document.getElementById('roomInput');
     const roomIdElement = document.getElementById('roomId');
     const chatContent = document.getElementById('chatContent');
     const roomName = document.getElementById('roomName');
-    let roomId = '';
-    let page = 1;
-    let pageSize = 50;
+    let oldRoomId;
+    let roomId;
+
+    // 是否有更多数据的标志
+    let hasMoreData = true;
+    let currentMessageId='';
+    let firstMessageId='';
+    // 监听滚动事件
+    chatContent.addEventListener('scroll', handleScroll);
+    async function handleScroll() {
+        // 检查是否正在加载数据
+        if (isLoading) return;
+
+        // 当滚动条滚动到顶部且还有更多数据时，进行数据加载
+        if (chatContent.scrollTop === 0 && hasMoreData) {
+            // 设置为正在加载
+            isLoading = true;
+
+            // 调用数据加载函数
+            await fetchChatData()
+        }
+    }
+
+
 
     document.addEventListener('DOMContentLoaded', function () {
 
         setRoomIdButton.addEventListener('click', function () {
             roomId = roomInput.value.trim();
             if (roomId) {
-                fetchChatData();
+                fetchChatNewData();
             } else {
                 alert('请输入房间号');
             }
@@ -348,7 +370,7 @@
             button.classList.add('dark-mode');
         }
     });
-    function displayChatMessages(messages) {
+    async function displayChatMessages(messages) {
         let lastTimestamp = null;
 
         messages.forEach(message => {
@@ -398,8 +420,59 @@
             lastTimestamp = currentTimestamp;
             chatContent.prepend(messageElement);
         });
-    }
 
+    }
+    async function displayNewChatMessages(messages) {
+        let lastTimestamp = null;
+
+        messages.forEach(message => {
+            const messageElement = document.createElement('div');
+            messageElement.className = 'chat-message';
+
+            // 添加用户头像
+            const avatarImg = document.createElement('img');
+            avatarImg.src = message.avatar || 'https://via.placeholder.com/40?text=U';
+            avatarImg.alt = message.nickname || 'User';
+            messageElement.appendChild(avatarImg);
+
+            // 添加消息内容
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'chat-message-content';
+            // 添加消息人昵称
+            const nicknameDiv = document.createElement('div');
+            nicknameDiv.className = 'chat-message-nickname';
+            nicknameDiv.textContent = message.nickname || 'User';
+            contentDiv.appendChild(nicknameDiv);
+
+            if (message.contentType === 'image') {
+                contentDiv.innerHTML = `<img src="${message.content}" alt="image">`;
+            } else if (message.contentType === 'video') {
+                contentDiv.innerHTML = `<video controls><source src="${message.content}" type="video/mp4">您的浏览器不支持视频标签。</video>`;
+            } else {
+                const textP = document.createElement('p');
+                textP.textContent = message.content;
+                contentDiv.appendChild(textP);
+            }
+
+            messageElement.appendChild(contentDiv);
+
+            // 如果是当前用户的消息，添加 'me' 类
+            if (message.nickname === localStorage.getItem("nickname")) { // `currentUserId` 是你需要定义的当前用户的 ID
+                messageElement.classList.add('me');
+            }
+            // 处理时间戳
+            const currentTimestamp = new Date(message.createTime);
+            if (lastTimestamp != null && (currentTimestamp-lastTimestamp) >= 5 * 60 * 1000) {
+                const timestampDiv = document.createElement('div');
+                timestampDiv.className = 'chat-timestamp';
+                timestampDiv.textContent = formatTimestamp(currentTimestamp);
+
+                chatContent.appendChild(timestampDiv);
+            }
+            lastTimestamp = currentTimestamp;
+            chatContent.appendChild(messageElement);
+        });
+    }
     function formatTimestamp(timestamp) {
         const now = new Date();
         const messageDate = new Date(timestamp);
@@ -424,7 +497,9 @@
         const day = messageDate.getDate();
         return `${month}月${day}日 ${timeString}`;
     }
-    function fetchChatData() {
+    async function fetchChatData() {
+        // 禁用刷新按钮
+        setRoomIdButton.disabled = true;
         if (!roomId) {
             alert('请设置房间号');
             return;
@@ -433,9 +508,6 @@
         if (null == token) {
             alert("请登录")
         }
-
-        page = 1; // 重置分页
-        chatContent.innerHTML = ''; // 清空聊天内容
         fetch('/api/anakki/chat/receive-from-room', {
             method: 'POST',
             headers: {
@@ -444,14 +516,23 @@
             },
             body: JSON.stringify({
                 roomId: roomId,
-                current: page,
-                size: pageSize
+                firstIndex: firstMessageId
             })
         })
             .then(response => response.json())
             .then(data => {
-                if (data.code === 200 && data.data) {
-                    displayChatMessages(data.data.data);
+                if (data.code === 200) {
+                    if (data.data.length===0){
+                        // 没有更多数据了
+                        hasMoreData = false;
+                        alert('没有更多数据');
+                    }
+                    if (!firstMessageId){
+                        firstMessageId=data.data[data.data.length-1].id
+                    }else if (data.data[data.data.length-1].id<firstMessageId){
+                        firstMessageId=data.data[data.data.length-1].id
+                    }
+                    displayChatMessages(data.data);
                     //roomIdElement.textContent = roomId;
                 } else {
                     alert(data.message || '获取数据失败');
@@ -459,8 +540,76 @@
             })
             .catch(error => {
                 console.error('Error:', error);
-            });
+            }).finally(() => {
+            // 完成后重新启用刷新按钮
+            setRoomIdButton.disabled = false;
+            isLoading=false;
+        });
     }
+    // setInterval(fetchChatNewData, 5000);
+
+    async function fetchChatNewData() {
+        if (!oldRoomId) {
+            oldRoomId = roomInput.value.trim();
+            roomId = roomInput.value.trim();
+        } else {
+            if (oldRoomId !== roomInput.value.trim()) {
+                currentMessageId = null;
+            }
+        }
+
+        // 禁用刷新按钮
+        setRoomIdButton.disabled = true;
+        if (!roomId) {
+            alert('请设置房间号');
+            setRoomIdButton.disabled = false; // 确保在输入房间号后按钮不会禁用
+            return;
+        }
+
+        const token = localStorage.getItem('user-token');
+        if (!token) {
+            alert('请登录');
+            setRoomIdButton.disabled = false; // 确保在未登录时按钮不会禁用
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/anakki/chat/receive-new-from-room', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': token
+                },
+                body: JSON.stringify({
+                    roomId: roomId,
+                    currentIndex: currentMessageId
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.code === 200) {
+                if (data.data.length > 0) {
+                    currentMessageId = data.data[data.data.length - 1].id;
+                    if (!firstMessageId) {
+                        firstMessageId = data.data[0].id;
+                    } else if (data.data[0].id < firstMessageId) {
+                        firstMessageId = data.data[0].id;
+                    }
+                    await displayNewChatMessages(data.data);
+                }
+            } else {
+                alert(data.message);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        } finally {
+            // 完成后重新启用刷新按钮
+            setRoomIdButton.disabled = false;
+        }
+    }
+
+
     window.onload = function () {
         $('#header').load("../pages/header.html", loadPersonDetail);
 
@@ -489,6 +638,7 @@
             if (null == token) {
                 alert("请登录")
             }
+            sendButton.disabled = true;
             // 发送请求到后端
             fetch('/api/anakki/chat/send-to-room', {
                 method: 'POST',
@@ -505,7 +655,8 @@
                         messageInput.value = '';
                         // 处理消息发送成功的逻辑，例如将消息添加到聊天记录中
                         console.log('消息发送成功');
-                        fetchChatData()
+                        fetchChatNewData()
+                        sendButton.disabled = false;
                     } else {
                         // 处理消息发送失败的逻辑
                         console.error('消息发送失败');

@@ -17,6 +17,8 @@ import com.drew.imaging.ImageProcessingException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -48,10 +50,11 @@ public class AnRecordServiceImpl extends ServiceImpl<AnRecordMapper, AnRecord> i
                 getContentRequest.getCurrent(),
                 getContentRequest.getSize());
         String type = getContentRequest.getImageType();
-
+        String tag = getContentRequest.getTag();
         QueryWrapper<AnRecord> anRecordQueryWrapper = new QueryWrapper<>();
         anRecordQueryWrapper.eq("type",type);
         anRecordQueryWrapper.eq("status","COMMON");
+        anRecordQueryWrapper.eq(!ObjectUtils.isEmpty(tag),"tag",tag);
         anRecordQueryWrapper.orderByDesc("photo_time","id");
         IPage<AnRecord> page = page(anRecordIPage, anRecordQueryWrapper);
         List<AnRecord> records = page.getRecords();

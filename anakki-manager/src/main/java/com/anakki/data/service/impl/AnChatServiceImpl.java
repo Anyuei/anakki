@@ -5,6 +5,7 @@ import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.entity.AnChat;
 import com.anakki.data.entity.AnUser;
 import com.anakki.data.entity.request.ReceiveFromRoomRequest;
+import com.anakki.data.entity.request.ReceiveNewFromRoomRequest;
 import com.anakki.data.entity.request.SendToRoomRequest;
 import com.anakki.data.mapper.AnChatMapper;
 import com.anakki.data.service.AnChatService;
@@ -15,6 +16,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * <p>
@@ -47,19 +51,45 @@ public class AnChatServiceImpl extends ServiceImpl<AnChatMapper, AnChat> impleme
     }
 
     @Override
-    public BasePageResult<AnChat> receiveFromRoom(ReceiveFromRoomRequest request) {
+    public List<AnChat> receiveFromRoom(ReceiveFromRoomRequest request) {
         String currentNickname = BaseContext.getCurrentNickname();
         AnUser user = anUserService.getByNickname(currentNickname);
         Long roomId = request.getRoomId();
-
-        IPage<AnChat> resourceIPage = new Page<>(
-                request.getCurrent(),
-                request.getSize());
+        Long firstIndex = request.getFirstIndex();
         QueryWrapper<AnChat> anChatQueryWrapper = new QueryWrapper<>();
         anChatQueryWrapper.eq("room_id", roomId);
         anChatQueryWrapper.eq("status", "NORMAL");
+        anChatQueryWrapper.lt(null!=firstIndex,"id",firstIndex);
         anChatQueryWrapper.orderByDesc("create_time");
-        IPage<AnChat> page = page(resourceIPage, anChatQueryWrapper);
-        return new BasePageResult<>(page.getRecords(), page.getTotal());
+        // 限制结果为前10条
+        anChatQueryWrapper.last("LIMIT 30");
+        return list(anChatQueryWrapper);
+    }
+
+    @Override
+    public List<AnChat> receiveNewFromRoom(ReceiveNewFromRoomRequest request) {
+        String currentNickname = BaseContext.getCurrentNickname();
+
+        Long roomId = request.getRoomId();
+        Long currentIndex = request.getCurrentIndex();
+
+        QueryWrapper<AnChat> anChatQueryWrapper = new QueryWrapper<>();
+        anChatQueryWrapper.eq("room_id", roomId);
+        anChatQueryWrapper.gt(null!=currentIndex,"id",currentIndex);
+        anChatQueryWrapper.eq("status", "NORMAL");
+
+        if (null!=currentIndex){
+            anChatQueryWrapper.orderByAsc("create_time");
+            anChatQueryWrapper.last("LIMIT 60");
+            return list(anChatQueryWrapper);
+        }else{
+            anChatQueryWrapper.orderByDesc("create_time");
+            // 限制结果为前10条
+            anChatQueryWrapper.last("LIMIT 30");
+            List<AnChat> list = list(anChatQueryWrapper);
+            Collections.reverse(list);
+            return list;
+        }
+
     }
 }

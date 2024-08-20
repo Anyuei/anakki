@@ -6,6 +6,7 @@ import com.anakki.data.bean.common.ResponseDTO;
 import com.anakki.data.entity.AnChat;
 import com.anakki.data.entity.request.CreateCommentsRequest;
 import com.anakki.data.entity.request.ReceiveFromRoomRequest;
+import com.anakki.data.entity.request.ReceiveNewFromRoomRequest;
 import com.anakki.data.entity.request.SendToRoomRequest;
 import com.anakki.data.service.AnChatService;
 import com.anakki.data.service.AnFriendsCommentService;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * <p>
@@ -39,9 +42,16 @@ public class AnChatController {
 
     @ApiOperation(value = "获取消息从聊天室")
     @PostMapping("/receive-from-room")
-    public ResponseDTO<BasePageResult<AnChat>> receiveFromRoom(@RequestBody ReceiveFromRoomRequest request) {
-        BasePageResult<AnChat> anChatBasePageResult = anChatService.receiveFromRoom(request);
-        return ResponseDTO.succData(anChatBasePageResult);
+    public ResponseDTO<List<AnChat>> receiveFromRoom(@RequestBody ReceiveFromRoomRequest request) {
+        List<AnChat> anChatList = anChatService.receiveFromRoom(request);
+        return ResponseDTO.succData(anChatList);
+    }
+
+    @ApiOperation(value = "获取新消息从聊天室")
+    @PostMapping("/receive-new-from-room")
+    public ResponseDTO<List<AnChat>> receiveNewFromRoom(@RequestBody ReceiveNewFromRoomRequest request) {
+        List<AnChat> anChatList = anChatService.receiveNewFromRoom(request);
+        return ResponseDTO.succData(anChatList);
     }
 
 }

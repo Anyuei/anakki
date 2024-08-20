@@ -29,6 +29,10 @@ public class AnRecord extends BaseEntity implements Serializable {
     @TableField("type")
     private String type;
 
+    @ApiModelProperty("标签")
+    @TableField("tag")
+    private String tag;
+
     @ApiModelProperty("图片标题")
     @TableField("title")
     private String title;

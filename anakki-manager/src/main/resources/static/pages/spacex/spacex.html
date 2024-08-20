@@ -96,7 +96,6 @@
 
         .heart-icons {
             position: absolute;
-            bottom: 1px;
             left: 6px;
             display: flex;
             align-items: center;
@@ -211,6 +210,8 @@
         .video-spacex-list:focus {
             outline: none; /* 去除点击时的边框 */
         }
+
+
     </style>
 </head>
 <body>
@@ -219,10 +220,49 @@
 <main class="main">
     <section style="padding-top: 4rem;">
         <div class="container-fluid text-center justify-content-center" id="spacexFlow">
-            <div class="timeline" id="timeline"></div>
-            <div class="load-more">
-                <button id="loadMoreBtn">加载更多</button>
+            <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    <button class="nav-link active" id="nav-all-tab" data-toggle="tab" data-target="#all" type="button" role="tab" aria-controls="all" aria-selected="true">总时间线</button>
+                    <button class="nav-link" id="nav-video-tab" data-toggle="tab" data-target="#video" type="button" role="tab" aria-controls="video" aria-selected="false">视频时间线</button>
+                    <button class="nav-link" id="nav-img-tab" data-toggle="tab" data-target="#img" type="button" role="tab" aria-controls="img" aria-selected="false">图片时间线</button>
+                </div>
+            </nav>
+            <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="nav-all-tab">
+                    <div class="timeline" id="timeline"></div>
+                    <div class="load-more">
+                        <button id="loadMoreBtn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-down" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
+                                <path fill-rule="evenodd" d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="video" role="tabpanel" aria-labelledby="nav-video-tab">
+                    <div class="timeline" id="videotimeline"></div>
+                    <div class="load-more">
+                        <button id="videoloadMoreBtn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-down" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
+                                <path fill-rule="evenodd" d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="img" role="tabpanel" aria-labelledby="nav-img-tab">
+                    <div class="timeline" id="imgtimeline"></div>
+                    <div class="load-more">
+                        <button id="imgloadMoreBtn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-down" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
+                                <path fill-rule="evenodd" d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
             </div>
+
         </div>
     </section>
 </main>
@@ -251,9 +291,9 @@
         autoplay: false,
         muted: true,
     });
-    function loadData() {
+    function loadData(tag) {
         var imageXHR = new XMLHttpRequest();
-        imageXHR.open("GET", "/base/anakki/record/flow?imageType=SPACEX&current=" + current + "&size=" + size, true);
+        imageXHR.open("GET", "/base/anakki/record/flow?imageType=SPACEX&current=" + current + "&size=" + size+"&tag="+tag, true);
         imageXHR.onreadystatechange = function () {
             if (imageXHR.readyState === 4 && imageXHR.status === 200) {
                 const response = JSON.parse(imageXHR.responseText);
@@ -294,7 +334,7 @@
                             gridHtml += '<div class="image-item">';
                             // 否则显示图片
                             gridHtml += '<img src="' + item.imgUrl + '?imageMogr2/thumbnail/400x" class="image-spacex-list img-fluid" alt="'
-                            + item.id + '" onclick="showModal(this)">';
+                            + item.id + '" onclick="showModal(this)" onLoad="hidePlaceholder(this)" onError="showPlaceholder(this)">';
                         }
                         if (isVideo) {
                             gridHtml +=
@@ -363,15 +403,15 @@
                     html += '</div>';
                 }
 
-                document.getElementById("timeline").insertAdjacentHTML('beforeend', html);
+                document.getElementById(tag+"timeline").insertAdjacentHTML('beforeend', html);
 
                 // 更新当前页数
                 current++;
 
                 // 如果没有更多数据，禁用按钮
                 if (response.data.data.length < size) {
-                    document.getElementById("loadMoreBtn").disabled = true;
-                    document.getElementById("loadMoreBtn").textContent = '没有更多数据';
+                    document.getElementById(tag+"loadMoreBtn").disabled = true;
+                    document.getElementById(tag+"loadMoreBtn").textContent = '没有更多数据';
                 }
             }
         };
@@ -384,11 +424,14 @@
         $('#footer').load("../../pages/footer.html");
 
         // 初始加载数据
-        loadData();
+        loadData("");
 
         // 绑定“加载更多”按钮的点击事件
-        document.getElementById("loadMoreBtn").addEventListener("click", loadData);
-
+        document.getElementById("loadMoreBtn").addEventListener("click", loadData(""));
+        // 绑定“加载更多”按钮的点击事件
+        document.getElementById("videoloadMoreBtn").addEventListener("click", loadData("video"));
+        // 绑定“加载更多”按钮的点击事件
+        document.getElementById("imgloadMoreBtn").addEventListener("click", loadData("img"));
 // 为所有视频元素添加播放事件监听器
         document.querySelectorAll('video').forEach(video => {
             video.onplay = function() {
@@ -474,6 +517,14 @@
     // 处理视频点击事件并发送请求
     function handleVideoClick(id) {
         fetch(`/base/anakki/record/increaseViewCount?id`+id, { method: 'GET' });
+    }
+
+    function hidePlaceholder(img) {
+        img.style.backgroundColor = 'transparent'; // 隐藏背景色
+    }
+
+    function showPlaceholder(img) {
+        img.style.backgroundColor = '#f0f0f0'; // 显示背景色作为占位符
     }
 </script>
 </body>
