@@ -80,6 +80,17 @@
     .btn:focus {
         box-shadow: 0 0 10px #333;
     }
+    .text-center {
+        text-align: justify;
+        position: -webkit-sticky;
+        position: sticky;
+        right: 0;
+        z-index: 10;
+        border-left: 2px solid #ddd;
+        width: auto;
+        white-space: nowrap;
+        background: #527c5c;
+    }
 
 </style>
 <body>
@@ -126,7 +137,7 @@
                 </span>
             </div>
             <div class="card-table table-responsive">
-                <table class="table table-vcenter">
+                <table class="table table-vcenter" style="margin-left: 0.4rem;">
                     <thead>
                     <tr>
                         <!--                        <th>标题</th>-->
@@ -136,28 +147,10 @@
                         <th style="white-space:nowrap">文件大小</th>
                         <th style="white-space:nowrap">上传用户</th>
                         <th style="min-width: 151px;">上传时间</th>
-                        <th style="min-width: 133px;" ></th>
+                        <th style="min-width: 133px;" class="text-center"></th>
                     </tr>
                     </thead>
                     <tbody id="list">
-                    <!--                    <tr>-->
-                    <!--                        <td>-->
-                    <!--                            /about.html-->
-                    <!--                            <a href="#" class="ms-1" aria-label="Open website">-->
-                    <!--                                &lt;!&ndash; Download SVG icon from http://tabler-icons.io/i/link &ndash;&gt;-->
-                    <!--                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"-->
-                    <!--                                     viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"-->
-                    <!--                                     stroke-linecap="round" stroke-linejoin="round">-->
-                    <!--                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>-->
-                    <!--                                    <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path>-->
-                    <!--                                    <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path>-->
-                    <!--                                </svg>-->
-                    <!--                            </a>-->
-                    <!--                        </td>-->
-                    <!--                        <td class="text-muted">4,896</td>-->
-                    <!--                        <td class="text-muted">3,654</td>-->
-                    <!--                        <td class="text-muted">82.54%</td>-->
-                    <!--                    </tr>-->
                     </tbody>
                 </table>
             </div>

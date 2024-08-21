@@ -98,6 +98,17 @@
         background-color: #fff0 !important;
         border-color: #577da200  !important;
     }
+
+    .operate-area {
+        text-align: center;
+        position: -webkit-sticky;
+        position: sticky;
+        right: 0;
+        z-index: 10;
+        width: auto;
+        white-space: nowrap;
+        background-color: #0000001f;
+    }
 </style>
 <body>
 <!--通用顶部导航-->
@@ -124,7 +135,7 @@
                             <th scope="col">标题</th>
                             <th scope="col">描述</th>
                             <th scope="col" style="min-width: 55px;">下载量</th>
-                            <th scope="col" style="min-width: 55px;">下载</th>
+                            <th scope="col" style="min-width: 55px;" class="operate-area">下载</th>
                         </tr>
                         </thead>
                         <tbody id="list" style="color: darkgray;">
@@ -320,11 +331,13 @@
                         "                                    <td>" + title + "</td>\n" +
                         "                                    <td>" + description + "</td>\n" +
                         "                                    <td>" + downloadCount + "</td>\n" +
-                        "    <td>\n" +
-                        "        <div style='color: #00ff58;' onclick=\"downloadModel(" + id + ")\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" fill=\"currentColor\" class=\"bi bi-download\" viewBox=\"0 0 16 16\">\n" +
-                        "  <path d=\"M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z\"/>\n" +
-                        "  <path d=\"M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z\"/>\n" +
-                        "</svg></div>\n" +
+                        "    <td class='operate-area'>\n" +
+                        "        <div style='color: #00ff58;' onclick=\"downloadModel(" + id + ")\">" +
+                                    "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" fill=\"currentColor\" class=\"bi bi-download\" viewBox=\"0 0 16 16\">\n" +
+                                    "  <path d=\"M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z\"/>\n" +
+                                    "  <path d=\"M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z\"/>\n" +
+                                    "</svg>" +
+                        "       </div>\n" +
                         "    </td>\n" +
                         "                                </tr>"
                 }
