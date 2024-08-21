@@ -82,5 +82,5 @@ jwt:
   tokenPrefix: "Bearer "      # token 前缀
   secret: "qwertyuiop1214156" # 私钥
   managerSecret: "qwertyuiop1214156" # 私钥
-  expireTime: 3600000 # token 的有效时间，单位是毫秒
+  expireTime: 259200000 # token 的有效时间，单位是毫秒
   expireManagerTime: 259200000 # token 的有效时间，单位是毫秒
