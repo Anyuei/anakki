@@ -7,6 +7,7 @@ import com.anakki.data.entity.AnSystemConfig;
 import com.anakki.data.entity.request.CreateSystemConfigRequest;
 import com.anakki.data.entity.request.ListManagerRequest;
 import com.anakki.data.entity.request.ListSystemConfigRequest;
+import com.anakki.data.entity.request.UpdateSystemConfigRequest;
 import com.anakki.data.entity.response.ListManagerResponse;
 import com.anakki.data.mapper.AnSystemConfigMapper;
 import com.anakki.data.service.AnSystemConfigService;
@@ -38,13 +39,19 @@ public class AnSystemConfigController {
 
         return ResponseDTO.succData(save);
     }
+    @ApiOperation(value = "修改系统设置")
+    @PostMapping("/update")
+    public ResponseDTO<Boolean> updateSystemConfig(@RequestBody UpdateSystemConfigRequest updateSystemConfigRequest) {
+        Boolean update = anSystemConfigService.update(updateSystemConfigRequest);
 
+        return ResponseDTO.succData(update);
+    }
 
     @ApiOperation(value = "批量删除系统设置")
     @DeleteMapping("/delete-batch")
-    public ResponseDTO<Boolean> listManager(@RequestBody IdListRequest idListRequest) {
-        Boolean save = anSystemConfigService.deleteSystemConfig(idListRequest);
+    public ResponseDTO<Boolean> deleteUpdateSystemConfig(@RequestBody IdListRequest idListRequest) {
+        Boolean delete = anSystemConfigService.deleteSystemConfig(idListRequest);
 
-        return ResponseDTO.succData(save);
+        return ResponseDTO.succData(delete);
     }
 }

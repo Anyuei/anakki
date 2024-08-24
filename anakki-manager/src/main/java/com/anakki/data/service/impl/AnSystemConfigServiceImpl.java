@@ -6,6 +6,7 @@ import com.anakki.data.entity.AnManager;
 import com.anakki.data.entity.AnSystemConfig;
 import com.anakki.data.entity.request.CreateSystemConfigRequest;
 import com.anakki.data.entity.request.ListSystemConfigRequest;
+import com.anakki.data.entity.request.UpdateSystemConfigRequest;
 import com.anakki.data.entity.response.ListManagerResponse;
 import com.anakki.data.mapper.AnSystemConfigMapper;
 import com.anakki.data.service.AnSystemConfigService;
@@ -71,6 +72,13 @@ public class AnSystemConfigServiceImpl extends ServiceImpl<AnSystemConfigMapper,
     @Override
     public Boolean deleteSystemConfig(IdListRequest idListRequest) {
         return removeByIds(idListRequest.getIdList());
+    }
+
+    @Override
+    public Boolean update(UpdateSystemConfigRequest updateSystemConfigRequest) {
+        AnSystemConfig anSystemConfig = new AnSystemConfig();
+        BeanUtils.copyProperties(updateSystemConfigRequest,anSystemConfig);
+        return updateById(anSystemConfig);
     }
 
 

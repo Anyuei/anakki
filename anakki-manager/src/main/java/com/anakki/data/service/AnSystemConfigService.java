@@ -6,6 +6,7 @@ import com.anakki.data.entity.AnSystemConfig;
 
 import com.anakki.data.entity.request.CreateSystemConfigRequest;
 import com.anakki.data.entity.request.ListSystemConfigRequest;
+import com.anakki.data.entity.request.UpdateSystemConfigRequest;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -28,4 +29,6 @@ public interface AnSystemConfigService extends IService<AnSystemConfig> {
     Boolean saveSystemConfig(CreateSystemConfigRequest createSystemConfigRequest);
 
     Boolean deleteSystemConfig(IdListRequest idListRequest);
+
+    Boolean update(UpdateSystemConfigRequest updateSystemConfigRequest);
 }

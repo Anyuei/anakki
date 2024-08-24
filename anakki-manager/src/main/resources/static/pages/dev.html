@@ -1,17 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dino Game</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="时光胶囊,Anakki的个人网站,摄影,博客,技术分享。">
+    <meta name="author" content="Anakki">
+    <title>Anakki-World</title>
+    <!-- Fonts -->
+    <!-- Theme CSS -->
+    <link type="text/css" href="../assets/css/theme.css" rel="stylesheet">
+    <!-- Demo CSS - No need to use these in your project -->
+    <link type="text/css" href="../assets/css/demo.css" rel="stylesheet">
     <style>
         body {
-            display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f4f4f4;
+            background-color: #575757;
             font-family: 'Arial', sans-serif;
         }
 
@@ -28,7 +34,7 @@
             position: absolute;
             bottom: 0;
             left: 50px;
-            width: 40px;
+            width: 20px;
             height: 40px;
             background-color: #333;
         }
@@ -39,13 +45,16 @@
             right: -40px;
             width: 20px;
             height: 40px;
-            background-color: #555;
+            background-image: url('path/to/cactus-image.png'); /* 用实际的图片路径替换 */
+            background-size: cover;
+            background-repeat: no-repeat;
             animation: moveCactus 2s linear infinite;
+            background-color: black;
         }
 
         @keyframes moveCactus {
             0% {
-                right: -20px;
+                right: -40px;
             }
             100% {
                 right: 100%;
@@ -71,25 +80,55 @@
             font-size: 20px;
             font-weight: bold;
         }
+
+        .dev-container {
+            display: grid;
+            place-items: center; /* 同时水平和垂直居中 */
+            height: 100vh; /* 使容器高度占满视口 */
+            margin: 0;
+        }
     </style>
 </head>
 <body>
-<!--通用顶部导航-->
+<!-- 通用顶部导航 -->
 <div id="header"></div>
-<div class="game-container">
-    <div id="dino" class="dino"></div>
-    <div id="cactus" class="cactus"></div>
-    <p id="score">Score: 0</p>
-</div>
+<main class="main">
+    <div class="dev-container">
+        <h1>此页面开发中，不妨玩玩游戏空格开始游戏</h1>
+        <div class="game-container">
+            <div id="dino" class="dino"></div>
+            <div id="cactus" class="cactus"></div>
+            <p id="score">得分: 0 </p>
+        </div>
+        <h5>(空格开始游戏)</h5>
+    </div>
+</main>
+<script src="../assets/vendor/jquery/jquery.min.js"></script>
+<script src="../assets/vendor/popper/popper.min.js"></script>
+<script src="../assets/js/bootstrap/bootstrap.min.js"></script>
+<!-- FontAwesome 5 -->
+<script src="../assets/vendor/fontawesome/js/fontawesome-all.min.js" defer></script>
+<!-- Page plugins -->
+<script src="../assets/vendor/bootstrap-select/js/bootstrap-select.min.js"></script>
+<script src="../assets/vendor/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>
+<script src="../assets/vendor/input-mask/input-mask.min.js"></script>
+<script src="../assets/vendor/nouislider/js/nouislider.min.js"></script>
+<script src="../assets/vendor/textarea-autosize/textarea-autosize.min.js"></script>
+<!-- Theme JS -->
+<script src="../assets/js/theme.js"></script>
 <script>
-        window.onload = function () {
-        $('#header').load("../pages/header.html", loadPersonDetail);
-        }
+    window.onload = function () {
+        $('#header').load("../pages/header.html");
+    }
+
     const dino = document.getElementById('dino');
     const cactus = document.getElementById('cactus');
     const scoreDisplay = document.getElementById('score');
     let score = 0;
     let isJumping = false;
+    let gameRunning = false;
+    let checkCollisionInterval;
+    let scoreInterval;
 
     function jump() {
         if (isJumping) return;
@@ -108,6 +147,30 @@
         }, 20);
     }
 
+    function startGame() {
+        score = 0;
+        scoreDisplay.textContent = `得分: ${score}`;
+
+        // 确保仙人掌动画和位置重置
+        cactus.style.animation = 'none'; // 移除当前动画
+        cactus.offsetHeight; // 触发重绘
+        cactus.style.animation = 'moveCactus 2s linear infinite'; // 重新设置动画
+        cactus.style.right = '-40px'; // 确保仙人掌从左侧外面开始
+
+        gameRunning = true;
+
+        checkCollisionInterval = setInterval(checkCollision, 10);
+        scoreInterval = setInterval(updateScore, 1000);
+    }
+
+    function endGame() {
+        gameRunning = false;
+        cactus.style.animationPlayState = 'paused'; // 游戏结束时暂停仙人掌动画
+        clearInterval(checkCollisionInterval);
+        clearInterval(scoreInterval);
+        alert(`游戏结束! 得分: ${score}`);
+    }
+
     function checkCollision() {
         const dinoRect = dino.getBoundingClientRect();
         const cactusRect = cactus.getBoundingClientRect();
@@ -116,25 +179,27 @@
             dinoRect.left < cactusRect.right &&
             dinoRect.bottom > cactusRect.top
         ) {
-            alert(`Game Over! Your score: ${score}`);
-            score = 0;
-            scoreDisplay.textContent = `Score: ${score}`;
+            endGame();
         }
     }
 
     function updateScore() {
-        score++;
-        scoreDisplay.textContent = `Score: ${score}`;
+        if (gameRunning) {
+            score++;
+            scoreDisplay.textContent = `得分: ${score}`;
+        }
     }
 
     document.addEventListener('keydown', (e) => {
         if (e.code === 'Space') {
-            jump();
+            if (!gameRunning) {
+                startGame();
+            } else {
+                jump();
+            }
         }
     });
 
-    setInterval(checkCollision, 10);
-    setInterval(updateScore, 1000);
 </script>
 </body>
 </html>
