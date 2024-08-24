@@ -74,9 +74,8 @@
             border-radius: 9px;
         }
         .chat-message.me .chat-message-content p{
-            background-color: rgba(178, 255, 117, 0.56);
-            text-align: right;
-            align-self: flex-end; /* 确保聊天气泡靠右 */
+            background-color: rgba(164, 255, 91, 0.67);
+            text-align: left;
             border-radius: 9px;
             color: black;
             font-weight: bold;
@@ -255,6 +254,9 @@
             box-shadow: none;
             transition: all 0.2s ease-in-out;
         }
+        .modal-header {
+            margin: 0.5rem;
+        }
     </style>
 
 </head>
@@ -267,15 +269,57 @@
         <div class="chat-section">
             <!-- Chat Header -->
             <div class="chat-header">
+                <!--左侧边栏-->
                 <h4 class="chat-title toggle-sidebar-button" id="toggleSidebarButton">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-grid" viewBox="0 0 16 16">
-                        <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z"/>
-                    </svg>
+                    <div class="btn-group">
+                        <div class="" type="button" data-toggle="dropdown" aria-expanded="false">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-grid" viewBox="0 0 16 16">
+                                <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z"/>
+                            </svg>
+                        </div>
+                        <div class="dropdown-menu">
+                            <button class="dropdown-item" type="button" data-toggle="tooltip" data-placement="left" title="有新消息时发送邮件">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope-at-fill" viewBox="0 0 16 16">
+                                    <path d="M2 2A2 2 0 0 0 .05 3.555L8 8.414l7.95-4.859A2 2 0 0 0 14 2H2Zm-2 9.8V4.698l5.803 3.546L0 11.801Zm6.761-2.97-6.57 4.026A2 2 0 0 0 2 14h6.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.606-3.446l-.367-.225L8 9.586l-1.239-.757ZM16 9.671V4.697l-5.803 3.546.338.208A4.482 4.482 0 0 1 12.5 8c1.414 0 2.675.652 3.5 1.671Z"/>
+                                    <path d="M15.834 12.244c0 1.168-.577 2.025-1.587 2.025-.503 0-1.002-.228-1.12-.648h-.043c-.118.416-.543.643-1.015.643-.77 0-1.259-.542-1.259-1.434v-.529c0-.844.481-1.4 1.26-1.4.585 0 .87.333.953.63h.03v-.568h.905v2.19c0 .272.18.42.411.42.315 0 .639-.415.639-1.39v-.118c0-1.277-.95-2.326-2.484-2.326h-.04c-1.582 0-2.64 1.067-2.64 2.724v.157c0 1.867 1.237 2.654 2.57 2.654h.045c.507 0 .935-.07 1.18-.18v.731c-.219.1-.643.175-1.237.175h-.044C10.438 16 9 14.82 9 12.646v-.214C9 10.36 10.421 9 12.485 9h.035c2.12 0 3.314 1.43 3.314 3.034v.21Zm-4.04.21v.227c0 .586.227.8.581.8.31 0 .564-.17.564-.743v-.367c0-.516-.275-.708-.572-.708-.346 0-.573.245-.573.791Z"/>
+                                </svg>
+                                邮箱
+                            </button>
+                            <button class="dropdown-item" type="button" data-toggle="tooltip" data-placement="left" title="有新消息时发送短信">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-telephone-forward-fill" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511zm10.761.135a.5.5 0 0 1 .708 0l2.5 2.5a.5.5 0 0 1 0 .708l-2.5 2.5a.5.5 0 0 1-.708-.708L14.293 4H9.5a.5.5 0 0 1 0-1h4.793l-1.647-1.646a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                                手机号
+                            </button>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-item disabled" type="button">房间</div>
+                            <button class="dropdown-item" type="button">测试2</button>
+                            <button class="dropdown-item" type="button">测试2</button>
+                            <button class="dropdown-item" type="button">测试2</button>
+                            <button class="dropdown-item" type="button">测试2</button>
+                            <button class="dropdown-item" type="button">测试2</button>
+                            <button class="dropdown-item" type="button">测试2</button>
+                            <div class="dropdown-divider"></div>
+                            <button class="dropdown-item" type="button" data-toggle="modal" data-target="#chatroomSettingMoal">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
+                                    <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+                                    <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
+                                </svg>
+                                设置
+                            </button>
+
+                        </div>
+                    </div>
                 </h4>
+
+<!--                暗黑模式-->
                 <button id="themeToggle" class="theme-toggle">🌕</button>
-                <div class="room-id-input">
+
+
+<!--                房号输入框-->
+                <div class="room-id-input"  data-toggle="tooltip" data-placement="left" title="输入房间号码">
                     <input class="form-control" type="text" id="roomInput" placeholder="请输入房间号" data-emojiable="true">
-                    <div class="btn input-group-append" id="setRoomIdButton" class="btn btn-default">
+                    <div class="btn input-group-append" id="setRoomIdButton" class="btn btn-default ">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
                             <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
@@ -297,6 +341,32 @@
         </div>
     </div>
 </main>
+
+
+<!-- 聊天框设置 Modal -->
+<div class="modal fade" id="chatroomSettingMoal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
+                        <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+                        <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
+                    </svg>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button></h5>
+            </div>
+            <div class="modal-body">
+                设置
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- 页面底部 -->
 <div id="footer"></div>
 <!-- Core -->
@@ -338,7 +408,7 @@
         if (isLoading) return;
 
         // 当滚动条滚动到顶部且还有更多数据时，进行数据加载
-        if (chatContent.scrollTop === 0 && hasMoreData) {
+        if (chatContent.scrollTop === 0) {
             // 设置为正在加载
             isLoading = true;
 
@@ -358,8 +428,7 @@
     document.addEventListener('DOMContentLoaded', function () {
 
         setRoomIdButton.addEventListener('click', function () {
-            roomId = roomInput.value.trim();
-            if (roomId) {
+            if (roomInput.value.trim()) {
                 fetchChatNewData();
             } else {
                 alert('请输入房间号');
@@ -385,9 +454,19 @@
         let lastTimestamp = null;
 
         messages.forEach(message => {
+            let isMyMessage=false;
+            // 如果是当前用户的消息，添加 'me' 类
+            if (message.nickname === localStorage.getItem("nickname")) { // `currentUserId` 是你需要定义的当前用户的 ID
+                isMyMessage=true;
+            }
+
             const messageElement = document.createElement('div');
             messageElement.className = 'chat-message';
 
+            // 如果是当前用户的消息，添加 'me' 类
+            if (isMyMessage) { // `currentUserId` 是你需要定义的当前用户的 ID
+                messageElement.classList.add('me');
+            }
             // 添加用户头像
             const avatarImg = document.createElement('img');
             avatarImg.src = message.avatar || 'https://via.placeholder.com/40?text=U';
@@ -397,11 +476,14 @@
             // 添加消息内容
             const contentDiv = document.createElement('div');
             contentDiv.className = 'chat-message-content';
-            // 添加消息人昵称
-            const nicknameDiv = document.createElement('div');
-            nicknameDiv.className = 'chat-message-nickname';
-            nicknameDiv.textContent = message.nickname || 'User';
-            contentDiv.appendChild(nicknameDiv);
+            // 如果是当前用户的消息，添加 'me' 类
+            if (!isMyMessage) { // `currentUserId` 是你需要定义的当前用户的 ID
+                // 添加消息人昵称
+                const nicknameDiv = document.createElement('div');
+                nicknameDiv.className = 'chat-message-nickname';
+                nicknameDiv.textContent = message.nickname || 'User';
+                contentDiv.appendChild(nicknameDiv);
+            }
 
             if (message.contentType === 'image') {
                 contentDiv.innerHTML = `<img src="${message.content}" alt="image">`;
@@ -415,10 +497,7 @@
 
             messageElement.appendChild(contentDiv);
 
-            // 如果是当前用户的消息，添加 'me' 类
-            if (message.nickname === localStorage.getItem("nickname")) { // `currentUserId` 是你需要定义的当前用户的 ID
-                messageElement.classList.add('me');
-            }
+
             // 处理时间戳
             const currentTimestamp = new Date(message.createTime);
             if (lastTimestamp != null && (lastTimestamp-currentTimestamp ) >= 5 * 60 * 1000) {
@@ -437,8 +516,19 @@
         let lastTimestamp = null;
 
         messages.forEach(message => {
+            let isMyMessage=false;
+            // 如果是当前用户的消息，添加 'me' 类
+            if (message.nickname === localStorage.getItem("nickname")) { // `currentUserId` 是你需要定义的当前用户的 ID
+                isMyMessage=true;
+            }
+
             const messageElement = document.createElement('div');
             messageElement.className = 'chat-message';
+
+            // 如果是当前用户的消息，添加 'me' 类
+            if (isMyMessage) { // `currentUserId` 是你需要定义的当前用户的 ID
+                messageElement.classList.add('me');
+            }
 
             // 添加用户头像
             const avatarImg = document.createElement('img');
@@ -449,11 +539,13 @@
             // 添加消息内容
             const contentDiv = document.createElement('div');
             contentDiv.className = 'chat-message-content';
-            // 添加消息人昵称
-            const nicknameDiv = document.createElement('div');
-            nicknameDiv.className = 'chat-message-nickname';
-            nicknameDiv.textContent = message.nickname || 'User';
-            contentDiv.appendChild(nicknameDiv);
+
+            if (!isMyMessage) {
+                const nicknameDiv = document.createElement('div');
+                nicknameDiv.className = 'chat-message-nickname';
+                nicknameDiv.textContent = message.nickname || 'User';
+                contentDiv.appendChild(nicknameDiv);
+            }
 
             if (message.contentType === 'image') {
                 contentDiv.innerHTML = `<img src="${message.content}" alt="image">`;
@@ -467,10 +559,7 @@
 
             messageElement.appendChild(contentDiv);
 
-            // 如果是当前用户的消息，添加 'me' 类
-            if (message.nickname === localStorage.getItem("nickname")) { // `currentUserId` 是你需要定义的当前用户的 ID
-                messageElement.classList.add('me');
-            }
+
             // 处理时间戳
             const currentTimestamp = new Date(message.createTime);
             if (lastTimestamp != null && (currentTimestamp-lastTimestamp) >= 5 * 60 * 1000) {
@@ -534,17 +623,15 @@
             .then(data => {
                 if (data.code === 200) {
                     if (data.data.length===0){
-                        // 没有更多数据了
-                        hasMoreData = false;
                         alert('没有更多数据');
+                    }else{
+                        if (!firstMessageId){
+                            firstMessageId=data.data[data.data.length-1].id
+                        }else if (data.data[data.data.length-1].id<firstMessageId){
+                            firstMessageId=data.data[data.data.length-1].id
+                        }
+                        displayChatMessages(data.data);
                     }
-                    if (!firstMessageId){
-                        firstMessageId=data.data[data.data.length-1].id
-                    }else if (data.data[data.data.length-1].id<firstMessageId){
-                        firstMessageId=data.data[data.data.length-1].id
-                    }
-                    displayChatMessages(data.data);
-                    //roomIdElement.textContent = roomId;
                 } else {
                     alert(data.message || '获取数据失败');
                 }
@@ -560,22 +647,32 @@
     // setInterval(fetchChatNewData, 5000);
 
     async function fetchChatNewData() {
-        if (!oldRoomId) {
-            oldRoomId = roomInput.value.trim();
-            roomId = roomInput.value.trim();
-        } else {
-            if (oldRoomId !== roomInput.value.trim()) {
-                currentMessageId = null;
-            }
-        }
-
+        let isFirst;
         // 禁用刷新按钮
         setRoomIdButton.disabled = true;
-        if (!roomId) {
+        if (!roomInput.value.trim()) {
             alert('请设置房间号');
             setRoomIdButton.disabled = false; // 确保在输入房间号后按钮不会禁用
             return;
         }
+        //第一次进入
+        if (!oldRoomId) {
+            oldRoomId = roomInput.value.trim();
+            roomId = roomInput.value.trim();
+        } else{
+            oldRoomId=roomId
+            roomId = roomInput.value.trim();
+            if (oldRoomId !== roomId) {
+                isFirst=true
+                currentMessageId = null;
+                document.getElementById('chatContent').innerHTML = '';
+            }
+        }
+
+
+
+
+
 
         const token = localStorage.getItem('user-token');
         if (!token) {
@@ -602,7 +699,7 @@
             if (data.code === 200) {
                 if (data.data.length > 0) {
                     currentMessageId = data.data[data.data.length - 1].id;
-                    if (!firstMessageId) {
+                    if (!firstMessageId||isFirst) {
                         firstMessageId = data.data[0].id;
                     } else if (data.data[0].id < firstMessageId) {
                         firstMessageId = data.data[0].id;
@@ -683,6 +780,8 @@
         // 让输入框滚动到视图中
         this.scrollIntoView({ behavior: 'smooth' });
     });
+
+
 </script>
 </body>
 </html>
