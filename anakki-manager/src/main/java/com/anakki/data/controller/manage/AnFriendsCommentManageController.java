@@ -2,6 +2,7 @@ package com.anakki.data.controller.manage;
 
 import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.bean.common.ResponseDTO;
+import com.anakki.data.bean.common.request.IdListRequest;
 import com.anakki.data.entity.AnFriendsComment;
 import com.anakki.data.entity.request.ListCommentsManageRequest;
 import com.anakki.data.entity.request.ListCommentsRequest;
@@ -38,6 +39,27 @@ public class AnFriendsCommentManageController {
     @PostMapping("/update-comments-state")
     public ResponseDTO<Boolean> updateCommentState(@Valid @RequestBody UpdateCommentStateRequest updateCommentStateRequest) {
         anFriendsCommentService.updateCommentState(updateCommentStateRequest);
+        return ResponseDTO.succData(true);
+    }
+
+    @ApiOperation(value = "删除评论")
+    @DeleteMapping("/delete-batch")
+    public ResponseDTO<Boolean> deleteCommentState(@Valid @RequestBody IdListRequest idListRequest) {
+        anFriendsCommentService.removeByIds(idListRequest.getIdList());
+        return ResponseDTO.succData(true);
+    }
+
+    @ApiOperation(value = "通过评论")
+    @PutMapping("/pass-batch")
+    public ResponseDTO<Boolean> passCommentState(@Valid @RequestBody IdListRequest idListRequest) {
+        anFriendsCommentService.operateBatch(idListRequest.getIdList(),"NORMAL");
+        return ResponseDTO.succData(true);
+    }
+
+    @ApiOperation(value = "关闭评论")
+    @PutMapping("/close-batch")
+    public ResponseDTO<Boolean> closeCommentState(@Valid @RequestBody IdListRequest idListRequest) {
+        anFriendsCommentService.operateBatch(idListRequest.getIdList(),"CLOSED");
         return ResponseDTO.succData(true);
     }
 }

@@ -158,4 +158,10 @@ public class SystemController {
 
         return ResponseDTO.succData(anPathStatisticLogService.getDailyVisitCounts(startDate, endDate));
     }
+
+    @ApiOperation(value = "主页背景")
+    @GetMapping("/main-cover")
+    public ResponseDTO<String> mainCover() {
+        return ResponseDTO.succData(anSystemConfigService.getStringConfigValue("MAIN_COVER"));
+    }
 }

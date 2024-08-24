@@ -6,6 +6,8 @@ import com.anakki.data.entity.request.*;
 import com.anakki.data.entity.response.AnFriendsCommentResponse;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务类
@@ -24,4 +26,6 @@ public interface AnFriendsCommentService extends IService<AnFriendsComment> {
     Boolean createComment(CreateCommentsRequest createCommentsRequest);
 
     void updateCommentState(UpdateCommentStateRequest updateCommentStateRequest);
+
+    void operateBatch(List<Long> idList,String status);
 }

@@ -22,7 +22,7 @@ import java.util.List;
 
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
  *
  * @author Anakki
@@ -33,30 +33,31 @@ public class AnFriendsCommentServiceImpl extends ServiceImpl<AnFriendsCommentMap
 
     @Autowired
     private AnUserService anUserService;
+
     @Override
-    public BasePageResult<AnFriendsCommentResponse> listComments(ListCommentsRequest listCommentsRequest){
-        IPage<AnFriendsComment>  anFriendsCommentPage= new Page<>(
+    public BasePageResult<AnFriendsCommentResponse> listComments(ListCommentsRequest listCommentsRequest) {
+        IPage<AnFriendsComment> anFriendsCommentPage = new Page<>(
                 listCommentsRequest.getCurrent(),
                 listCommentsRequest.getSize());
         String type = listCommentsRequest.getType();
         QueryWrapper<AnFriendsComment> anFriendsCommentQueryWrapper = new QueryWrapper<>();
-        anFriendsCommentQueryWrapper.eq("type",type);
-        anFriendsCommentQueryWrapper.eq("status","true");
+        anFriendsCommentQueryWrapper.eq("type", type);
+        anFriendsCommentQueryWrapper.eq("status", "NORMAL");
         anFriendsCommentQueryWrapper.ge(
-                null!=listCommentsRequest.getCreateTimeStart(),"create_time",listCommentsRequest.getCreateTimeStart());
+                null != listCommentsRequest.getCreateTimeStart(), "create_time", listCommentsRequest.getCreateTimeStart());
         anFriendsCommentQueryWrapper.le(
-                null!=listCommentsRequest.getCreateTimeEnd(),"create_time",listCommentsRequest.getCreateTimeEnd());
+                null != listCommentsRequest.getCreateTimeEnd(), "create_time", listCommentsRequest.getCreateTimeEnd());
         anFriendsCommentQueryWrapper.orderByDesc("create_time");
         IPage<AnFriendsComment> page = page(anFriendsCommentPage, anFriendsCommentQueryWrapper);
         List<AnFriendsComment> records = page.getRecords();
         List<AnFriendsCommentResponse> responses = new ArrayList<>();
         for (AnFriendsComment record : records) {
             AnFriendsCommentResponse anFriendsCommentResponse = new AnFriendsCommentResponse();
-            BeanUtils.copyProperties(record,anFriendsCommentResponse);
+            BeanUtils.copyProperties(record, anFriendsCommentResponse);
             Long userId = record.getUserId();
-            if (null!=userId){
+            if (null != userId) {
                 AnUser byId = anUserService.getById(userId);
-                if (null!=byId){
+                if (null != byId) {
                     Long exp = byId.getExp();
                     anFriendsCommentResponse.setExp(exp);
                 }
@@ -68,17 +69,17 @@ public class AnFriendsCommentServiceImpl extends ServiceImpl<AnFriendsCommentMap
 
 
     @Override
-    public BasePageResult<AnFriendsComment> listCommentsManage(ListCommentsManageRequest listCommentsManageRequest){
-        IPage<AnFriendsComment>  anFriendsCommentPage= new Page<>(
+    public BasePageResult<AnFriendsComment> listCommentsManage(ListCommentsManageRequest listCommentsManageRequest) {
+        IPage<AnFriendsComment> anFriendsCommentPage = new Page<>(
                 listCommentsManageRequest.getCurrent(),
                 listCommentsManageRequest.getSize());
         String type = listCommentsManageRequest.getType();
         QueryWrapper<AnFriendsComment> anFriendsCommentQueryWrapper = new QueryWrapper<>();
-        anFriendsCommentQueryWrapper.eq(null!=type,"type",type);
+        anFriendsCommentQueryWrapper.eq(null != type, "type", type);
         anFriendsCommentQueryWrapper.ge(
-                null!=listCommentsManageRequest.getCreateTimeStart(),"create_time",listCommentsManageRequest.getCreateTimeStart());
+                null != listCommentsManageRequest.getCreateTimeStart(), "create_time", listCommentsManageRequest.getCreateTimeStart());
         anFriendsCommentQueryWrapper.le(
-                null!=listCommentsManageRequest.getCreateTimeEnd(),"create_time",listCommentsManageRequest.getCreateTimeEnd());
+                null != listCommentsManageRequest.getCreateTimeEnd(), "create_time", listCommentsManageRequest.getCreateTimeEnd());
         anFriendsCommentQueryWrapper.orderByDesc("create_time");
         IPage<AnFriendsComment> page = page(anFriendsCommentPage, anFriendsCommentQueryWrapper);
         List<AnFriendsComment> records = page.getRecords();
@@ -88,19 +89,19 @@ public class AnFriendsCommentServiceImpl extends ServiceImpl<AnFriendsCommentMap
     @Override
     public Boolean createComment(CreateCommentsRequest createCommentsRequest) {
         AnFriendsComment anFriendsComment = new AnFriendsComment();
-        if (createCommentsRequest.getIsAnonymous()){
+        if (createCommentsRequest.getIsAnonymous()) {
             anFriendsComment.setNickname("匿名用户");
             anFriendsComment.setComment(createCommentsRequest.getComment());
-            anFriendsComment.setStatus("false");
-        }else{
+            anFriendsComment.setStatus("IN_REVIEW");
+        } else {
             String currentNickname = BaseContext.getCurrentNickname();
             AnUser byNickname = anUserService.getByNickname(currentNickname);
-            BeanUtils.copyProperties(createCommentsRequest,anFriendsComment);
+            BeanUtils.copyProperties(createCommentsRequest, anFriendsComment);
             anFriendsComment.setAvatar(byNickname.getAvatar());
             anFriendsComment.setNickname(currentNickname);
             anFriendsComment.setUserId(byNickname.getId());
             anFriendsComment.setUserName(byNickname.getUserName());
-            anFriendsComment.setStatus("false");
+            anFriendsComment.setStatus("IN_REVIEW");
         }
         return save(anFriendsComment);
     }
@@ -109,11 +110,22 @@ public class AnFriendsCommentServiceImpl extends ServiceImpl<AnFriendsCommentMap
     public void updateCommentState(UpdateCommentStateRequest updateCommentStateRequest) {
         String state = updateCommentStateRequest.getStatus();
 
-            updateCommentStateRequest.getCommentIdList().forEach(commentId->{
-                AnFriendsComment byId = getById(commentId);
-                byId.setStatus(state);
-                updateById(byId);
-            });
+        updateCommentStateRequest.getCommentIdList().forEach(commentId -> {
+            AnFriendsComment byId = getById(commentId);
+            byId.setStatus(state);
+            updateById(byId);
+        });
 
     }
+
+    @Override
+    public void operateBatch(List<Long> ids,String status) {
+        List<AnFriendsComment> anFriendsComments = listByIds(ids);
+
+        anFriendsComments.forEach(anFriendsComment -> {
+            anFriendsComment.setStatus(status);
+        });
+        updateBatchById(anFriendsComments);
+    }
+
 }

@@ -261,6 +261,12 @@
         .message-operate {
             background-color: rgba(0, 0, 0, 0.56);
         }
+
+        .spotlight {
+            height: 100vh; /* 使背景区域覆盖整个视口高度 */
+            background-size: cover;
+            background-position: center;
+        }
     </style>
 
 </head>
@@ -268,7 +274,7 @@
 <!--通用顶部导航-->
 <div id="header"></div>
 <main class="main">
-    <div class="bg-cover bg-size--cover" data-spotlight="fullscreen"
+    <div class="bg-cover bg-size--cover spotlight" data-spotlight="fullscreen"
          style="background-image: url('https://securex-1258150206.cos.ap-beijing.myqcloud.com/backend/DSC07694.jpg')">
         <div class="chat-section">
             <!-- Chat Header -->

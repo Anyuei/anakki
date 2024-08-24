@@ -39,7 +39,6 @@
         }
         .view-count {
             position: absolute;
-            bottom: 2px;
             right: 1px;
             background-color: rgba(0, 0, 0, 0);
             color: #fff;
@@ -326,8 +325,10 @@
 <!-- Theme JS -->
 <script src="../../assets/js/theme.js"></script>
 <script>
-    var current = 1; // 当前页数
-    var size = 10; // 每页数据量
+    let current = 1; // 当前页数
+    let videoCurrent = 1; // 当前页数
+    let imgCurrent = 1; // 当前页数
+    const size = 10; // 每页数据量
     const player = new Plyr('#player', {
         controls: ['play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
         settings: ['quality', 'speed', 'loop'],
@@ -449,7 +450,14 @@
                 document.getElementById(tag+"timeline").insertAdjacentHTML('beforeend', html);
 
                 // 更新当前页数
-                current++;
+                if (tag===""){
+                    current++;
+                }else if (tag==="video"){
+                    videoCurrent++;
+                }else if (tag==="img"){
+                    imgCurrent++;
+                }
+
 
                 // 如果没有更多数据，禁用按钮
                 if (response.data.data.length < size) {
@@ -467,25 +475,21 @@
         $('#footer').load("../../pages/footer.html");
 
         // 初始加载数据
-        loadData("");
+        ["", "video", "img"].forEach(type => loadData(type));
 
         // 绑定“加载更多”按钮的点击事件
-        document.getElementById("loadMoreBtn").addEventListener("click", loadData(""));
-        // 绑定“加载更多”按钮的点击事件
-        document.getElementById("videoloadMoreBtn").addEventListener("click", loadData("video"));
-        // 绑定“加载更多”按钮的点击事件
-        document.getElementById("imgloadMoreBtn").addEventListener("click", loadData("img"));
-// 为所有视频元素添加播放事件监听器
+        const bindLoadMoreEvent = (btnId, type) => {
+            document.getElementById(btnId).addEventListener("click", () => loadData(type));
+        };
+
+        bindLoadMoreEvent("loadMoreBtn", "");
+        bindLoadMoreEvent("videoloadMoreBtn", "video");
+        bindLoadMoreEvent("imgloadMoreBtn", "img");
+
+        // 为所有视频元素添加播放事件监听器
         document.querySelectorAll('video').forEach(video => {
             video.onplay = function() {
-                // 获取当前播放的视频元素
-                var currentVideo = this;
-
-                // 获取该视频元素的 id
-                var videoId = currentVideo.id;
-
-                // 输出 id 到控制台
-                console.log('播放的视频 ID:', videoId);
+                console.log('播放的视频 ID:', this.id);
 
                 // 您可以在这里进行其他操作，例如发送请求或记录信息
             };

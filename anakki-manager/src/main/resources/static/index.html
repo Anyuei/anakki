@@ -121,13 +121,17 @@
     .hidden {
         opacity: 0;
     }
+    .spotlight {
+        height: 100vh; /* 使背景区域覆盖整个视口高度 */
+        background-size: cover;
+        background-position: center;
+    }
 </style>
 <body>
 <!--通用顶部导航-->
 <div id="header"></div>
 <main class="main">
-    <section class="spotlight parallax bg-cover bg-size--cover" data-spotlight="fullscreen"
-             style="background-image: url('https://securex-1258150206.cos.ap-beijing.myqcloud.com/backend/DSC06473.jpg')">
+    <section class="spotlight parallax bg-cover bg-size--cover" data-spotlight="fullscreen">
         <div class="spotlight-holder pt-lg-xl py-lg-xl" style="min-height: 50rem;">
             <div class="container-fluid d-flex align-items-top no-padding">
                 <div class="col">
@@ -217,6 +221,33 @@
 <!-- Theme JS -->
 <script src="assets/js/theme.js"></script>
 <script>
+    async function setBackgroundImage() {
+        try {
+            // 从后端获取封面图片 URL
+            const response = await fetch('/base/system/main-cover');
+
+            if (!response.ok) {
+                throw new Error('网络响应不正常');
+            }
+
+            const data = await response.json();
+
+            // 假设 API 返回的数据格式为 { imageUrl: 'http://example.com/image.jpg' }
+            const imageUrl = data.data;
+
+            // 获取 section 元素
+            const section = document.querySelector('.spotlight');
+
+            // 更新背景图片
+            section.style.backgroundImage = `url('${imageUrl}')`;
+        } catch (error) {
+            console.error('获取封面图片失败:', error);
+        }
+    }
+
+    // 页面加载时设置背景图片
+    document.addEventListener('DOMContentLoaded', setBackgroundImage);
+
     let currentPage=1;
     let size=10;
     let loading = false;
