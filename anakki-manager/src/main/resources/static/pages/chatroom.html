@@ -81,12 +81,12 @@
             font-weight: bold;
         }
 
-        .chat-message.me .chat-message-content div{
-            background-color: rgba(178, 255, 117, 0);
-            text-align: right;
-            align-self: flex-end; /* 确保聊天气泡靠右 */
-            border-radius: 9px;
-        }
+        /*.chat-message.me .chat-message-content div{*/
+        /*    background-color: rgba(178, 255, 117, 0);*/
+        /*    text-align: right;*/
+        /*    align-self: flex-end; !* 确保聊天气泡靠右 *!*/
+        /*    border-radius: 9px;*/
+        /*}*/
         .chat-message.me img {
             order: 1; /* 确保头像在聊天气泡后面 */
             border-radius: 50%;
@@ -256,6 +256,10 @@
         }
         .modal-header {
             margin: 0.5rem;
+        }
+
+        .message-operate {
+            background-color: rgba(0, 0, 0, 0.56);
         }
     </style>
 
@@ -452,125 +456,121 @@
     });
     async function displayChatMessages(messages) {
         let lastTimestamp = null;
+        const chatContent = document.getElementById('chatContent');
 
         messages.forEach(message => {
-            let isMyMessage=false;
+            let isMyMessage = false;
             // 如果是当前用户的消息，添加 'me' 类
-            if (message.nickname === localStorage.getItem("nickname")) { // `currentUserId` 是你需要定义的当前用户的 ID
-                isMyMessage=true;
+            if (message.nickname === localStorage.getItem("nickname")) {
+                isMyMessage = true;
             }
 
-            const messageElement = document.createElement('div');
-            messageElement.className = 'chat-message';
+            // 生成消息的 HTML 字符串
+            let messageHTML = `
+            <div class="chat-message${isMyMessage ? ' me' : ''}">
+                <img src="${message.avatar || 'https://via.placeholder.com/40?text=U'}" alt="${message.nickname || 'User'}" />
+                <div class="chat-message-content">
 
-            // 如果是当前用户的消息，添加 'me' 类
-            if (isMyMessage) { // `currentUserId` 是你需要定义的当前用户的 ID
-                messageElement.classList.add('me');
+        `;
+            if (isMyMessage){
+                messageHTML += `<div className="dropup" data-toggle="dropdown" aria-expanded="false">`
             }
-            // 添加用户头像
-            const avatarImg = document.createElement('img');
-            avatarImg.src = message.avatar || 'https://via.placeholder.com/40?text=U';
-            avatarImg.alt = message.nickname || 'User';
-            messageElement.appendChild(avatarImg);
-
-            // 添加消息内容
-            const contentDiv = document.createElement('div');
-            contentDiv.className = 'chat-message-content';
-            // 如果是当前用户的消息，添加 'me' 类
-            if (!isMyMessage) { // `currentUserId` 是你需要定义的当前用户的 ID
-                // 添加消息人昵称
-                const nicknameDiv = document.createElement('div');
-                nicknameDiv.className = 'chat-message-nickname';
-                nicknameDiv.textContent = message.nickname || 'User';
-                contentDiv.appendChild(nicknameDiv);
+            // 如果是当前用户的消息，不添加昵称
+            if (!isMyMessage) {
+                messageHTML += `
+                <div class="chat-message-nickname">${message.nickname || 'User'}</div>
+            `;
             }
+            messageHTML += `<p>${message.content}</p>`;
 
-            if (message.contentType === 'image') {
-                contentDiv.innerHTML = `<img src="${message.content}" alt="image">`;
-            } else if (message.contentType === 'video') {
-                contentDiv.innerHTML = `<video controls><source src="${message.content}" type="video/mp4">您的浏览器不支持视频标签。</video>`;
-            } else {
-                const textP = document.createElement('p');
-                textP.textContent = message.content;
-                contentDiv.appendChild(textP);
+            if (isMyMessage) {
+                        messageHTML += `
+                            <div class="message-operate dropdown-menu" style="background-color: #c2c2c2;">
+                                <button class="dropdown-item" type="button" onclick="">撤回</button>
+                                <button class="dropdown-item" type="button">复制</button>
+                            </div>
+
+                    `;
             }
-
-            messageElement.appendChild(contentDiv);
-
-
+            messageHTML += `</div>
+                    </div>
+                    </div>`;
             // 处理时间戳
             const currentTimestamp = new Date(message.createTime);
-            if (lastTimestamp != null && (lastTimestamp-currentTimestamp ) >= 5 * 60 * 1000) {
-                const timestampDiv = document.createElement('div');
-                timestampDiv.className = 'chat-timestamp';
-                timestampDiv.textContent = formatTimestamp(currentTimestamp);
-
-                chatContent.prepend(timestampDiv);
+            if (lastTimestamp != null && (lastTimestamp - currentTimestamp) >= 5 * 60 * 1000) {
+                const timestampHTML = `
+                <div class="chat-timestamp">${formatTimestamp(currentTimestamp)}</div>
+            `;
+                // 创建时间戳的 DOM 节点并插入到 chatContent
+                const timestampNode = document.createRange().createContextualFragment(timestampHTML);
+                chatContent.prepend(timestampNode);
             }
-            lastTimestamp = currentTimestamp;
-            chatContent.prepend(messageElement);
-        });
 
+            // 创建消息的 DOM 节点并插入到 chatContent
+            const messageNode = document.createRange().createContextualFragment(messageHTML);
+            chatContent.prepend(messageNode);
+
+            lastTimestamp = currentTimestamp;
+        });
     }
     async function displayNewChatMessages(messages) {
         let lastTimestamp = null;
+        const chatContent = document.getElementById('chatContent');
 
         messages.forEach(message => {
-            let isMyMessage=false;
+            let isMyMessage = false;
             // 如果是当前用户的消息，添加 'me' 类
-            if (message.nickname === localStorage.getItem("nickname")) { // `currentUserId` 是你需要定义的当前用户的 ID
-                isMyMessage=true;
+            if (message.nickname === localStorage.getItem("nickname")) {
+                isMyMessage = true;
             }
 
-            const messageElement = document.createElement('div');
-            messageElement.className = 'chat-message';
+            // 生成消息的 HTML 字符串
+            let messageHTML = `
+            <div class="chat-message${isMyMessage ? ' me' : ''}">
+                <img src="${message.avatar || 'https://via.placeholder.com/40?text=U'}" alt="${message.nickname || 'User'}" />
+                <div class="chat-message-content">
 
-            // 如果是当前用户的消息，添加 'me' 类
-            if (isMyMessage) { // `currentUserId` 是你需要定义的当前用户的 ID
-                messageElement.classList.add('me');
+        `;
+            if (isMyMessage){
+                messageHTML += `<div className="dropup" data-toggle="dropdown" aria-expanded="false">`
             }
-
-            // 添加用户头像
-            const avatarImg = document.createElement('img');
-            avatarImg.src = message.avatar || 'https://via.placeholder.com/40?text=U';
-            avatarImg.alt = message.nickname || 'User';
-            messageElement.appendChild(avatarImg);
-
-            // 添加消息内容
-            const contentDiv = document.createElement('div');
-            contentDiv.className = 'chat-message-content';
-
+            // 如果是当前用户的消息，不添加昵称
             if (!isMyMessage) {
-                const nicknameDiv = document.createElement('div');
-                nicknameDiv.className = 'chat-message-nickname';
-                nicknameDiv.textContent = message.nickname || 'User';
-                contentDiv.appendChild(nicknameDiv);
+                messageHTML += `
+                <div class="chat-message-nickname">${message.nickname || 'User'}</div>
+            `;
             }
+            messageHTML += `<p>${message.content}</p>`;
 
-            if (message.contentType === 'image') {
-                contentDiv.innerHTML = `<img src="${message.content}" alt="image">`;
-            } else if (message.contentType === 'video') {
-                contentDiv.innerHTML = `<video controls><source src="${message.content}" type="video/mp4">您的浏览器不支持视频标签。</video>`;
-            } else {
-                const textP = document.createElement('p');
-                textP.textContent = message.content;
-                contentDiv.appendChild(textP);
+            if (isMyMessage) {
+                messageHTML += `
+                            <div class="message-operate dropdown-menu" style="background-color: #c2c2c2;">
+                                <button class="dropdown-item" type="button">撤回</button>
+                                <button class="dropdown-item" type="button">删除</button>
+                                <button class="dropdown-item" type="button">复制</button>
+                            </div>
+
+                    `;
             }
-
-            messageElement.appendChild(contentDiv);
-
-
+            messageHTML += `</div>
+                    </div>
+                    </div>`;
             // 处理时间戳
             const currentTimestamp = new Date(message.createTime);
             if (lastTimestamp != null && (currentTimestamp-lastTimestamp) >= 5 * 60 * 1000) {
-                const timestampDiv = document.createElement('div');
-                timestampDiv.className = 'chat-timestamp';
-                timestampDiv.textContent = formatTimestamp(currentTimestamp);
-
-                chatContent.appendChild(timestampDiv);
+                const timestampHTML = `
+                <div class="chat-timestamp">${formatTimestamp(currentTimestamp)}</div>
+            `;
+                // 创建时间戳的 DOM 节点并插入到 chatContent
+                const timestampNode = document.createRange().createContextualFragment(timestampHTML);
+                chatContent.appendChild(timestampNode);
             }
+
+            // 创建消息的 DOM 节点并插入到 chatContent
+            const messageNode = document.createRange().createContextualFragment(messageHTML);
+            chatContent.appendChild(messageNode);
+
             lastTimestamp = currentTimestamp;
-            chatContent.appendChild(messageElement);
         });
     }
     function formatTimestamp(timestamp) {
@@ -669,11 +669,6 @@
             }
         }
 
-
-
-
-
-
         const token = localStorage.getItem('user-token');
         if (!token) {
             alert('请登录');
@@ -705,6 +700,7 @@
                         firstMessageId = data.data[0].id;
                     }
                     await displayNewChatMessages(data.data);
+                    scrollToBottom();
                 }
             } else {
                 alert(data.message);
@@ -765,6 +761,7 @@
                         console.log('消息发送成功');
                         fetchChatNewData()
                         sendButton.disabled = false;
+                        scrollToBottom();
                     } else {
                         // 处理消息发送失败的逻辑
                         console.error('消息发送失败');
@@ -781,7 +778,11 @@
         this.scrollIntoView({ behavior: 'smooth' });
     });
 
-
+    // 函数用于滚动到聊天内容的底部
+    function scrollToBottom() {
+        const chatContent = document.getElementById('chatContent');
+        chatContent.scrollTop = chatContent.scrollHeight;
+    }
 </script>
 </body>
 </html>
