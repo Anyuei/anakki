@@ -1,18 +1,21 @@
 package com.anakki.data.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.entity.AnIpAddress;
+import com.anakki.data.entity.request.ListIpAddressRequest;
 import com.anakki.data.mapper.AnIpAddressMapper;
 import com.anakki.data.service.AnIpAddressService;
 import com.anakki.data.utils.IPUtils;
 import com.anakki.data.utils.common.HttpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 
@@ -27,6 +30,42 @@ import java.util.List;
 @Service
 @Slf4j
 public class AnIpAddressServiceImpl extends ServiceImpl<AnIpAddressMapper, AnIpAddress> implements AnIpAddressService {
+
+
+
+
+    @Override
+    public BasePageResult<AnIpAddress> listIpAddress(ListIpAddressRequest listIpAddressRequest) {
+        String ip = listIpAddressRequest.getIp();
+        String prov = listIpAddressRequest.getProv();
+        String city = listIpAddressRequest.getCity();
+        String state = listIpAddressRequest.getState();
+        String district = listIpAddressRequest.getDistrict();
+        String contentJson = listIpAddressRequest.getContentJson();
+        String country = listIpAddressRequest.getCountry();
+        LocalDateTime createTimeStart = listIpAddressRequest.getCreateTimeStart();
+        LocalDateTime createTimeEnd = listIpAddressRequest.getCreateTimeEnd();
+
+        IPage<AnIpAddress> anIpAddressIPage = new Page<>(
+                listIpAddressRequest.getCurrent(),
+                listIpAddressRequest.getSize());
+        QueryWrapper<AnIpAddress> anIpAddressQueryWrapper = new QueryWrapper<>();
+        anIpAddressQueryWrapper.eq(null != ip, "ip", ip);
+        anIpAddressQueryWrapper.like(null != prov, "prov", prov);
+        anIpAddressQueryWrapper.like(null != city, "city", city);
+        anIpAddressQueryWrapper.like(null != country, "country", country);
+        anIpAddressQueryWrapper.like(null!= contentJson,"content_json",contentJson);
+        anIpAddressQueryWrapper.like(null != state, "state", state);
+        anIpAddressQueryWrapper.like(null != district, "district", district);
+        anIpAddressQueryWrapper.ge(null != createTimeStart, "create_time", createTimeStart);
+        anIpAddressQueryWrapper.le(null != createTimeEnd, "create_time", createTimeEnd);
+        anIpAddressQueryWrapper.orderByDesc("create_time");
+        IPage<AnIpAddress> page = page(anIpAddressIPage, anIpAddressQueryWrapper);
+        return new BasePageResult<>(page.getRecords(), page.getTotal());
+
+    }
+
+
 
     @Override
     public synchronized AnIpAddress getAddressByIp(String ip) {

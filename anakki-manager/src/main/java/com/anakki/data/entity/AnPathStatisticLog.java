@@ -28,7 +28,7 @@ public class AnPathStatisticLog extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty("统计类型")
+    @ApiModelProperty("路径")
     @TableField("path")
     private String path;
 
@@ -36,7 +36,7 @@ public class AnPathStatisticLog extends BaseEntity implements Serializable {
     @TableField("client_ip")
     private String clientIp;
 
-    @ApiModelProperty("访问者地域信息")
+    @ApiModelProperty("国家")
     @TableField("country")
     private String country;
 

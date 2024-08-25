@@ -1,6 +1,9 @@
 package com.anakki.data.service;
 
+import com.anakki.data.bean.common.BasePageResult;
+import com.anakki.data.entity.AnIpAddress;
 import com.anakki.data.entity.AnPathStatisticLog;
+import com.anakki.data.entity.request.ListPathStatisticLogRequest;
 import com.anakki.data.entity.response.DailyVisitCountResponse;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -20,4 +23,6 @@ public interface AnPathStatisticLogService extends IService<AnPathStatisticLog> 
 
 
     List<DailyVisitCountResponse> getDailyVisitCounts(LocalDate startDate, LocalDate endDate);
+
+    BasePageResult<AnPathStatisticLog> listPathStatisticLog(ListPathStatisticLogRequest listIpAddressRequest);
 }
