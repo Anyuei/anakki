@@ -306,6 +306,7 @@ function loadPersonDetail() {
                     document.getElementById('breathing-light').style.display = 'inline-block';
                     localStorage.setItem("nickname",nickname);
                     localStorage.setItem("avatar",avatar);
+                    localStorage.setItem("isChatroomMailNotice",user.isChatroomMailNotice)
                 }else{
                     localStorage.removeItem('user-token')
                 }
@@ -331,48 +332,16 @@ function saveAvatar() {
     const xhr = new XMLHttpRequest();
     xhr.open("POST", "/api/anakki/user/upload-avatar", true); // Replace with your backend API endpoint
     xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4) {
-            const alertDiv = document.createElement("div");
-            alertDiv.classList.add("alert", "alert-warning", "alert-dismissible", "fade", "show", "fixed-top");
-            alertDiv.setAttribute("role", "alert");
             if (xhr.readyState === 4 && xhr.status === 200) {
                 const response = JSON.parse(xhr.responseText);
-                if (response.success === false) {
-                    const errorMessage = response.data;
-                    const alertDiv = document.createElement("div");
-                    alertDiv.classList.add("alert", "alert-warning", "alert-dismissible", "fade", "show", "fixed-top");
-                    alertDiv.setAttribute("role", "alert");
-                    alertDiv.innerHTML = `
-                <span class="alert-inner--icon"><i class="fas fa-exclamation"></i></span>
-                <span class="alert-inner--text"><strong>错误!</strong> ${errorMessage}</span>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            `;
-                    document.body.appendChild(alertDiv);
-                } else {
-                    const alertDiv = document.createElement("div");
-                    alertDiv.classList.add("alert", "alert-success", "alert-dismissible", "fade", "show", "fixed-top");
-                    alertDiv.setAttribute("role", "alert");
-                    alertDiv.innerHTML = `
-                <span class="alert-inner--icon"><i class="fas fa-exclamation"></i></span>
-                <span class="alert-inner--text"><strong>成功!</strong></span>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            `;
+                if (response.success === true) {
                     // Handle success response
                     console.log(response.data);
                     loadPersonDetail();
                 }
-            } else {
-                // Handle error response
-                const errorMessage = "Error: " + xhr.status + " " + xhr.statusText;
-                // ...
             }
             // Close the modal
             $('#avatarModal').modal('hide');
-        }
     };
     xhr.setRequestHeader('authorization', localStorage.getItem('user-token'));
     xhr.send(formData);

@@ -24,18 +24,17 @@ public class UserDetailResponse {
     private String avatar;
 
     @ApiModelProperty("用户昵称")
-    @TableField("nickname")
     private String nickname;
 
     @ApiModelProperty("用户生日")
-    @TableField("birthday")
     private LocalDate birthday;
 
     @ApiModelProperty("经验值")
-    @TableField("exp")
     private Long exp;
 
     @ApiModelProperty("登录天数")
-    @TableField("login_days")
     private Integer loginDays;
+
+    @ApiModelProperty("是否开启聊天室邮箱提醒")
+    private Boolean isChatroomMailNotice;
 }

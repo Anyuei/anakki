@@ -77,4 +77,8 @@ public class AnUser extends BaseEntity  implements Serializable {
     @TableField("telephone_last_update_time")
     private LocalDateTime telephoneLastUpdateTime;
 
+
+    @ApiModelProperty("是否开启聊天室邮箱提醒")
+    @TableField("is_chatroom_mail_notice")
+    private Boolean isChatroomMailNotice;
 }

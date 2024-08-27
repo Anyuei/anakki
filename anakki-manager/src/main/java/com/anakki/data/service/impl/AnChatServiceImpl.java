@@ -3,22 +3,28 @@ package com.anakki.data.service.impl;
 import com.anakki.data.bean.common.BaseContext;
 import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.entity.AnChat;
+import com.anakki.data.entity.AnChatRoom;
+import com.anakki.data.entity.AnChatRoomUser;
 import com.anakki.data.entity.AnUser;
-import com.anakki.data.entity.request.ReceiveFromRoomRequest;
-import com.anakki.data.entity.request.ReceiveNewFromRoomRequest;
-import com.anakki.data.entity.request.SendToRoomRequest;
+import com.anakki.data.entity.request.*;
 import com.anakki.data.mapper.AnChatMapper;
+import com.anakki.data.service.AnChatRoomService;
+import com.anakki.data.service.AnChatRoomUserService;
 import com.anakki.data.service.AnChatService;
 import com.anakki.data.service.AnUserService;
+import com.anakki.data.utils.common.EmailUtil;
+import com.anakki.data.utils.common.RedisUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -30,16 +36,29 @@ import java.util.List;
  */
 @Service
 public class AnChatServiceImpl extends ServiceImpl<AnChatMapper, AnChat> implements AnChatService {
-
+    @Autowired
+    private EmailUtil emailUtil;
     @Autowired
     private AnUserService anUserService;
+    @Autowired
+    private AnChatRoomService anChatRoomService;
+    @Autowired
+    private  AnChatRoomUserService anChatRoomUserService;
+
+
     @Override
     public Boolean sendToRoom(SendToRoomRequest sendToRoomRequest) {
+
+        AnChatRoom chatRoom = anChatRoomService.getById(sendToRoomRequest.getRoomId());
+        if (null==chatRoom){
+            throw new RuntimeException("聊天室不存在");
+        }
+        Long roomId = sendToRoomRequest.getRoomId();
         String currentNickname = BaseContext.getCurrentNickname();
         AnUser user = anUserService.getByNickname(currentNickname);
         AnChat anChat = new AnChat();
         anChat.setAvatar(user.getAvatar());
-        anChat.setRoomId(sendToRoomRequest.getRoomId());
+        anChat.setRoomId(roomId);
         anChat.setIsTemp(sendToRoomRequest.getIsTemp());
         anChat.setContent(sendToRoomRequest.getContent());
         anChat.setNickname(user.getNickname());
@@ -47,7 +66,33 @@ public class AnChatServiceImpl extends ServiceImpl<AnChatMapper, AnChat> impleme
         anChat.setStatus("NORMAL");
         anChat.setIsEncrypt(false);
         anChat.setUserId(user.getId());
-        return save(anChat);
+        boolean save = save(anChat);
+
+
+        if (save){
+            QueryWrapper<AnChatRoomUser> anChatRoomUserQueryWrapper = new QueryWrapper<>();
+            anChatRoomUserQueryWrapper.eq("room_id",roomId);
+            anChatRoomUserQueryWrapper.ne("user_id",user.getId());
+            List<AnChatRoomUser> roomUserList = anChatRoomUserService.list(anChatRoomUserQueryWrapper);
+
+            roomUserList.forEach(roomUser->{
+                AnUser roomUserInfo = anUserService.getById(roomUser.getUserId());
+                if (null!=roomUserInfo&&!roomUserInfo.getState().equals("ban")){
+                    if (null!=roomUserInfo.getMail()){
+                        boolean noticeEnable = RedisUtil.StringOps.setIfAbsent("UserChatroomNotice_"+roomUser.getId(), roomUserInfo.getMail(), 10, TimeUnit.MINUTES);
+                        if (noticeEnable){
+                            emailUtil.sendMessage(
+                                    roomUserInfo.getMail(),
+                                    "【ANAKKIX】您有一条新的消息来自聊天室:"+roomId,
+                                    "发送人:"+currentNickname+",本信息10分钟内不再提示");
+                        }
+                    }
+                }
+            });
+
+        }
+
+        return true;
     }
 
     @Override
@@ -91,5 +136,23 @@ public class AnChatServiceImpl extends ServiceImpl<AnChatMapper, AnChat> impleme
             return list;
         }
 
+    }
+
+    @Override
+    public Boolean userSetting(ChatRoomSettingRequest request) {
+        String currentNickname = BaseContext.getCurrentNickname();
+        AnUser user = anUserService.getByNickname(currentNickname);
+        if (!StringUtils.isEmpty(request.getEmail())){
+            user.setMail(request.getEmail());
+        }
+        return anUserService.updateById(user);
+    }
+
+    @Override
+    public Boolean userSettingMailNotice(TurnOnOffRequest request) {
+        String currentNickname = BaseContext.getCurrentNickname();
+        AnUser user = anUserService.getByNickname(currentNickname);
+        user.setIsChatroomMailNotice(request.getStatus());
+        return anUserService.updateById(user);
     }
 }

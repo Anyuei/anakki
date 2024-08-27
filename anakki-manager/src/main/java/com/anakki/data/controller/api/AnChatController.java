@@ -4,10 +4,7 @@ package com.anakki.data.controller.api;
 import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.bean.common.ResponseDTO;
 import com.anakki.data.entity.AnChat;
-import com.anakki.data.entity.request.CreateCommentsRequest;
-import com.anakki.data.entity.request.ReceiveFromRoomRequest;
-import com.anakki.data.entity.request.ReceiveNewFromRoomRequest;
-import com.anakki.data.entity.request.SendToRoomRequest;
+import com.anakki.data.entity.request.*;
 import com.anakki.data.service.AnChatService;
 import com.anakki.data.service.AnFriendsCommentService;
 import io.swagger.annotations.ApiOperation;
@@ -53,5 +50,17 @@ public class AnChatController {
         List<AnChat> anChatList = anChatService.receiveNewFromRoom(request);
         return ResponseDTO.succData(anChatList);
     }
+    @ApiOperation(value = "设置用户聊天室")
+    @PostMapping("/user-setting")
+    public ResponseDTO<Boolean> userSetting(@RequestBody ChatRoomSettingRequest request) {
+        Boolean save= anChatService.userSetting(request);
+        return ResponseDTO.succData(save);
+    }
 
+    @ApiOperation(value = "设置用户邮箱提醒开关")
+    @PostMapping("/user-setting-mail-notice")
+    public ResponseDTO<Boolean> userSettingMailNotice(@RequestBody TurnOnOffRequest request) {
+        Boolean save= anChatService.userSettingMailNotice(request);
+        return ResponseDTO.succData(save);
+    }
 }
