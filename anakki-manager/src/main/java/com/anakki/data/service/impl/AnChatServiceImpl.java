@@ -8,10 +8,7 @@ import com.anakki.data.entity.AnChatRoomUser;
 import com.anakki.data.entity.AnUser;
 import com.anakki.data.entity.request.*;
 import com.anakki.data.mapper.AnChatMapper;
-import com.anakki.data.service.AnChatRoomService;
-import com.anakki.data.service.AnChatRoomUserService;
-import com.anakki.data.service.AnChatService;
-import com.anakki.data.service.AnUserService;
+import com.anakki.data.service.*;
 import com.anakki.data.utils.common.EmailUtil;
 import com.anakki.data.utils.common.RedisUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -46,7 +43,8 @@ public class AnChatServiceImpl extends ServiceImpl<AnChatMapper, AnChat> impleme
     @Autowired
     private  AnChatRoomUserService anChatRoomUserService;
 
-
+    @Autowired
+    private AnSystemConfigService anSystemConfigService;
     @Override
     public Boolean sendToRoom(SendToRoomRequest sendToRoomRequest) {
 
@@ -69,14 +67,15 @@ public class AnChatServiceImpl extends ServiceImpl<AnChatMapper, AnChat> impleme
         anChat.setUserId(user.getId());
         boolean save = save(anChat);
         if (save){
-            sendEmailToUsers(roomId,user.getId());
+            sendEmailToUsers(roomId,user.getId(),sendToRoomRequest.getContent());
         }
 
         return true;
     }
 
     @Async
-    public void sendEmailToUsers(Long roomId,Long senderUserId){
+    public void sendEmailToUsers(Long roomId,Long senderUserId,final String content){
+        Long chatroomNoticeIntervalTime = anSystemConfigService.getNumberConfigValue("CHATROOM_NOTICE_INTERVAL_TIME");
         String currentNickname = BaseContext.getCurrentNickname();
         QueryWrapper<AnChatRoomUser> anChatRoomUserQueryWrapper = new QueryWrapper<>();
         anChatRoomUserQueryWrapper.eq("room_id",roomId);
@@ -87,12 +86,25 @@ public class AnChatServiceImpl extends ServiceImpl<AnChatMapper, AnChat> impleme
             AnUser roomUserInfo = anUserService.getById(roomUser.getUserId());
             if (null!=roomUserInfo&&!roomUserInfo.getState().equals("ban")){
                 if (null!=roomUserInfo.getMail()){
-                    boolean noticeEnable = RedisUtil.StringOps.setIfAbsent("UserChatroomNotice_"+roomUser.getId(), roomUserInfo.getMail(), 10, TimeUnit.MINUTES);
+                    boolean noticeEnable = RedisUtil
+                            .StringOps
+                            .setIfAbsent(
+                                    "UserChatroomNotice_"+roomId+"_"+roomUser.getId(),
+                                    roomUserInfo.getMail(),
+                                    chatroomNoticeIntervalTime,
+                                    TimeUnit.MINUTES);
                     if (noticeEnable){
+                        String sendMsg=content;
+                        if (content.length()>30){
+                            sendMsg=content.substring(0,30);
+                        }
                         emailUtil.sendMessage(
                                 roomUserInfo.getMail(),
-                                "【ANAKKIX】您有一条新的消息来自聊天室:"+roomId,
-                                "发送人:"+currentNickname+",本信息10分钟内不再提示");
+                                "【ANAKKI-X】您有一条新的消息来自聊天室:"+roomId,
+                                "发送人:"+currentNickname+"\n" +
+                                        "发送内容:"+sendMsg+"\n"+
+                                        "本信息"+chatroomNoticeIntervalTime+"分钟内不再提示\n"
+                        );
                     }
                 }
             }
