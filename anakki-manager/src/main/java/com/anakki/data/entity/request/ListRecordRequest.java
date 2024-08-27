@@ -4,6 +4,7 @@ import com.anakki.data.entity.common.Pagination;
 import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
@@ -33,15 +34,19 @@ public class ListRecordRequest extends Pagination {
     private String imgUrl;
 
     @ApiModelProperty("图片拍摄时间-开始")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime photoTimeStart;
 
     @ApiModelProperty("图片拍摄时间-结束")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime photoTimeEnd;
 
     @ApiModelProperty("图片上传时间-开始")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTimeStart;
 
     @ApiModelProperty("图片上传时间-结束")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTimeEnd;
 
     @ApiModelProperty("摄影师")

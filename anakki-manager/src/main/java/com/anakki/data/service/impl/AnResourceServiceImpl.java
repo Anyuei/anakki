@@ -186,7 +186,7 @@ public class AnResourceServiceImpl extends ServiceImpl<AnResourceMapper, AnResou
         anRecordQueryWrapper.like(null != type, "type", type);
         anRecordQueryWrapper.like(null != description, "description", description);
         anRecordQueryWrapper.like(null != title, "title", title);
-        anRecordQueryWrapper.eq("status", "COMMON");
+        //anRecordQueryWrapper.eq("status", "COMMON");
         anRecordQueryWrapper.eq(null != isPublic,"is_public", isPublic);
 
         anRecordQueryWrapper.orderByDesc("create_time");

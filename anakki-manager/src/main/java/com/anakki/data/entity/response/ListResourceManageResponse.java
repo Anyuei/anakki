@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
@@ -33,6 +34,7 @@ public class ListResourceManageResponse extends BaseEntity {
     private String fileUrl;
 
     @ApiModelProperty("过期时间")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime expirationDate;
 
     @ApiModelProperty("模型状态（正常：COMMON，失效 INVALID")
