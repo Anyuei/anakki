@@ -20,6 +20,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -67,32 +68,35 @@ public class AnChatServiceImpl extends ServiceImpl<AnChatMapper, AnChat> impleme
         anChat.setIsEncrypt(false);
         anChat.setUserId(user.getId());
         boolean save = save(anChat);
-
-
         if (save){
-            QueryWrapper<AnChatRoomUser> anChatRoomUserQueryWrapper = new QueryWrapper<>();
-            anChatRoomUserQueryWrapper.eq("room_id",roomId);
-            anChatRoomUserQueryWrapper.ne("user_id",user.getId());
-            List<AnChatRoomUser> roomUserList = anChatRoomUserService.list(anChatRoomUserQueryWrapper);
-
-            roomUserList.forEach(roomUser->{
-                AnUser roomUserInfo = anUserService.getById(roomUser.getUserId());
-                if (null!=roomUserInfo&&!roomUserInfo.getState().equals("ban")){
-                    if (null!=roomUserInfo.getMail()){
-                        boolean noticeEnable = RedisUtil.StringOps.setIfAbsent("UserChatroomNotice_"+roomUser.getId(), roomUserInfo.getMail(), 10, TimeUnit.MINUTES);
-                        if (noticeEnable){
-                            emailUtil.sendMessage(
-                                    roomUserInfo.getMail(),
-                                    "【ANAKKIX】您有一条新的消息来自聊天室:"+roomId,
-                                    "发送人:"+currentNickname+",本信息10分钟内不再提示");
-                        }
-                    }
-                }
-            });
-
+            sendEmailToUsers(roomId,user.getId());
         }
 
         return true;
+    }
+
+    @Async
+    public void sendEmailToUsers(Long roomId,Long senderUserId){
+        String currentNickname = BaseContext.getCurrentNickname();
+        QueryWrapper<AnChatRoomUser> anChatRoomUserQueryWrapper = new QueryWrapper<>();
+        anChatRoomUserQueryWrapper.eq("room_id",roomId);
+        anChatRoomUserQueryWrapper.ne("user_id",senderUserId);
+        List<AnChatRoomUser> roomUserList = anChatRoomUserService.list(anChatRoomUserQueryWrapper);
+
+        roomUserList.forEach(roomUser->{
+            AnUser roomUserInfo = anUserService.getById(roomUser.getUserId());
+            if (null!=roomUserInfo&&!roomUserInfo.getState().equals("ban")){
+                if (null!=roomUserInfo.getMail()){
+                    boolean noticeEnable = RedisUtil.StringOps.setIfAbsent("UserChatroomNotice_"+roomUser.getId(), roomUserInfo.getMail(), 10, TimeUnit.MINUTES);
+                    if (noticeEnable){
+                        emailUtil.sendMessage(
+                                roomUserInfo.getMail(),
+                                "【ANAKKIX】您有一条新的消息来自聊天室:"+roomId,
+                                "发送人:"+currentNickname+",本信息10分钟内不再提示");
+                    }
+                }
+            }
+        });
     }
 
     @Override
