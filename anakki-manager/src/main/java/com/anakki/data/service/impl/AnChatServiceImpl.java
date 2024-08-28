@@ -47,14 +47,18 @@ public class AnChatServiceImpl extends ServiceImpl<AnChatMapper, AnChat> impleme
     private AnSystemConfigService anSystemConfigService;
     @Override
     public Boolean sendToRoom(SendToRoomRequest sendToRoomRequest) {
-
-        AnChatRoom chatRoom = anChatRoomService.getById(sendToRoomRequest.getRoomId());
+        String currentNickname = BaseContext.getCurrentNickname();
+        AnUser user = anUserService.getByNickname(currentNickname);
+        Long userId = user.getId();
+        Long roomId = sendToRoomRequest.getRoomId();
+        AnChatRoom chatRoom = anChatRoomService.getById(roomId);
         if (null==chatRoom){
             throw new RuntimeException("聊天室不存在");
         }
-        Long roomId = sendToRoomRequest.getRoomId();
-        String currentNickname = BaseContext.getCurrentNickname();
-        AnUser user = anUserService.getByNickname(currentNickname);
+        if (!anChatRoomUserService.isRoomUser(userId,roomId)) {
+            throw new RuntimeException("请先进入聊天室");
+        }
+
         AnChat anChat = new AnChat();
         anChat.setAvatar(user.getAvatar());
         anChat.setRoomId(roomId);
@@ -84,7 +88,7 @@ public class AnChatServiceImpl extends ServiceImpl<AnChatMapper, AnChat> impleme
 
         roomUserList.forEach(roomUser->{
             AnUser roomUserInfo = anUserService.getById(roomUser.getUserId());
-            if (null!=roomUserInfo&&!roomUserInfo.getState().equals("ban")){
+            if (null!=roomUserInfo&&!roomUserInfo.getState().equals("ban")&&roomUserInfo.getIsChatroomMailNotice()){
                 if (null!=roomUserInfo.getMail()){
                     boolean noticeEnable = RedisUtil
                             .StringOps
@@ -114,8 +118,17 @@ public class AnChatServiceImpl extends ServiceImpl<AnChatMapper, AnChat> impleme
     @Override
     public List<AnChat> receiveFromRoom(ReceiveFromRoomRequest request) {
         String currentNickname = BaseContext.getCurrentNickname();
-        AnUser user = anUserService.getByNickname(currentNickname);
         Long roomId = request.getRoomId();
+        AnUser byNickname = anUserService.getByNickname(currentNickname);
+        if (null==byNickname){
+            throw new RuntimeException("用户不存在！");
+        }
+
+        if (!anChatRoomUserService.isRoomUser(roomId,byNickname.getId())) {
+            throw new RuntimeException("请先进入聊天室");
+        }
+
+
         Long firstIndex = request.getFirstIndex();
         QueryWrapper<AnChat> anChatQueryWrapper = new QueryWrapper<>();
         anChatQueryWrapper.eq("room_id", roomId);
@@ -130,10 +143,17 @@ public class AnChatServiceImpl extends ServiceImpl<AnChatMapper, AnChat> impleme
     @Override
     public List<AnChat> receiveNewFromRoom(ReceiveNewFromRoomRequest request) {
         String currentNickname = BaseContext.getCurrentNickname();
-
+        AnUser byNickname = anUserService.getByNickname(currentNickname);
+        if (null==byNickname){
+            throw new RuntimeException("用户不存在！");
+        }
         Long roomId = request.getRoomId();
-        Long currentIndex = request.getCurrentIndex();
 
+        if (!anChatRoomUserService.isRoomUser(byNickname.getId(),roomId)) {
+            throw new RuntimeException("请先进入聊天室");
+        }
+
+        Long currentIndex = request.getCurrentIndex();
         QueryWrapper<AnChat> anChatQueryWrapper = new QueryWrapper<>();
         anChatQueryWrapper.eq("room_id", roomId);
         anChatQueryWrapper.gt(null!=currentIndex,"id",currentIndex);

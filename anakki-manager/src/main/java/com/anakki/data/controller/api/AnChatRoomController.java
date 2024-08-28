@@ -10,11 +10,7 @@ import com.anakki.data.entity.request.ReceiveFromRoomRequest;
 import com.anakki.data.service.AnChatRoomService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -37,4 +33,12 @@ public class AnChatRoomController {
         BasePageResult<AnChatRoom> anChatRoomList = anChatRoomService.listRoom(request);
         return ResponseDTO.succData(anChatRoomList);
     }
+
+    @ApiOperation(value = "获取聊天室详情")
+    @PostMapping("/info/{roomId}")
+    public ResponseDTO<AnChatRoom> listRoom(@PathVariable("roomId")Long roomId) {
+        AnChatRoom room = anChatRoomService.getById(roomId);
+        return ResponseDTO.succData(room);
+    }
+
 }

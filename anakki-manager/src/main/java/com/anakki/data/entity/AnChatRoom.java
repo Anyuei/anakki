@@ -34,7 +34,7 @@ public class AnChatRoom extends BaseEntity implements Serializable {
     @TableField("avatar")
     private String avatar;
 
-    @ApiModelProperty("用户id")
+    @ApiModelProperty("房主id")
     @TableField("room_master_id")
     private Long roomMasterId;
 

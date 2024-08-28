@@ -316,13 +316,19 @@
 <!--                房号输入框-->
                 <div class="room-id-input"  data-toggle="tooltip" data-placement="left" title="输入房间号码">
                     <input class="form-control" type="text" id="roomInput" placeholder="请输入房间号" data-emojiable="true">
-                    <div class="btn input-group-append" id="setRoomIdButton" class="btn btn-default ">
+                    <div class="btn input-group-append" id="setRoomIdButton">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
                             <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
                         </svg>
                     </div>
                 </div>
+                <div class="" type="button" data-toggle="modal" data-target="#chatroomInfoModal" style="margin-right: 0.2rem">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                        <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+                    </svg>
+                </div>
+
             </div>
 
             <!-- Chat Body -->
@@ -364,13 +370,6 @@
 <!--                        </svg>-->
 <!--                        手机号-->
 <!--                    </button>-->
-                    <button class="dropdown-item" type="button" data-toggle="tooltip" data-placement="left" title="有新消息时发送邮件">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope-at-fill" viewBox="0 0 16 16">
-                            <path d="M2 2A2 2 0 0 0 .05 3.555L8 8.414l7.95-4.859A2 2 0 0 0 14 2H2Zm-2 9.8V4.698l5.803 3.546L0 11.801Zm6.761-2.97-6.57 4.026A2 2 0 0 0 2 14h6.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.606-3.446l-.367-.225L8 9.586l-1.239-.757ZM16 9.671V4.697l-5.803 3.546.338.208A4.482 4.482 0 0 1 12.5 8c1.414 0 2.675.652 3.5 1.671Z"/>
-                            <path d="M15.834 12.244c0 1.168-.577 2.025-1.587 2.025-.503 0-1.002-.228-1.12-.648h-.043c-.118.416-.543.643-1.015.643-.77 0-1.259-.542-1.259-1.434v-.529c0-.844.481-1.4 1.26-1.4.585 0 .87.333.953.63h.03v-.568h.905v2.19c0 .272.18.42.411.42.315 0 .639-.415.639-1.39v-.118c0-1.277-.95-2.326-2.484-2.326h-.04c-1.582 0-2.64 1.067-2.64 2.724v.157c0 1.867 1.237 2.654 2.57 2.654h.045c.507 0 .935-.07 1.18-.18v.731c-.219.1-.643.175-1.237.175h-.044C10.438 16 9 14.82 9 12.646v-.214C9 10.36 10.421 9 12.485 9h.035c2.12 0 3.314 1.43 3.314 3.034v.21Zm-4.04.21v.227c0 .586.227.8.581.8.31 0 .564-.17.564-.743v-.367c0-.516-.275-.708-.572-.708-.346 0-.573.245-.573.791Z"/>
-                        </svg>
-                        邮箱
-                    </button>
                     <div class="form-group">
                         <input type="email" class="form-control" id="emailInput" placeholder="请输入邮箱地址">
                     </div>
@@ -383,6 +382,28 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
                 <button type="button" class="btn btn-primary" onclick="saveChatRoomSetting()">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 聊天框设置 Modal -->
+<div class="modal fade" id="chatroomInfoModal" tabindex="-1" aria-labelledby="chatroomInfoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="chatroomInfoModalLabel">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
+                        <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+                        <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
+                    </svg>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </h5>
+            </div>
+            <div class="modal-body" id="currentChatroomInfo">
+
             </div>
         </div>
     </div>
@@ -460,6 +481,51 @@
         emailNoticeSwitch.addEventListener('change', function () {
             saveMailNoticeSetting(emailNoticeSwitch.checked)
         });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // 当模态框显示时触发
+        $('#chatroomInfoModal').on('show.bs.modal', function (event) {
+            var roomId = getRoomId(); // 获取当前roomId的逻辑
+
+            // 发送请求获取聊天室信息
+            fetch(`/api/chatroom/info/${roomId}`)
+                .then(response => response.json())
+                .then(data => {
+                    // 构建显示的HTML内容
+                    // 将构建的HTML插入到模态框中
+                    document.getElementById('currentChatroomInfo').innerHTML = `
+                    <p><strong>房间名称:</strong> ${data.roomName}</p>
+                    <p><strong>房间类型:</strong> ${data.roomType}</p>
+                    <p><strong>房主ID:</strong> ${data.roomMasterId}</p>
+                    <p><strong>介绍:</strong> ${data.description}</p>
+                    <p><strong>是否临时消息:</strong> ${data.isTemp ? '是' : '否'}</p>
+                    <p><strong>是否加密:</strong> ${data.isEncrypt ? '是' : '否'}</p>
+                    <p><strong>是否公开可搜索:</strong> ${data.isPublicForSearch ? '是' : '否'}</p>
+                    <p><strong>进入类型:</strong> ${getEnterTypeLabel(data.enterType)}</p>
+                    <p><strong>头像:</strong><br><img src="${data.avatar}" alt="头像" style="max-width: 100px;"></p>
+                `;
+                })
+                .catch(error => console.error('获取聊天室信息失败:', error));
+        });
+
+        // 根据enterType值返回对应的文字描述
+        function getEnterTypeLabel(type) {
+            switch(type) {
+                case 1: return '自由进入';
+                case 2: return '密码进入';
+                case 3: return '申请进入';
+                case 4: return '邀请进入';
+                default: return '未知类型';
+            }
+        }
+
+        // 获取当前roomId的函数，可以从全局变量、URL或者其他地方获取
+        function getRoomId() {
+            // 示例：从URL中获取roomId参数
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('roomId');
+        }
     });
     function saveChatRoomSetting() {
         let token = localStorage.getItem('user-token');
@@ -793,6 +859,7 @@
                     await displayNewChatMessages(data.data);
                     scrollToBottom();
                 }
+                setRoomIdToPath(roomId);
             } else {
                 alert(data.message);
             }
@@ -803,7 +870,11 @@
             setRoomIdButton.disabled = false;
         }
     }
-
+    function setRoomIdToPath(roomId) {
+        const url = new URL(window.location);
+        url.searchParams.set('roomId', roomId);
+        window.history.pushState({}, '', url);
+    }
 
     window.onload = function () {
         $('#header').load("../pages/header.html", loadPersonDetail);
@@ -815,8 +886,10 @@
         sendButton.addEventListener('click', function () {
             // 获取输入框的消息内容
             const messageContent = messageInput.value;
-
-            if (messageContent.trim() === '') {
+            if (!roomId){
+                alert('请输入房号');
+            }
+            if (!messageContent||messageContent.trim() === '') {
                 alert('请输入消息内容');
                 return;
             }

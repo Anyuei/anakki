@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -32,27 +33,27 @@ public class AnChatController {
     private AnChatService anChatService;
     @ApiOperation(value = "发送消息到聊天室")
     @PostMapping("/send-to-room")
-    public ResponseDTO<Boolean> sendToRoom(@RequestBody SendToRoomRequest sendToRoomRequest) {
+    public ResponseDTO<Boolean> sendToRoom(@Valid @RequestBody SendToRoomRequest sendToRoomRequest) {
         Boolean ok = anChatService.sendToRoom(sendToRoomRequest);
         return ResponseDTO.succData(ok);
     }
 
     @ApiOperation(value = "获取消息从聊天室")
     @PostMapping("/receive-from-room")
-    public ResponseDTO<List<AnChat>> receiveFromRoom(@RequestBody ReceiveFromRoomRequest request) {
+    public ResponseDTO<List<AnChat>> receiveFromRoom(@Valid @RequestBody ReceiveFromRoomRequest request) {
         List<AnChat> anChatList = anChatService.receiveFromRoom(request);
         return ResponseDTO.succData(anChatList);
     }
 
     @ApiOperation(value = "获取新消息从聊天室")
     @PostMapping("/receive-new-from-room")
-    public ResponseDTO<List<AnChat>> receiveNewFromRoom(@RequestBody ReceiveNewFromRoomRequest request) {
+    public ResponseDTO<List<AnChat>> receiveNewFromRoom(@Valid @RequestBody ReceiveNewFromRoomRequest request) {
         List<AnChat> anChatList = anChatService.receiveNewFromRoom(request);
         return ResponseDTO.succData(anChatList);
     }
     @ApiOperation(value = "设置用户聊天室")
     @PostMapping("/user-setting")
-    public ResponseDTO<Boolean> userSetting(@RequestBody ChatRoomSettingRequest request) {
+    public ResponseDTO<Boolean> userSetting(@Valid @RequestBody ChatRoomSettingRequest request) {
         Boolean save= anChatService.userSetting(request);
         return ResponseDTO.succData(save);
     }

@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface AnChatRoomUserService extends IService<AnChatRoomUser> {
 
+    Boolean isRoomUser(Long userId, Long roomId);
 }

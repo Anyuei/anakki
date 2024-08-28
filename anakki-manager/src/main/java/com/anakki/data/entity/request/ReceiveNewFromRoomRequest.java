@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 public class ReceiveNewFromRoomRequest{
 
     @ApiModelProperty("房间id")
-    @NotNull
+    @NotNull(message = "房间id为空")
     private Long roomId;
 
     @ApiModelProperty("客户端最新消息id")
