@@ -35,8 +35,11 @@ public class AnChatRoomController {
     }
 
     @ApiOperation(value = "获取聊天室详情")
-    @PostMapping("/info/{roomId}")
-    public ResponseDTO<AnChatRoom> listRoom(@PathVariable("roomId")Long roomId) {
+    @GetMapping("/info")
+    public ResponseDTO<AnChatRoom> info(Long roomId) {
+        if (null==roomId){
+            throw new RuntimeException("请输入房间号");
+        }
         AnChatRoom room = anChatRoomService.getById(roomId);
         return ResponseDTO.succData(room);
     }
