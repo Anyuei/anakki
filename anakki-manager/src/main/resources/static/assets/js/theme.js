@@ -3,7 +3,7 @@
 $(window).on("load", function () {
 
 
-}),
+})
     function userDetail() {
 
     }

@@ -161,7 +161,7 @@ public class SystemController {
 
     @ApiOperation(value = "主页背景")
     @GetMapping("/main-cover")
-    public ResponseDTO<String> mainCover() {
-        return ResponseDTO.succData(anSystemConfigService.getStringConfigValue("MAIN_COVER"));
+    public ResponseDTO<String> mainCover(String page) {
+        return ResponseDTO.succData(anSystemConfigService.getStringConfigValue(page));
     }
 }

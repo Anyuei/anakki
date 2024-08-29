@@ -3,63 +3,576 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description"
-          content="时光胶囊,Anakki的个人网站,摄影,博客,技术分享。                             ">
+    <meta name="description" content="时光胶囊,Anakki的个人网站,摄影,博客,技术分享。">
     <meta name="author" content="Anakki">
     <title>Anakki-World</title>
-    <!-- Fonts -->
-    <!-- Theme CSS -->
-    <link type="text/css" href="../assets/css/theme.css" rel="stylesheet">
-    <!-- Demo CSS - No need to use these in your project -->
-    <link type="text/css" href="../assets/css/demo.css" rel="stylesheet">
-    <meta charset="utf-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <meta
-            content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"
-            name="viewport"
-    />
+    <link type="text/css" href="../../assets/css/theme.css" rel="stylesheet">
+    <link type="text/css" href="../../assets/css/demo.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.css" />
     <style>
-        .bg-tertiary {
-            background-color: #503662 !important;
+        body {
+            color: #aeaeae;
+            background-color: #000000b8;
+        }
+
+        .image-item {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin: 0.2rem;
+        }
+
+        .image-spacex-list {
+            border-radius: 1rem;
+            cursor: pointer;
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+        }
+        /* 可选：设置在视频上悬停时的效果 */
+        .image-spacex-list:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            transform: scale(1.02);
+            transition: all 0.3s ease;
+        }
+        .view-count {
+            position: absolute;
+            right: 1px;
+            background-color: rgba(0, 0, 0, 0);
+            color: #fff;
+            padding: 0.3rem 0.5rem;
+            border-radius: 0.8rem;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+        }
+        .view-count svg {
+            width: 20px;
+            height: 20px;
+        }
+        /*别删*/
+        .modal-spacex {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.72);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content-my {
+            position: relative;
+            background-color: rgba(255, 255, 255, 0);
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+        .modal-content-my img, .modal-content-my video {
+            border-radius: 1rem;
+            max-width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+        }
+
+
+        .modal-header-my {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            z-index: 1; /* 确保关闭按钮在其他内容之上 */
+        }
+
+        .modal-header-my i {
+            font-size: 24px;
+            color: #fff;
+        }
+
+        .heart-icons {
+            position: absolute;
+            left: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0);
+            border-radius: 4px;
+            padding: 5px;
+            z-index: 1;
+        }
+
+        .heart-icon {
+            cursor: pointer;
+            color: #fff;
+            background: rgba(255, 255, 255, 0);
+            border-radius: 50%;
+        }
+
+        .heart-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .timeline {
+            position: relative;
+            margin: 0 auto;
+            width: 100%;
+            max-width: 880px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 100%;
+            background-color: #aeaeae;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin: 20px 20px;
+            width: calc(100% - 2rem);
+            text-align: left;
+        }
+
+        .timeline-item .image-grid {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(33%, 1fr));
+            gap: 0.2rem;
+        }
+
+        .timeline-item .image-grid img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .timeline-header {
+            font-size: 1.5rem;
+            color: #ddd;
+        }
+
+        .timeline-description {
+            font-size: 0.8rem;
+            color: #ddd;
+        }
+
+        .load-more {
+            display: flex;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+
+        .load-more button {
+            background-color: rgba(189, 189, 189, 0);
+            color: #ffffffb8;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .load-more button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+        .video-spacex-list {
+            width: 100%;
+            height: auto;
+            cursor: pointer;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+        }
+
+        /* 可选：设置在视频上悬停时的效果 */
+        .video-spacex-list:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            transform: scale(1.02);
+            transition: all 0.3s ease;
+        }
+
+        /* 为视频控件添加样式 */
+        .video-spacex-list::-webkit-media-controls {
+            opacity: 0.9; /* 控件半透明效果 */
+        }
+
+        .video-spacex-list:focus {
+            outline: none; /* 去除点击时的边框 */
+        }
+        .nav-tabs {
+            border-bottom: .0625rem solid #dee2e600;
+        }
+        .nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+            color: #fff;
+            background-color: #fff0;
+            border-color: #dee2e6 #dee2e6 #fff0;
+        }
+        .nav-pills .nav-link {
+            padding: 1rem 1rem;
+            border: 1px solid rgba(222, 226, 230, 0);
+            border-radius: 0;
+            color: #98a4ab;
+            font-weight: 500;
+            width: 100%;
+            background-color: #ffe4c400;
+        }
+        .media-nav-item {
+            width: 33%;
+        }
+        .nav-header{
+            position: relative;
+            margin: 0 auto;
+            width: 100%;
+            max-width: 880px;
         }
     </style>
-    <script src="../assets/js/ckeditor5-41.4.2-ij2a3vhv6e7y/build/translations/zh-cn.js"></script>
-    <script src="../assets/js/ckeditor5-41.4.2-ij2a3vhv6e7y/build/ckeditor.js"></script>
 </head>
-<style>
-
-</style>
-<!--通用顶部导航-->
-
 <body>
+<!--通用顶部导航-->
+<div id="header"></div>
+<main class="main">
+    <section style="padding-top: 4rem;">
+        <div class="container-fluid text-center justify-content-center" id="spacexFlow">
+            <div class="nav-header">
+                <ul  class="nav nav-pills justify-content-center" id="pills-tab" role="tablist">
+                    <li class="media-nav-item" role="presentation">
+                        <button class="nav-link active" id="nav-all-tab" data-toggle="pill" data-target="#all" type="button" role="tab" aria-controls="all" aria-selected="true">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="20" fill="currentColor" class="bi bi-collection" viewBox="0 0 16 16">
+                                <path d="M2.5 3.5a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1zm2-2a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1zM0 13a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 16 13V6a1.5 1.5 0 0 0-1.5-1.5h-13A1.5 1.5 0 0 0 0 6zm1.5.5A.5.5 0 0 1 1 13V6a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5z"/>
+                            </svg>
+                        </button>
+                    </li>
+                    <li class="media-nav-item" role="presentation">
+                        <button class="nav-link" id="nav-video-tab" data-toggle="pill" data-target="#video" type="button" role="tab" aria-controls="video" aria-selected="false">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="20" fill="currentColor" class="bi bi-youtube" viewBox="0 0 16 16">
+                                <path d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.01 2.01 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.01 2.01 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31 31 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.01 2.01 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A100 100 0 0 1 7.858 2zM6.4 5.209v4.818l4.157-2.408z"/>
+                            </svg>
+                        </button>
+                    </li>
+                    <li class="media-nav-item" role="presentation">
+                        <button class="nav-link" id="nav-img-tab" data-toggle="pill" data-target="#img" type="button" role="tab" aria-controls="img" aria-selected="false">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="20" fill="currentColor" class="bi bi-image" viewBox="0 0 16 16">
+                                <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+                                <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1z"/>
+                            </svg>
+                        </button>
+                    </li>
+                </ul >
+            </div>
+            <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="nav-all-tab">
+                    <div class="timeline" id="timeline"></div>
+                    <div class="load-more">
+                        <button id="loadMoreBtn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-down" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
+                                <path fill-rule="evenodd" d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="video" role="tabpanel" aria-labelledby="nav-video-tab">
+                    <div class="timeline" id="videotimeline"></div>
+                    <div class="load-more">
+                        <button id="videoloadMoreBtn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-down" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
+                                <path fill-rule="evenodd" d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="img" role="tabpanel" aria-labelledby="nav-img-tab">
+                    <div class="timeline" id="imgtimeline"></div>
+                    <div class="load-more">
+                        <button id="imgloadMoreBtn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-down" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
+                                <path fill-rule="evenodd" d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
 
-<main id="main" class="main" role="main" data-page-type="overview">
-
-    <div id="header"></div>
-    <div>
-
-    </div>
+        </div>
+    </section>
 </main>
-
 <!-- Core -->
-<script src="../assets/vendor/jquery/jquery.min.js"></script>
-<script src="../assets/vendor/popper/popper.min.js"></script>
-<script src="../assets/js/bootstrap/bootstrap.min.js"></script>
+<script src="../../assets/vendor/jquery/jquery.min.js"></script>
+<script src="../../assets/vendor/popper/popper.min.js"></script>
+<script src="../../assets/js/bootstrap/bootstrap.min.js"></script>
 <!-- FontAwesome 5 -->
-<script src="../assets/vendor/fontawesome/js/fontawesome-all.min.js" defer></script>
+<script src="../../assets/vendor/fontawesome/js/fontawesome-all.min.js" defer></script>
 <!-- Page plugins -->
-<script src="../assets/vendor/bootstrap-select/js/bootstrap-select.min.js"></script>
-<script src="../assets/vendor/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>
-<script src="../assets/vendor/input-mask/input-mask.min.js"></script>
-<script src="../assets/vendor/nouislider/js/nouislider.min.js"></script>
-<script src="../assets/vendor/textarea-autosize/textarea-autosize.min.js"></script>
+<script src="../../assets/vendor/bootstrap-select/js/bootstrap-select.min.js"></script>
+<script src="../../assets/vendor/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>
+<script src="../../assets/vendor/input-mask/input-mask.min.js"></script>
+<script src="../../assets/vendor/nouislider/js/nouislider.min.js"></script>
+<script src="../../assets/vendor/textarea-autosize/textarea-autosize.min.js"></script>
+<!-- Plyr JS -->
+<script src="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.js"></script>
 <!-- Theme JS -->
-<script src="../assets/js/theme.js"></script>
+<script src="../../assets/js/theme.js"></script>
 <script>
+    let current = 1; // 当前页数
+    let videoCurrent = 1; // 当前页数
+    let imgCurrent = 1; // 当前页数
+    const size = 10; // 每页数据量
+    const player = new Plyr('#player', {
+        controls: ['play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
+        settings: ['quality', 'speed', 'loop'],
+        autoplay: false,
+        muted: true,
+    });
+    function loadData(tag) {
+        var imageXHR = new XMLHttpRequest();
+        imageXHR.open("GET", "/base/anakki/record/flow?imageType=PAGE_MEDIA&current=" + current + "&size=" + size+"&tag="+tag, true);
+        imageXHR.onreadystatechange = function () {
+            if (imageXHR.readyState === 4 && imageXHR.status === 200) {
+                const response = JSON.parse(imageXHR.responseText);
+                const itemList = response.data.data;
+
+                // 将图片按日期分组
+                const groupedItems = itemList.reduce((groups, item) => {
+                    const dateKey = item.photoTime ? new Date(item.photoTime).toISOString().split('T')[0] : '未知';
+                    if (!groups[dateKey]) {
+                        groups[dateKey] = [];
+                    }
+                    groups[dateKey].push(item);
+                    return groups;
+                }, {});
+
+                let html = "";
+
+                for (let date in groupedItems) {
+                    const items = groupedItems[date];
+                    let gridHtml = "";
+
+                    items.forEach(item => {
+                        // 判断是否为视频资源
+                        const isVideo = /\.(mp4|webm|ogg)$/.test(item.imgUrl);
+
+
+
+                        if (isVideo) {
+                            gridHtml += '<div class="image-item" style="grid-column: span 3;">';
+                            // 如果是视频资源，点击播放视频
+                            gridHtml += `
+                                  <video id="player" controls onclick="handleVideoClick(${item.id})" class="video-spacex-list" >
+                                    <source src="${item.imgUrl}" type="video/mp4">
+                                    你的浏览器不支持此格式
+                                  </video>
+                            `;
+                        } else {
+                            gridHtml += '<div class="image-item">';
+                            // 否则显示图片
+                            gridHtml += '<img src="' + item.imgUrl + '?imageMogr2/thumbnail/400x" class="image-spacex-list img-fluid" alt="'
+                                + item.id + '" onclick="showModal(this)" onLoad="hidePlaceholder(this)" onError="showPlaceholder(this)">';
+                        }
+                        if (isVideo) {
+                            gridHtml +=
+                                `
+                                <div class="heart-icons" style="top: 1px;align-items: normal;">
+                                    <div class="heart-icon" onclick="like(${item.id}, this)">
+                                        <div class="justify-content-lg-between" style="display: flex">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-suit-heart" viewBox="0 0 16 16">
+                                              <path d="m8 6.236-.894-1.789c-.222-.443-.607-1.08-1.152-1.595C5.418 2.345 4.776 2 4 2 2.324 2 1 3.326 1 4.92c0 1.211.554 2.066 1.868 3.37.337.334.721.695 1.146 1.093C5.122 10.423 6.5 11.717 8 13.447c1.5-1.73 2.878-3.024 3.986-4.064.425-.398.81-.76 1.146-1.093C14.446 6.986 15 6.131 15 4.92 15 3.326 13.676 2 12 2c-.777 0-1.418.345-1.954.852-.545.515-.93 1.152-1.152 1.595L8 6.236zm.392 8.292a.513.513 0 0 1-.784 0c-1.601-1.902-3.05-3.262-4.243-4.381C1.3 8.208 0 6.989 0 4.92 0 2.755 1.79 1 4 1c1.6 0 2.719 1.05 3.404 2.008.26.365.458.716.596.992a7.55 7.55 0 0 1 .596-.992C9.281 2.049 10.4 1 12 1c2.21 0 4 1.755 4 3.92 0 2.069-1.3 3.288-3.365 5.227-1.193 1.12-2.642 2.48-4.243 4.38z"/>
+                                            </svg>
+                                            <div id="likeCount">${item.likeCount}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                `
+                            gridHtml +=
+                                '<div class="view-count" style="top: 1px;align-items: normal;">' +
+                                `
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+                                              <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
+                                              <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+                                            </svg>
+                                            `
+                                + item.viewCount
+                                + '</div>';
+                        } else {
+                            gridHtml +=
+                                `
+                                <div class="heart-icons">
+                                    <div class="heart-icon" onclick="like(${item.id}, this)">
+                                        <div class="justify-content-lg-between" style="display: flex">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-suit-heart" viewBox="0 0 16 16">
+                                              <path d="m8 6.236-.894-1.789c-.222-.443-.607-1.08-1.152-1.595C5.418 2.345 4.776 2 4 2 2.324 2 1 3.326 1 4.92c0 1.211.554 2.066 1.868 3.37.337.334.721.695 1.146 1.093C5.122 10.423 6.5 11.717 8 13.447c1.5-1.73 2.878-3.024 3.986-4.064.425-.398.81-.76 1.146-1.093C14.446 6.986 15 6.131 15 4.92 15 3.326 13.676 2 12 2c-.777 0-1.418.345-1.954.852-.545.515-.93 1.152-1.152 1.595L8 6.236zm.392 8.292a.513.513 0 0 1-.784 0c-1.601-1.902-3.05-3.262-4.243-4.381C1.3 8.208 0 6.989 0 4.92 0 2.755 1.79 1 4 1c1.6 0 2.719 1.05 3.404 2.008.26.365.458.716.596.992a7.55 7.55 0 0 1 .596-.992C9.281 2.049 10.4 1 12 1c2.21 0 4 1.755 4 3.92 0 2.069-1.3 3.288-3.365 5.227-1.193 1.12-2.642 2.48-4.243 4.38z"/>
+                                            </svg>
+                                            <div id="likeCount">${item.likeCount}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                `
+                            gridHtml +=
+                                '<div class="view-count">' +
+                                `
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+                                              <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
+                                              <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+                                            </svg>
+                                            `
+                                + item.viewCount
+                                + '</div>';
+                        }
+                        gridHtml += '</div>';
+                    });
+
+                    html += '<div class="timeline-item">';
+
+                    html += '<div class="timeline-header">';
+                    html += '<div class="timeline-date">' + date + '</div>';
+                    html += '<div class="timeline-description">' + items[0].description + '</div>';
+                    html += '</div>';
+
+                    html += '<div class="timeline-content">';
+                    html += '<div class="image-info">';
+                    html += '<div class="image-grid">' + gridHtml + '</div>';
+                    html += '</div>';
+                    html += '</div>';
+                    html += '</div>';
+                }
+
+                document.getElementById(tag+"timeline").insertAdjacentHTML('beforeend', html);
+
+                // 更新当前页数
+                if (tag===""){
+                    current++;
+                }else if (tag==="video"){
+                    videoCurrent++;
+                }else if (tag==="img"){
+                    imgCurrent++;
+                }
+
+
+                // 如果没有更多数据，禁用按钮
+                if (response.data.data.length < size) {
+                    document.getElementById(tag+"loadMoreBtn").disabled = true;
+                    document.getElementById(tag+"loadMoreBtn").textContent = '没有更多数据';
+                }
+            }
+        };
+        imageXHR.send();
+    }
+
+
     window.onload = function () {
-        $('#header').load("../pages/header.html", loadPersonDetail);
+        $('#header').load("../../pages/header.html");
+        $('#footer').load("../../pages/footer.html");
+
+        // 初始加载数据
+        ["", "video", "img"].forEach(type => loadData(type));
+
+        // 绑定“加载更多”按钮的点击事件
+        const bindLoadMoreEvent = (btnId, type) => {
+            document.getElementById(btnId).addEventListener("click", () => loadData(type));
+        };
+
+        bindLoadMoreEvent("loadMoreBtn", "");
+        bindLoadMoreEvent("videoloadMoreBtn", "video");
+        bindLoadMoreEvent("imgloadMoreBtn", "img");
+
+        // 为所有视频元素添加播放事件监听器
+        document.querySelectorAll('video').forEach(video => {
+            video.onplay = function() {
+                console.log('播放的视频 ID:', this.id);
+
+                // 您可以在这里进行其他操作，例如发送请求或记录信息
+            };
+        });
+    };
+    // 用于播放视频的函数
+
+    function showModal(img) {
+        let item;
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", "/base/anakki/record/flowById?id=" + img.alt, true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                item = JSON.parse(xhr.responseText).data;
+                const modal = document.createElement("div");
+                modal.className = "modal-spacex";
+                modal.innerHTML = `
+                <div class="modal-content-my">
+                    <div class="modal-header-my" onclick="this.parentElement.parentElement.remove()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
+                        </svg>
+                    </div>
+                    ${item.isVideo ? `
+                        <video controls>
+                            <source src="${item.imgUrl}" type="video/mp4">
+                            您的浏览器不支持播放该视频。
+                        </video>
+                    ` : `
+                        <img src="${item.imgUrl}" alt="${item.id}" onclick="this.parentElement.parentElement.remove()">
+                    `}
+                    <div class="heart-icons">
+                        <div class="heart-icon" onclick="like(${item.id}, this)">
+                            <div class="justify-content-lg-between" style="display: flex">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-suit-heart" viewBox="0 0 16 16">
+                                  <path d="m8 6.236-.894-1.789c-.222-.443-.607-1.08-1.152-1.595C5.418 2.345 4.776 2 4 2 2.324 2 1 3.326 1 4.92c0 1.211.554 2.066 1.868 3.37.337.334.721.695 1.146 1.093C5.122 10.423 6.5 11.717 8 13.447c1.5-1.73 2.878-3.024 3.986-4.064.425-.398.81-.76 1.146-1.093C14.446 6.986 15 6.131 15 4.92 15 3.326 13.676 2 12 2c-.777 0-1.418.345-1.954.852-.545.515-.93 1.152-1.152 1.595L8 6.236zm.392 8.292a.513.513 0 0 1-.784 0c-1.601-1.902-3.05-3.262-4.243-4.381C1.3 8.208 0 6.989 0 4.92 0 2.755 1.79 1 4 1c1.6 0 2.719 1.05 3.404 2.008.26.365.458.716.596.992a7.55 7.55 0 0 1 .596-.992C9.281 2.049 10.4 1 12 1c2.21 0 4 1.755 4 3.92 0 2.069-1.3 3.288-3.365 5.227-1.193 1.12-2.642 2.48-4.243 4.38z"/>
+                                </svg>
+                                <div id="likeCount">${item.likeCount}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+                document.body.appendChild(modal);
+            }
+        };
+        xhr.send();
+    }
+
+
+    function like(id, element) {
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "/base/anakki/record/like", true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                newCount = JSON.parse(xhr.responseText).data;
+                // 更新图标状态
+                element.innerHTML = `
+                    <div class="justify-content-lg-between" style="display: flex">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-suit-heart-fill" viewBox="0 0 16 16">
+                          <path d="M4 1c2.21 0 4 1.755 4 3.92C8 2.755 9.79 1 12 1s4 1.755 4 3.92c0 3.263-3.234 4.414-7.608 9.608a.513.513 0 0 1-.784 0C3.234 9.334 0 8.183 0 4.92 0 2.755 1.79 1 4 1z"/>
+                        </svg>
+                        <div id="likeCount">${newCount}</div>
+                    </div>
+                `;
+
+            }
+        };
+        xhr.send(JSON.stringify({ id }));
+    }
+    // 处理视频点击事件并发送请求
+    function handleVideoClick(id) {
+        fetch(`/base/anakki/record/increaseViewCount?id`+id, { method: 'GET' });
+    }
+
+    function hidePlaceholder(img) {
+        img.style.backgroundColor = 'transparent'; // 隐藏背景色
+    }
+
+    function showPlaceholder(img) {
+        img.style.backgroundColor = '#f0f0f0'; // 显示背景色作为占位符
     }
 </script>
 </body>
-
 </html>

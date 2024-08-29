@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import java.util.List;
 public class UploadRecordForManageRequest {
 
     @ApiModelProperty("图片发布模块")
+    @NotNull(message = "type不能为空")
     private String type;
 
     @ApiModelProperty("图片标题")

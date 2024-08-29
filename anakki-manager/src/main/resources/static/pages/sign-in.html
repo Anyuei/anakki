@@ -29,9 +29,11 @@
         background-color: rgba(72, 72, 72, 0.73);
         border: .0625rem solid rgba(100, 100, 100, 0.62);
     }
+
     a {
         color: #515151;
     }
+
     .shorten-width {
         display: inline-block;
         width: 80px;
@@ -39,18 +41,21 @@
         text-overflow: ellipsis;
         white-space: nowrap;
     }
+
+    .spotlight {
+        height: 100vh; /* 使背景区域覆盖整个视口高度 */
+        background-size: cover;
+        background-position: center;
+    }
 </style>
 <body>
 <!--通用顶部导航-->
 <div id="header"></div>
 <main class="main">
-    <section class="spotlight parallax bg-cover bg-size--cover" data-spotlight="fullscreen"
-             style="background-image: url('https://securex-1258150206.cos.ap-beijing.myqcloud.com/backend/DSC07382_1.jpg');
-             align-items: center;
-             display: flex; min-height: 50rem;">
+    <section class="spotlight parallax bg-cover bg-size--cover" data-spotlight="fullscreen">
         <!--        <span class="mask bg-primary alpha-6"></span>-->
         <div class="container-fluid d-flex align-items-center no-padding">
-            <div class="col">
+            <div class="col" style="margin-top: 10rem;">
                 <div class="row justify-content-center">
                     <div style="width: 20rem;">
                         <div>
@@ -89,12 +94,15 @@
                                                class="form-control"
                                                placeholder="请输入验证码"
                                                maxlength="6" name="verify" required>
-                                        <img class="captcha-img" src="/base/system/captcha" alt="验证码" style="width: 6rem; cursor: pointer;" onclick="refreshCaptcha()">
+                                        <img class="captcha-img" src="/base/system/captcha" alt="验证码"
+                                             style="width: 6rem; cursor: pointer;" onclick="refreshCaptcha()">
                                     </div>
                                     <div class="text-right mt-4"><a href="#" class="text-white"
                                                                     onclick="forgot()">忘记密码?</a></div>
                                     <p id="login-notice" style="color: red"></p>
-                                    <button type="submit" class="btn btn-block btn-lg bg-white mt-4" style="padding: 0.3rem 1rem;">登录</button>
+                                    <button type="submit" class="btn btn-block btn-lg bg-white mt-4"
+                                            style="padding: 0.3rem 1rem;">登录
+                                    </button>
                                 </form>
                             </div>
                         </div>
@@ -121,6 +129,32 @@
 <!-- Theme JS -->
 <script src="../assets/js/theme.js"></script>
 <script>
+    async function setBackgroundImage() {
+        try {
+            // 从后端获取封面图片 URL
+            const response = await fetch('/base/system/main-cover?page=SIGN_IN_COVER');
+
+            if (!response.ok) {
+                throw new Error('网络响应不正常');
+            }
+
+            const data = await response.json();
+
+            const imageUrl = data.data;
+
+            // 获取 section 元素
+            const section = document.querySelector('.spotlight');
+
+            // 更新背景图片
+            section.style.backgroundImage = `url('${imageUrl}')`;
+        } catch (error) {
+            console.error('获取封面图片失败:', error);
+        }
+    }
+
+    // 页面加载时设置背景图片
+    document.addEventListener('DOMContentLoaded', setBackgroundImage);
+
     window.onload = function () {
         $('#header').load("../pages/header.html", loadPersonDetail);
         $('#footer').load("../pages/footer.html", insertCreateTime);
