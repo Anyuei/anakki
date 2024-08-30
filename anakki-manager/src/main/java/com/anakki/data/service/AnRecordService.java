@@ -23,6 +23,8 @@ public interface AnRecordService extends IService<AnRecord> {
 
     BasePageResult<AnRecord> flow(GetContentRequest getContentRequest,String ipAddr);
 
+    BasePageResult<AnRecord> flowMedia(GetMediaRequest getMediaRequest, String ipAddr);
+
     boolean removeById(Serializable id);
     List<String> getRecordTypes();
 

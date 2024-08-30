@@ -284,13 +284,13 @@
     function localImgData(current){
         loading=true;
         var mainPageImageFlow = new XMLHttpRequest();
-        mainPageImageFlow.open("GET", "/base/anakki/record/flow?imageType=MAINPAGE_FLOW&current="+current+"&size"+size, true);
+        mainPageImageFlow.open("GET", "/base/anakki/record/flow?imageType=MAINPAGE_FLOW&tag=img&current="+current+"&size"+size, true);
         mainPageImageFlow.onreadystatechange = function () {
             if (mainPageImageFlow.readyState === 4 && mainPageImageFlow.status === 200) {
                 const response = JSON.parse(mainPageImageFlow.responseText);
                 const itemList = response.data.data;
                 if (!(Array.isArray(itemList) && itemList.length === 0)){
-                    currentPage=currentPage+1;
+                    currentPage++;
                     for (let i = 0; i < itemList.length; i++) {
                         const item = itemList[i];
 

@@ -56,10 +56,11 @@ public class AnFriendsCommentServiceImpl extends ServiceImpl<AnFriendsCommentMap
             BeanUtils.copyProperties(record, anFriendsCommentResponse);
             Long userId = record.getUserId();
             if (null != userId) {
-                AnUser byId = anUserService.getById(userId);
-                if (null != byId) {
-                    Long exp = byId.getExp();
+                AnUser user = anUserService.getById(userId);
+                if (null != user) {
+                    Long exp = user.getExp();
                     anFriendsCommentResponse.setExp(exp);
+                    anFriendsCommentResponse.setAvatar(user.getAvatar());
                 }
             }
             responses.add(anFriendsCommentResponse);

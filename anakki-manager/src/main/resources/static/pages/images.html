@@ -336,8 +336,18 @@
         muted: true,
     });
     function loadData(tag) {
+        document.getElementById(tag+"loadMoreBtn").disabled = true;
         var imageXHR = new XMLHttpRequest();
-        imageXHR.open("GET", "/base/anakki/record/flow?imageType=PAGE_MEDIA&current=" + current + "&size=" + size+"&tag="+tag, true);
+        let temCurrent=1;
+        if (tag===""){
+            temCurrent= current;
+        }else if (tag==="video"){
+            temCurrent=videoCurrent;
+        }else if (tag==="img"){
+            temCurrent=imgCurrent;
+        }
+
+        imageXHR.open("GET", "/base/anakki/record/flowMedia?current=" + temCurrent + "&size=" + size+"&tag="+tag, true);
         imageXHR.onreadystatechange = function () {
             if (imageXHR.readyState === 4 && imageXHR.status === 200) {
                 const response = JSON.parse(imageXHR.responseText);
@@ -446,7 +456,7 @@
                     html += '</div>';
                     html += '</div>';
                 }
-
+                document.getElementById(tag+"loadMoreBtn").disabled = false;
                 document.getElementById(tag+"timeline").insertAdjacentHTML('beforeend', html);
 
                 // 更新当前页数

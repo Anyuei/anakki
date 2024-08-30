@@ -7,6 +7,7 @@ import com.anakki.data.bean.common.request.IdNotNullRequest;
 import com.anakki.data.entity.AnIpAddress;
 import com.anakki.data.entity.AnRecord;
 import com.anakki.data.entity.request.GetContentRequest;
+import com.anakki.data.entity.request.GetMediaRequest;
 import com.anakki.data.service.AnIpAddressService;
 import com.anakki.data.service.AnRecordService;
 import com.anakki.data.utils.IPUtils;
@@ -46,7 +47,13 @@ public class AnRecordController {
 
         return ResponseDTO.succData(anRecordService.flow(getContentRequest,ipAddr));
     }
+    @ApiOperation(value = "获取图文-摄影模块")
+    @GetMapping("/flowMedia")
+    public ResponseDTO<BasePageResult<AnRecord>> flowMedia(GetMediaRequest getMediaRequest, HttpServletRequest request) {
+        String ipAddr = IPUtils.getIpAddr(request);
 
+        return ResponseDTO.succData(anRecordService.flowMedia(getMediaRequest,ipAddr));
+    }
     @ApiOperation(value = "根据id获取图文")
     @GetMapping("/flowById")
     public ResponseDTO<AnRecord> flowById(Long id) {
