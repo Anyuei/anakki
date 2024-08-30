@@ -121,7 +121,7 @@
                 <div class="dropdown-divider d-lg-none my-4"></div>
                 <li class="nav-item" >
                     <div id="user-avatar">
-                        <img src="${avatar}" alt="x" style="width: 3rem; border-radius: 50%;" onclick="showAvatarModal()">
+                        <img src="${avatar}" alt="" style="border-radius: 50%;" onclick="showAvatarModal()">
                     </div>
                 </li>
 
@@ -141,20 +141,25 @@
 <div class="modal" id="avatarModal" tabindex="-1" role="dialog" style="background-color: rgba(0, 0, 0, 0.5); margin-top: 4rem">
     <div class="modal-dialog" role="document" style="max-width: 400px;">
         <div class="modal-content" style="border-radius: 10px; overflow: hidden; box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);">
-            <div class="modal-body" style="padding: 20px;">
+            <div class="modal-body" style="padding: 10px;">
                 <form id="avatarForm" style="display: flex; flex-direction: column; align-items: center;">
                     <div style="margin-bottom: 15px; text-align: center;">
-                        <label for="avatarInput" style="cursor: pointer;width: 120px; height: 120px; border-radius: 50%;">
+                        <label for="avatarInput" style="cursor: pointer; width: 120px; height: 120px; border-radius: 50%;">
                             <img src="" id="avatarPreview" alt="点击上传"
                                  style="width: 120px; height: 120px; border-radius: 50%; ">
                         </label>
                     </div>
                     <input type="file" id="avatarInput" accept="image/*" style="display: none;" onchange="previewAvatar(event)">
                 </form>
+                <div class="avatar-select-area" id="avatarSelectArea" style="display: flex; flex-wrap: wrap; justify-content: center;">
+                    <!-- 头像列表将在此处动态加载 -->
+                </div>
+                <button id="loadMoreAvatarBtn" class="btn" onclick="loadMoreAvatars()" style="width: 100%;color: #000;">
+                    更多
+                </button>
             </div>
-            <div class="modal-footer" style="border-top: none; padding: 10px 20px;">
+            <div class="modal-footer" style="border-top: none; padding: 10px 10px;">
                 <button type="button" class="btn btn-primary" onclick="saveAvatar()" style="width: 100%;">保存</button>
-
             </div>
         </div>
     </div>
@@ -165,6 +170,10 @@
         const output = document.getElementById('avatarPreview');
         output.src = localStorage.getItem("avatar");
     }
+    // 初始化加载第一页的头像数据
+    document.addEventListener('DOMContentLoaded', () => {
+        loadAvatars();
+    });
     function previewAvatar(event) {
         const reader = new FileReader();
         reader.onload = function(){

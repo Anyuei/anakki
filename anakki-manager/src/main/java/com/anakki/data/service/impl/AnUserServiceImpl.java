@@ -5,6 +5,7 @@ import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.bean.constant.CosBucketNameConst;
 import com.anakki.data.bean.constant.CosPathConst;
 import com.anakki.data.bean.constant.RedisKey;
+import com.anakki.data.entity.AnRecord;
 import com.anakki.data.entity.common.ExpKeyConst;
 import com.anakki.data.entity.AnUser;
 import com.anakki.data.bean.common.UserToken;
@@ -13,6 +14,7 @@ import com.anakki.data.entity.request.*;
 import com.anakki.data.entity.response.ListUserResponse;
 import com.anakki.data.entity.response.UserDetailResponse;
 import com.anakki.data.mapper.AnUserMapper;
+import com.anakki.data.service.AnRecordService;
 import com.anakki.data.service.AnSystemConfigService;
 import com.anakki.data.service.AnUserService;
 import com.anakki.data.utils.common.*;
@@ -21,8 +23,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -47,10 +51,9 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
 
     @Autowired
     private AnUserMapper anUserMapper;
-
-
     @Autowired
-    private AnSystemConfigService anSystemConfigService;
+    @Lazy
+    private AnRecordService anRecordService;
 
     @Override
     public String login(UserLoginRequest userLoginRequest) throws UnsupportedEncodingException, NoSuchAlgorithmException {
@@ -155,21 +158,50 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
     }
 
     @Override
-    public void uploadAvatar(MultipartFile file) throws IOException {
-        long sizeInBytes = file.getSize();
-        long sizeInMB = sizeInBytes / (1024 * 1024);
-        if (sizeInMB > 2) {
-            throw new RuntimeException("头像不能大于2MB");
-        }
+    public void uploadAvatar(UploadAvatarRequest uploadAvatarRequest) throws IOException {
         String currentNickname = BaseContext.getCurrentNickname();
         AnUser byNickname = getByNickname(currentNickname);
-        String url = COSUtil.uploadImage(
-                file,
-                COSUtil.region,
-                CosBucketNameConst.BUCKET_NAME_IMAGES, CosPathConst.BUCKET_NAME_AVATAR,
-                false
-        );
-        byNickname.setAvatar(url);
+        String selectedAvatar = uploadAvatarRequest.getSelectedAvatar();
+        Long id = uploadAvatarRequest.getId();
+        MultipartFile file = uploadAvatarRequest.getFile();
+
+        if (StringUtils.isNotBlank(selectedAvatar)) {
+
+            AnRecord avatarImg = anRecordService.getById(id);
+            if (null==avatarImg){
+                throw new RuntimeException("找不到此头像");
+            }
+            Long avatarUserId = avatarImg.getAvatarUserId();
+            if (null!=avatarUserId){
+                if (!avatarUserId.equals(byNickname.getId())){
+                    throw new RuntimeException("头像已经被其他用户使用");
+                }else{
+                    throw new RuntimeException("您正在使用此头像");
+                }
+            }
+            avatarImg.setAvatarUserId(byNickname.getId());
+            //移除旧占位，如果有的话
+            anRecordService.removeByAvatarUserId(byNickname.getId());
+            //占有新的头像
+            anRecordService.updateById(avatarImg);
+
+            byNickname.setAvatar(selectedAvatar);
+        }else{
+            long sizeInBytes = file.getSize();
+            long sizeInMB = sizeInBytes / (1024 * 1024);
+            if (sizeInMB > 2) {
+                throw new RuntimeException("头像不能大于2MB");
+            }
+
+            String url = COSUtil.uploadImage(
+                    file,
+                    COSUtil.region,
+                    CosBucketNameConst.BUCKET_NAME_IMAGES, CosPathConst.BUCKET_NAME_AVATAR,
+                    false
+            );
+            byNickname.setAvatar(url);
+        }
+
         updateById(byNickname);
     }
 

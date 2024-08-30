@@ -4,7 +4,9 @@ import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.bean.common.ResponseDTO;
 import com.anakki.data.bean.common.request.IdNotNullRequest;
 import com.anakki.data.entity.AnRecord;
+import com.anakki.data.entity.request.AvatarImgListRequest;
 import com.anakki.data.entity.request.GetContentRequest;
+import com.anakki.data.entity.response.AvatarImgListResponse;
 import com.anakki.data.service.AnRecordService;
 import com.anakki.data.utils.IPUtils;
 import io.swagger.annotations.ApiOperation;
@@ -47,4 +49,12 @@ public class AnUserRecordController {
         Object unlike = anRecordService.userOperate(id.getId(), ipAddr, "UNLIKE");
         return ResponseDTO.succData(unlike);
     }
+
+    @ApiOperation(value = "获取头像列表")
+    @GetMapping("/list-avatars")
+    public ResponseDTO<BasePageResult<AvatarImgListResponse>> listAvatars(AvatarImgListRequest avatarImgListRequest) {
+        BasePageResult<AvatarImgListResponse> pages = anRecordService.listAvatars(avatarImgListRequest);
+        return ResponseDTO.succData(pages);
+    }
+
 }

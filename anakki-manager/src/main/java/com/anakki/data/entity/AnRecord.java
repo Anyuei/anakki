@@ -88,4 +88,8 @@ public class AnRecord extends BaseEntity implements Serializable {
     @ApiModelProperty("不喜欢数")
     @TableField("unlike_count")
     private Long unlikeCount;
+
+    @ApiModelProperty("头像所属人")
+    @TableField("avatar_user_id")
+    private Long avatarUserId;
 }

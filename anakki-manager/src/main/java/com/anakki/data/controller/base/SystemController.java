@@ -3,6 +3,7 @@ package com.anakki.data.controller.base;
 import com.anakki.data.bean.common.RandomList;
 import com.anakki.data.bean.common.ResponseDTO;
 import com.anakki.data.entity.AnGiftLog;
+import com.anakki.data.entity.request.DeviceInfoRequest;
 import com.anakki.data.entity.request.RandomNameRequest;
 import com.anakki.data.entity.request.SendMailRequest;
 import com.anakki.data.entity.response.DailyVisitCountResponse;
@@ -145,6 +146,13 @@ public class SystemController {
     @GetMapping("/siteViewCount")
     public ResponseDTO<Integer> siteViewCount() {
         return ResponseDTO.succData(anPathStatisticLogService.count());
+    }
+
+    @ApiOperation(value = "网页访问量总计")
+    @PostMapping("/device-info")
+    public ResponseDTO<Boolean> deviceInfo(@RequestBody DeviceInfoRequest deviceInfoRequest,HttpServletRequest request) {
+        anPathStatisticLogService.log("/base/system/device-info",IPUtils.getIpAddr(request),deviceInfoRequest.getJson());
+        return ResponseDTO.succData(true);
     }
 
     @ApiOperation(value = "每日访问量")

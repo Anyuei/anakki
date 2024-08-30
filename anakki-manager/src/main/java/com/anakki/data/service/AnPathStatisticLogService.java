@@ -19,8 +19,7 @@ import java.util.List;
  * @since 2023-12-01
  */
 public interface AnPathStatisticLogService extends IService<AnPathStatisticLog> {
-    Boolean log(String path,String ipAddr);
-
+    Boolean log(String path,String ipAddr,String deviceInfo);
 
     List<DailyVisitCountResponse> getDailyVisitCounts(LocalDate startDate, LocalDate endDate);
 

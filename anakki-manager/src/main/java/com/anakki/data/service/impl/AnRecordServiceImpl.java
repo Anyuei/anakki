@@ -6,6 +6,8 @@ import com.anakki.data.bean.constant.CosBucketNameConst;
 import com.anakki.data.entity.AnRecord;
 import com.anakki.data.entity.AnUser;
 import com.anakki.data.entity.request.*;
+import com.anakki.data.entity.request.AvatarImgListRequest;
+import com.anakki.data.entity.response.AvatarImgListResponse;
 import com.anakki.data.mapper.AnRecordMapper;
 import com.anakki.data.service.*;
 import com.anakki.data.utils.common.COSUtil;
@@ -17,7 +19,6 @@ import com.drew.imaging.ImageProcessingException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import java.io.IOException;
@@ -189,4 +190,32 @@ public class AnRecordServiceImpl extends ServiceImpl<AnRecordMapper, AnRecord> i
         return null;
     }
 
+
+    @Override
+    public  BasePageResult<AvatarImgListResponse> listAvatars(AvatarImgListRequest avatarImgListRequest){
+        LocalDateTime createTimeStart = avatarImgListRequest.getCreateTimeStart();
+        LocalDateTime createTimeEnd = avatarImgListRequest.getCreateTimeEnd();
+        String searchString = avatarImgListRequest.getSearchString();
+        IPage<AnRecord> anRecordIPage = new Page<>(
+                avatarImgListRequest.getCurrent(),
+                avatarImgListRequest.getSize());
+        QueryWrapper<AnRecord> anRecordQueryWrapper = new QueryWrapper<>();
+        anRecordQueryWrapper.eq( "type", "AVATAR");
+        anRecordQueryWrapper.like(null != searchString, "description", searchString);
+        anRecordQueryWrapper.ge(null != createTimeStart, "create_time", createTimeStart);
+        anRecordQueryWrapper.le(null != createTimeEnd, "create_time", createTimeEnd);
+        anRecordQueryWrapper.orderByDesc("create_time","id");
+        anRecordQueryWrapper.isNull("avatar_user_id");
+        IPage<AnRecord> page = page(anRecordIPage, anRecordQueryWrapper);
+        List<AnRecord> records = page.getRecords();
+        List<AvatarImgListResponse> avatarImgListResponses = com.anakki.data.utils.common.BeanUtils.copyBeanList(records, AvatarImgListResponse.class);
+        return new BasePageResult<>(avatarImgListResponses, page.getTotal());
+    }
+
+    @Override
+    public void removeByAvatarUserId(Long id) {
+        QueryWrapper<AnRecord> anRecordQueryWrapper = new QueryWrapper<>();
+        anRecordQueryWrapper.eq("avatar_user_id",id);
+        remove(anRecordQueryWrapper);
+    }
 }

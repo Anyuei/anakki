@@ -52,4 +52,8 @@ public class AnPathStatisticLog extends BaseEntity implements Serializable {
     @TableField("district")
     private String district;
 
+    @ApiModelProperty("浏览信息统计")
+    @TableField("view_info")
+    private String viewInfo;
+
 }

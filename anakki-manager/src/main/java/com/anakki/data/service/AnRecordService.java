@@ -3,6 +3,7 @@ package com.anakki.data.service;
 import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.entity.AnRecord;
 import com.anakki.data.entity.request.*;
+import com.anakki.data.entity.response.AvatarImgListResponse;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.drew.imaging.ImageProcessingException;
 
@@ -36,4 +37,12 @@ public interface AnRecordService extends IService<AnRecord> {
     void increaseViewCount(Long recordId);
 
     Object userOperate(Long id, String ipAddr, String operateType);
+
+    BasePageResult<AvatarImgListResponse> listAvatars(AvatarImgListRequest avatarImgListRequest);
+
+    /**
+     * 移除旧头像占位
+     * @param id
+     */
+    void removeByAvatarUserId(Long id);
 }

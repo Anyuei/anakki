@@ -40,9 +40,17 @@ public class AnUserController {
     }
 
     @ApiOperation(value = "上传头像")
-    @PostMapping ("/upload-avatar")
-    public ResponseDTO<Boolean> uploadAvatar(MultipartFile file) throws IOException {
-        anUserService.uploadAvatar(file);
+    @PostMapping("/upload-avatar")
+    public ResponseDTO<Boolean> uploadAvatar(
+            @RequestParam(value = "file", required = false) MultipartFile file,
+            @RequestParam(value = "selectedAvatar", required = false) String selectedAvatar,
+            @RequestParam(value = "id", required = false) Long id) throws IOException {
+
+        UploadAvatarRequest uploadAvatarRequest = new UploadAvatarRequest();
+        uploadAvatarRequest.setFile(file);
+        uploadAvatarRequest.setSelectedAvatar(selectedAvatar);
+        uploadAvatarRequest.setId(id);
+        anUserService.uploadAvatar(uploadAvatarRequest);
         return ResponseDTO.succData(true);
     }
 

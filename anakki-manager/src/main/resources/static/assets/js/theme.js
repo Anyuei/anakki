@@ -4,9 +4,11 @@ $(window).on("load", function () {
 
 
 })
-    function userDetail() {
 
-    }
+function userDetail() {
+
+}
+
 $(window).on('load resize', function () {
 
     // Background image holder - Static hero with fullscreen autosize
@@ -304,10 +306,10 @@ function loadPersonDetail() {
                     </div>`;
                     userAvatar.innerHTML = `<img src="${avatar}" alt="x" style="width: 3rem; border-radius: 50%;" onclick="showAvatarModal()">`;
                     document.getElementById('breathing-light').style.display = 'inline-block';
-                    localStorage.setItem("nickname",nickname);
-                    localStorage.setItem("avatar",avatar);
-                    localStorage.setItem("isChatroomMailNotice",user.isChatroomMailNotice)
-                }else{
+                    localStorage.setItem("nickname", nickname);
+                    localStorage.setItem("avatar", avatar);
+                    localStorage.setItem("isChatroomMailNotice", user.isChatroomMailNotice)
+                } else {
                     localStorage.removeItem('user-token')
                 }
             },
@@ -325,28 +327,107 @@ function showAvatarModal() {
 }
 
 function saveAvatar() {
+    const preview = document.getElementById('avatarPreview');
+    const selectedAvatar = preview.dataset.selectedAvatar;
+    const id = preview.dataset.id;
     const avatarInput = document.getElementById("avatarInput");
     const file = avatarInput.files[0];
     const formData = new FormData();
-    formData.append("file", file);
+    // 添加文件数据（如果有）
+    if (file) {
+        formData.append("file", file);
+    }
+
+    // 添加选中的系统头像 URL
+    if (selectedAvatar) {
+        formData.append("selectedAvatar", selectedAvatar);
+        formData.append("id", id);
+    }
+
     const xhr = new XMLHttpRequest();
     xhr.open("POST", "/api/anakki/user/upload-avatar", true); // Replace with your backend API endpoint
     xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                const response = JSON.parse(xhr.responseText);
-                if (response.success === true) {
-                    // Handle success response
-                    console.log(response.data);
-                    loadPersonDetail();
-                }
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            const response = JSON.parse(xhr.responseText);
+            if (response.success === true) {
+                // Handle success response
+                console.log(response.data);
+                loadPersonDetail();
             }
-            // Close the modal
-            $('#avatarModal').modal('hide');
+        }
+        // Close the modal
+        $('#avatarModal').modal('hide');
     };
     xhr.setRequestHeader('authorization', localStorage.getItem('user-token'));
     xhr.send(formData);
     // Close the modal
     $('#avatarModal').modal('hide');
+
+}
+
+let avatarCurrentPage = 1; // 当前页数
+const avatarPageSize = 15; // 每页显示的头像数量
+// 加载更多头像
+function loadMoreAvatars() {
+    loadAvatars(avatarCurrentPage++);
+}
+
+// 从后端获取头像数据并渲染
+async function loadAvatars(page = 1) {
+    try {
+        const token = localStorage.getItem('user-token');
+        if (!token) {
+            return;
+        }
+        const response = await fetch(`/api/anakki/record/list-avatars?current=${page}&size=${avatarPageSize}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'authorization': token
+            },
+        });
+        if (!response.ok) {
+            throw new Error('网络响应不正常');
+        }
+        const data = await response.json();
+        const avatars = data.data;
+
+        const avatarSelectArea = document.getElementById('avatarSelectArea');
+
+        avatars.data.forEach(avatar => {
+            const imgElement = document.createElement('img');
+            imgElement.src = avatar.imgUrl;
+            imgElement.alt = 'Avatar';
+            imgElement.classList.add('avatar-option');
+            imgElement.style.width = '60px';
+            imgElement.style.height = '60px';
+            imgElement.style.margin = '5px';
+            imgElement.style.cursor = 'pointer';
+            imgElement.style.borderRadius = '50%';
+
+            imgElement.addEventListener('click', () => {
+                selectAvatar(avatar);
+            });
+
+            avatarSelectArea.appendChild(imgElement);
+        });
+        // 如果加载到的头像数量小于每页大小，禁用“更多”按钮
+        if (avatars.data.length < avatarPageSize) {
+            document.getElementById('loadMoreAvatarBtn').disabled = true;
+            document.getElementById('loadMoreAvatarBtn').textContent = '没了(￣▽￣")';
+        } else {
+            currentPage = page;
+        }
+    } catch (error) {
+        console.error('获取头像数据失败:', error);
+    }
+}
+
+// 选择头像并预览
+function selectAvatar(avatar) {
+    const preview = document.getElementById('avatarPreview');
+    preview.src = avatar.imgUrl;
+    preview.dataset.selectedAvatar = avatar.imgUrl;
+    preview.dataset.id = avatar.id;// 存储选中的头像 URL
 }
 
 function insertCreateTime() {
@@ -479,7 +560,7 @@ function alert(data, callback) { //回调函数
         'bottom': '0',
         'background-color': 'rgba(0, 0, 0, 0.59)',
         'z-index': '999999999',
-        'color' : '#000'
+        'color': '#000'
     });
 
     css(alert_box, {//控制盒子大小、背景颜色上下边距
@@ -534,7 +615,10 @@ function css(targetObj, cssObj) {
     }
     targetObj.style.cssText = str;
 }
-window.onscroll = function() {scrollFunction()};
+
+window.onscroll = function () {
+    scrollFunction()
+};
 
 function scrollFunction() {
     if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
@@ -543,33 +627,75 @@ function scrollFunction() {
         document.querySelector('.navbar').style.backgroundColor = 'rgba(0, 0, 0, 0)'; /* Initial transparency level */
     }
 }
-function like(id){
+
+function like(id) {
     const xhr = new XMLHttpRequest();
-    xhr.open("GET", "/api/anakki/record/like?id="+id, true);
+    xhr.open("GET", "/api/anakki/record/like?id=" + id, true);
     xhr.setRequestHeader('authorization', localStorage.getItem('user-token')); // Include the token in the Authorization header
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
             const response = JSON.parse(xhr.responseText);
             const item = response.data;
-            document.getElementById("likeId_"+id).innerHTML="<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-heart-fill\" viewBox=\"0 0 16 16\">\n" +
+            document.getElementById("likeId_" + id).innerHTML = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-heart-fill\" viewBox=\"0 0 16 16\">\n" +
                 "  <path fill-rule=\"evenodd\" d=\"M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z\"/>\n" +
                 "</svg>" + item;
         }
     };
     xhr.send();
 }
-function unLike(id){
+
+function unLike(id) {
     const xhr = new XMLHttpRequest();
-    xhr.open("GET", "/api/anakki/record/unLike?id="+id, true);
+    xhr.open("GET", "/api/anakki/record/unLike?id=" + id, true);
     xhr.setRequestHeader('authorization', localStorage.getItem('user-token')); // Include the token in the Authorization header
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
             const response = JSON.parse(xhr.responseText);
             const item = response.data;
-            document.getElementById("unLikeId_"+id).innerHTML="<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-heartbreak-fill\" viewBox=\"0 0 16 16\">\n" +
+            document.getElementById("unLikeId_" + id).innerHTML = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-heartbreak-fill\" viewBox=\"0 0 16 16\">\n" +
                 "  <path d=\"M8.931.586 7 3l1.5 4-2 3L8 15C22.534 5.396 13.757-2.21 8.931.586ZM7.358.77 5.5 3 7 7l-1.5 3 1.815 4.537C-6.533 4.96 2.685-2.467 7.358.77Z\"/>\n" +
                 "</svg>" + item;
         }
     };
     xhr.send();
 }
+
+function getDeviceInfo() {
+    return {
+        userAgent: navigator.userAgent, // 获取浏览器的 userAgent 字符串
+        platform: navigator.platform,  // 获取操作系统平台
+        language: navigator.language,  // 获取浏览器的语言
+        cookieEnabled: navigator.cookieEnabled,  // 判断是否启用了 cookie
+        online: navigator.onLine,  // 获取设备是否在线
+        screenWidth: window.screen.width,  // 获取屏幕的宽度
+        screenHeight: window.screen.height,  // 获取屏幕的高度
+        deviceMemory: navigator.deviceMemory || 'unknown', // 设备的内存信息（仅部分浏览器支持）
+        hardwareConcurrency: navigator.hardwareConcurrency || 'unknown', // CPU 线程数
+    };
+}
+
+async function sendDeviceInfo() {
+    const deviceInfo = getDeviceInfo();
+
+    // 将设备信息转换为 JSON 字符串
+    const deviceInfoJson = JSON.stringify(deviceInfo);
+
+    // 创建请求体，key 为 "json"
+    const requestBody = {
+        json: deviceInfoJson
+    };
+
+    try {
+        await fetch('/base/system/device-info', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestBody)
+        });
+    } catch (error) {
+    }
+}
+
+// 页面加载时发送设备信息
+document.addEventListener('DOMContentLoaded', sendDeviceInfo);

@@ -36,7 +36,7 @@ public class AnPathStatisticLogServiceImpl extends ServiceImpl<AnPathStatisticLo
     @Autowired
     private AnPathStatisticLogMapper anPathStatisticLogMapper;
     @Override
-    public synchronized Boolean log(String path, String ipAddr) {
+    public synchronized Boolean log(String path, String ipAddr,String deviceInfo) {
             AnIpAddress addressByIp = anIpAddressService.getAddressByIp(ipAddr);
             //统计访问日志
             if (null!=addressByIp){
@@ -44,6 +44,7 @@ public class AnPathStatisticLogServiceImpl extends ServiceImpl<AnPathStatisticLo
                 BeanUtils.copyProperties(addressByIp,anPathStatisticLog,"id","create_time","updateTime");
                 anPathStatisticLog.setPath(path);
                 anPathStatisticLog.setClientIp(ipAddr);
+                anPathStatisticLog.setViewInfo(deviceInfo);
                 save(anPathStatisticLog);
             }
             return true;

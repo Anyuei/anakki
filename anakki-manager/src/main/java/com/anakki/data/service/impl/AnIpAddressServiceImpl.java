@@ -70,7 +70,7 @@ public class AnIpAddressServiceImpl extends ServiceImpl<AnIpAddressMapper, AnIpA
     @Override
     public synchronized AnIpAddress getAddressByIp(String ip) {
         if (IPUtils.isPrivateIPAddress(ip)||ip.equals("119.45.1.61")){
-            return null;
+            return new AnIpAddress();
         }
         QueryWrapper<AnIpAddress> objectQueryWrapper = new QueryWrapper<>();
         objectQueryWrapper.eq("ip",ip);

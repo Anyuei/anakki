@@ -39,7 +39,7 @@ public interface AnUserService extends IService<AnUser> {
 
     UserDetailResponse detail();
 
-    void uploadAvatar(MultipartFile file) throws IOException;
+    void uploadAvatar(UploadAvatarRequest uploadAvatarRequest) throws IOException;
 
     Boolean sendSms(String telephone);
 

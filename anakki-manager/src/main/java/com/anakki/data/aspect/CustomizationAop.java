@@ -34,7 +34,7 @@ public class CustomizationAop  {
     public void logBeforeAPIAccess(JoinPoint joinPoint) {
         String ipAddr = IPUtils.getIpAddr(request);
         String requestURI = request.getRequestURI();
-        anPathStatisticLogService.log(requestURI,ipAddr);
+        anPathStatisticLogService.log(requestURI,ipAddr,null);
     }
 
     @AfterReturning(pointcut = "apiEndpoint()", returning = "result")
