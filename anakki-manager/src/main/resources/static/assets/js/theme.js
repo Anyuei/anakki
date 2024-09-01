@@ -9,160 +9,160 @@ function userDetail() {
 
 }
 
-$(window).on('load resize', function () {
+// $(window).on('load resize', function () {
+//
+//     // Background image holder - Static hero with fullscreen autosize
+//     if ($('.spotlight').length) {
+//         $('.spotlight').each(function () {
+//
+//             var $this = $(this);
+//             var holderHeight;
+//
+//             if ($this.data('spotlight') == 'fullscreen') {
+//                 if ($this.data('spotlight-offset')) {
+//                     var offsetHeight = $('body').find($this.data('spotlight-offset')).height();
+//                     holderHeight = $(window).height() - offsetHeight;
+//                 } else {
+//                     holderHeight = $(window).height();
+//                 }
+//
+//
+//                 if ($(window).width() > 991) {
+//                     $this.find('.spotlight-holder').css({
+//                         'height': holderHeight + 'px'
+//                     });
+//                 } else {
+//                     $this.find('.spotlight-holder').css({
+//                         'height': 'auto'
+//                     });
+//                 }
+//             }
+//         })
+//     }
+// }),
 
-    // Background image holder - Static hero with fullscreen autosize
-    if ($('.spotlight').length) {
-        $('.spotlight').each(function () {
+$(document).ready(function () {
 
-            var $this = $(this);
-            var holderHeight;
-
-            if ($this.data('spotlight') == 'fullscreen') {
-                if ($this.data('spotlight-offset')) {
-                    var offsetHeight = $('body').find($this.data('spotlight-offset')).height();
-                    holderHeight = $(window).height() - offsetHeight;
-                } else {
-                    holderHeight = $(window).height();
-                }
-
-
-                if ($(window).width() > 991) {
-                    $this.find('.spotlight-holder').css({
-                        'height': holderHeight + 'px'
-                    });
-                } else {
-                    $this.find('.spotlight-holder').css({
-                        'height': 'auto'
-                    });
-                }
-            }
-        })
-    }
-}),
-
-    $(document).ready(function () {
-
-        // Plugins init
-        $(".scrollbar-inner")[0] && $(".scrollbar-inner").scrollbar().scrollLock();
-        $('[data-stick-in-parent="true"]')[0] && $('[data-stick-in-parent="true"]').stick_in_parent();
-        $('.selectpicker')[0] && $('.selectpicker').selectpicker();
-        $('.textarea-autosize')[0] && autosize($('.textarea-autosize'));
-        $('[data-toggle="tooltip"]').tooltip();
-        $('[data-toggle="popover"]').each(function () {
-            var popoverClass = '';
-            if ($(this).data('color')) {
-                popoverClass = 'popover-' + $(this).data('color');
-            }
-            $(this).popover({
-                trigger: 'focus',
-                template: '<div class="popover ' + popoverClass + '" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>'
-            })
-        });
-
-
-        // Floating label
-        $('.form-control').on('focus blur', function (e) {
-            $(this).parents('.form-group').toggleClass('focused', (e.type === 'focus' || this.value.length > 0));
-        }).trigger('blur');
-
-
-        // Custom input file
-        $('.custom-input-file').each(function () {
-            var $input = $(this),
-                $label = $input.next('label'),
-                labelVal = $label.html();
-
-            $input.on('change', function (e) {
-                var fileName = '';
-
-                if (this.files && this.files.length > 1)
-                    fileName = (this.getAttribute('data-multiple-caption') || '').replace('{count}', this.files.length);
-                else if (e.target.value)
-                    fileName = e.target.value.split('\\').pop();
-
-                if (fileName)
-                    $label.find('span').html(fileName);
-                else
-                    $label.html(labelVal);
-            });
-
-
-            // Firefox bug fix
-            $input.on('focus', function () {
-                $input.addClass('has-focus');
-            })
-                .on('blur', function () {
-                    $input.removeClass('has-focus');
-                });
-        });
-
-
-        // NoUI Slider
-        if ($(".input-slider-container")[0]) {
-            $('.input-slider-container').each(function () {
-
-                var slider = $(this).find('.input-slider');
-                var sliderId = slider.attr('id');
-                var minValue = slider.data('range-value-min');
-                var maxValue = slider.data('range-value-max');
-
-                var sliderValue = $(this).find('.range-slider-value');
-                var sliderValueId = sliderValue.attr('id');
-                var startValue = sliderValue.data('range-value-low');
-
-                var c = document.getElementById(sliderId),
-                    d = document.getElementById(sliderValueId);
-
-                noUiSlider.create(c, {
-                    start: [parseInt(startValue)],
-                    connect: [true, false],
-                    //step: 1000,
-                    range: {
-                        'min': [parseInt(minValue)],
-                        'max': [parseInt(maxValue)]
-                    }
-                });
-
-                c.noUiSlider.on('update', function (a, b) {
-                    d.textContent = a[b];
-                });
-            })
-
+    // Plugins init
+    $(".scrollbar-inner")[0] && $(".scrollbar-inner").scrollbar().scrollLock();
+    $('[data-stick-in-parent="true"]')[0] && $('[data-stick-in-parent="true"]').stick_in_parent();
+    $('.selectpicker')[0] && $('.selectpicker').selectpicker();
+    $('.textarea-autosize')[0] && autosize($('.textarea-autosize'));
+    $('[data-toggle="tooltip"]').tooltip();
+    $('[data-toggle="popover"]').each(function () {
+        var popoverClass = '';
+        if ($(this).data('color')) {
+            popoverClass = 'popover-' + $(this).data('color');
         }
+        $(this).popover({
+            trigger: 'focus',
+            template: '<div class="popover ' + popoverClass + '" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>'
+        })
+    });
 
-        if ($("#input-slider-range")[0]) {
-            var c = document.getElementById("input-slider-range"),
-                d = document.getElementById("input-slider-range-value-low"),
-                e = document.getElementById("input-slider-range-value-high"),
-                f = [d, e];
+
+    // Floating label
+    $('.form-control').on('focus blur', function (e) {
+        $(this).parents('.form-group').toggleClass('focused', (e.type === 'focus' || this.value.length > 0));
+    }).trigger('blur');
+
+
+    // Custom input file
+    $('.custom-input-file').each(function () {
+        var $input = $(this),
+            $label = $input.next('label'),
+            labelVal = $label.html();
+
+        $input.on('change', function (e) {
+            var fileName = '';
+
+            if (this.files && this.files.length > 1)
+                fileName = (this.getAttribute('data-multiple-caption') || '').replace('{count}', this.files.length);
+            else if (e.target.value)
+                fileName = e.target.value.split('\\').pop();
+
+            if (fileName)
+                $label.find('span').html(fileName);
+            else
+                $label.html(labelVal);
+        });
+
+
+        // Firefox bug fix
+        $input.on('focus', function () {
+            $input.addClass('has-focus');
+        })
+            .on('blur', function () {
+                $input.removeClass('has-focus');
+            });
+    });
+
+
+    // NoUI Slider
+    if ($(".input-slider-container")[0]) {
+        $('.input-slider-container').each(function () {
+
+            var slider = $(this).find('.input-slider');
+            var sliderId = slider.attr('id');
+            var minValue = slider.data('range-value-min');
+            var maxValue = slider.data('range-value-max');
+
+            var sliderValue = $(this).find('.range-slider-value');
+            var sliderValueId = sliderValue.attr('id');
+            var startValue = sliderValue.data('range-value-low');
+
+            var c = document.getElementById(sliderId),
+                d = document.getElementById(sliderValueId);
 
             noUiSlider.create(c, {
-                start: [parseInt(d.getAttribute('data-range-value-low')), parseInt(e.getAttribute('data-range-value-high'))],
-                connect: !0,
+                start: [parseInt(startValue)],
+                connect: [true, false],
+                //step: 1000,
                 range: {
-                    min: parseInt(c.getAttribute('data-range-value-min')),
-                    max: parseInt(c.getAttribute('data-range-value-max'))
+                    'min': [parseInt(minValue)],
+                    'max': [parseInt(maxValue)]
                 }
-            }), c.noUiSlider.on("update", function (a, b) {
-                f[b].textContent = a[b]
-            })
-        }
+            });
 
-        // Scroll to anchor with animation
-        $('.scroll-me, .toc-entry a').on('click', function (event) {
-            var hash = $(this).attr('href');
-            var offset = $(this).data('scroll-to-offset') ? $(this).data('scroll-to-offset') : 0;
+            c.noUiSlider.on('update', function (a, b) {
+                d.textContent = a[b];
+            });
+        })
 
-            // Animate scroll to the selected section
-            $('html, body').stop(true, true).animate({
-                scrollTop: $(hash).offset().top - offset
-            }, 600);
+    }
 
-            event.preventDefault();
-        });
+    if ($("#input-slider-range")[0]) {
+        var c = document.getElementById("input-slider-range"),
+            d = document.getElementById("input-slider-range-value-low"),
+            e = document.getElementById("input-slider-range-value-high"),
+            f = [d, e];
 
-    }),
+        noUiSlider.create(c, {
+            start: [parseInt(d.getAttribute('data-range-value-low')), parseInt(e.getAttribute('data-range-value-high'))],
+            connect: !0,
+            range: {
+                min: parseInt(c.getAttribute('data-range-value-min')),
+                max: parseInt(c.getAttribute('data-range-value-max'))
+            }
+        }), c.noUiSlider.on("update", function (a, b) {
+            f[b].textContent = a[b]
+        })
+    }
+
+    // Scroll to anchor with animation
+    $('.scroll-me, .toc-entry a').on('click', function (event) {
+        var hash = $(this).attr('href');
+        var offset = $(this).data('scroll-to-offset') ? $(this).data('scroll-to-offset') : 0;
+
+        // Animate scroll to the selected section
+        $('html, body').stop(true, true).animate({
+            scrollTop: $(hash).offset().top - offset
+        }, 600);
+
+        event.preventDefault();
+    });
+
+}),
 
     $(document).ready(function () {
         $("body").on("click", "[data-action]", function (e) {
@@ -621,28 +621,17 @@ window.onscroll = function () {
 };
 
 function scrollFunction() {
+    let element = document.querySelector('.navbar');
+    if (!element) {
+        return
+    }
     if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
-        document.querySelector('.navbar').style.backgroundColor = 'rgba(0, 0, 0, 0.5)'; /* Change the transparency level here */
+        element.style.backgroundColor = 'rgba(0, 0, 0, 0.5)'; /* Change the transparency level here */
     } else {
-        document.querySelector('.navbar').style.backgroundColor = 'rgba(0, 0, 0, 0)'; /* Initial transparency level */
+        element.style.backgroundColor = 'rgba(0, 0, 0, 0)'; /* Initial transparency level */
     }
 }
 
-function like(id) {
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", "/api/anakki/record/like?id=" + id, true);
-    xhr.setRequestHeader('authorization', localStorage.getItem('user-token')); // Include the token in the Authorization header
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            const response = JSON.parse(xhr.responseText);
-            const item = response.data;
-            document.getElementById("likeId_" + id).innerHTML = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-heart-fill\" viewBox=\"0 0 16 16\">\n" +
-                "  <path fill-rule=\"evenodd\" d=\"M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z\"/>\n" +
-                "</svg>" + item;
-        }
-    };
-    xhr.send();
-}
 
 function unLike(id) {
     const xhr = new XMLHttpRequest();
@@ -699,3 +688,42 @@ async function sendDeviceInfo() {
 
 // 页面加载时发送设备信息
 document.addEventListener('DOMContentLoaded', sendDeviceInfo);
+
+
+function handleVideoClick(id) {
+    fetch(`/base/anakki/record/increaseViewCount?id=` + id, {method: 'GET'});
+    showModal(id)
+}
+
+async function like(id) {
+    try {
+        const response = await fetch('/api/anakki/record/like', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'authorization': localStorage.getItem('user-token')
+            },
+            body: JSON.stringify({ id })
+        });
+
+        const json = await response.json();
+
+        if (json.code === 200) {
+            const item = json.data;
+            const likeElement = document.getElementById("likeCount_" + id);
+            const likeElementModal = document.getElementById("modalLikeCount_" + id);
+
+            if (likeElement) {
+                likeElement.innerHTML = `<i class="bi bi-suit-heart-fill"></i>${item}`;
+            }
+            if (likeElementModal) {
+                likeElementModal.innerHTML = `<i class="bi bi-suit-heart-fill"></i>${item}`;
+            }
+
+        } else {
+            alert(json.data);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description"
+          content="时光胶囊,Anakki的个人网站,摄影,博客,技术分享。                             ">
+    <meta name="author" content="Anakki">
+    <title>Anakki-World</title>
+    <!-- Fonts -->
+    <!-- Theme CSS -->
+    <link type="text/css" href="../assets/css/theme.css" rel="stylesheet">
+    <!-- Demo CSS - No need to use these in your project -->
+    <link type="text/css" href="../assets/css/demo.css" rel="stylesheet">
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta
+            content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"
+            name="viewport"
+    />
+    <style>
+        .bg-tertiary {
+            background-color: #503662 !important;
+        }
+    </style>
+
+</head>
+<style>
+    .center-video {
+        text-align: center;
+    }
+    .bg-light {
+        position: relative;
+    }
+
+    .date {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        margin: 10px;
+        font-size: 14px;
+        color: #666;
+    }
+    body {
+        color: #254768;
+        background-color: #000000e8;
+        margin: 0;
+        height: 100%;
+    }
+
+    .manageUi {
+        border: none;
+        width: 100%;
+        top: 0;
+        left: 0;
+            padding-top: 4rem;
+        height: 100vh;
+    }
+    iframe {
+        border: 0;
+        height: 100%;
+        width: 100%;
+    }
+</style>
+<body>
+<!--通用顶部导航-->
+<div id="header"></div>
+
+<div class="manageUi">
+    <iframe src="https://anakkix.netlify.app/#login">
+        <p>您的浏览器不支持iframe标签。</p>
+    </iframe>
+</div>
+
+<!-- Core -->
+<script src="../assets/vendor/jquery/jquery.min.js"></script>
+<script src="../assets/vendor/popper/popper.min.js"></script>
+<script src="../assets/js/bootstrap/bootstrap.min.js"></script>
+<!-- FontAwesome 5 -->
+<script src="../assets/vendor/fontawesome/js/fontawesome-all.min.js" defer></script>
+<!-- Page plugins -->
+<script src="../assets/vendor/bootstrap-select/js/bootstrap-select.min.js"></script>
+<script src="../assets/vendor/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>
+<script src="../assets/vendor/input-mask/input-mask.min.js"></script>
+<script src="../assets/vendor/nouislider/js/nouislider.min.js"></script>
+<script src="../assets/vendor/textarea-autosize/textarea-autosize.min.js"></script>
+<!-- Theme JS -->
+<script src="../assets/js/theme.js"></script>
+
+<script>
+    window.onload = function () {
+        $('#header').load("../pages/header.html", loadPersonDetail);
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", "/base/system/view?moduleType=MANAGE", true);
+        xhr.onreadystatechange = function () {
+        };
+        xhr.send();
+    }
+</script>
+</body>
+</html>

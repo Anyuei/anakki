@@ -95,11 +95,16 @@
         .comment-open-button:hover {
             transform: scale(1.1); /* 放大1.1倍，你可以根据需要调整 */
         }
+
         .spotlight {
             height: 100vh; /* 使背景区域覆盖整个视口高度 */
             background-size: cover;
             background-position: center;
             min-height: 1080px;
+        }
+
+        .spinner-border {
+            margin: 20px auto; /* 使加载动画居中 */
         }
     </style>
 </head>
@@ -121,49 +126,53 @@
         <div class="container-fluid" style="justify-content: center;display: flex;">
             <div class="col-lg-7">
                 <div class="heading h3 mb-2">
-                    <div class="comment-open-button" type="button" data-toggle="modal" data-target="#commentModal" style="width: 4rem">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-envelope-plus" viewBox="0 0 16 16">
+                    <div class="comment-open-button" type="button" data-toggle="modal" data-target="#commentModal"
+                         style="width: 4rem">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                             class="bi bi-envelope-plus" viewBox="0 0 16 16">
                             <path d="M2 2a2 2 0 0 0-2 2v8.01A2 2 0 0 0 2 14h5.5a.5.5 0 0 0 0-1H2a1 1 0 0 1-.966-.741l5.64-3.471L8 9.583l7-4.2V8.5a.5.5 0 0 0 1 0V4a2 2 0 0 0-2-2H2Zm3.708 6.208L1 11.105V5.383l4.708 2.825ZM1 4.217V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v.217l-7 4.2-7-4.2Z"/>
                             <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Zm-3.5-2a.5.5 0 0 0-.5.5v1h-1a.5.5 0 0 0 0 1h1v1a.5.5 0 0 0 1 0v-1h1a.5.5 0 0 0 0-1h-1v-1a.5.5 0 0 0-.5-.5Z"/>
                         </svg>
                     </div>
                 </div>
+
                 <div id="friend-comment" class="list-group align-items-center">
-                    <!--留言填充-->
+
+
                 </div>
             </div>
         </div>
     </section>
     背景摄于2022年川藏线骑行
-            <!-- 模态框结构 -->
-            <div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="commentModalLabel"
-                 aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header d-flex justify-content-between align-items-center">
-                            <h5 class="modal-title" id="commentModalLabel">留言板(审核后展示)</h5>
-                            <div class="form-check form-switch" style="margin-right: 1.5rem;">
-                                <input class="form-check-input" type="checkbox" id="anonymousSwitch"
-                                       onclick="toggleAnonymousFields()">
-                                <label class="form-check-label" for="anonymousSwitch">匿名留言</label>
-                            </div>
-                        </div>
-                        <div class="modal-body">
-                            <!-- 原始表单内容 -->
-                            <form id="commentForm">
-                                <div class="form-group">
-                                    <textarea class="form-control" rows="5" placeholder="留言内容" name="comment"
-                                              required></textarea>
-                                </div>
-                                <div class="mt-4">
-                                    <button type="submit" class="btn btn-primary px-4">发送</button>
-                                </div>
-                            </form>
-
-                        </div>
+    <!-- 模态框结构 -->
+    <div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="commentModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header d-flex justify-content-between align-items-center">
+                    <h5 class="modal-title" id="commentModalLabel">留言板(审核后展示)</h5>
+                    <div class="form-check form-switch" style="margin-right: 1.5rem;">
+                        <input class="form-check-input" type="checkbox" id="anonymousSwitch"
+                               onclick="toggleAnonymousFields()">
+                        <label class="form-check-label" for="anonymousSwitch">匿名留言</label>
                     </div>
                 </div>
+                <div class="modal-body">
+                    <!-- 原始表单内容 -->
+                    <form id="commentForm">
+                        <div class="form-group">
+                                    <textarea class="form-control" rows="5" placeholder="留言内容" name="comment"
+                                              required></textarea>
+                        </div>
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-primary px-4">发送</button>
+                        </div>
+                    </form>
+
+                </div>
             </div>
+        </div>
+    </div>
 </main>
 <!-- 页面底部 -->
 <div id="footer"></div>
@@ -184,13 +193,25 @@
 
 <script>
     window.onload = function () {
+
         $('#header').load("../pages/header.html", loadPersonDetail);
         $('#footer').load("../pages/footer.html", insertCreateTime);
-
         const mainPageImageFlow = new XMLHttpRequest();
+
+
+        // 创建加载动画元素
+        const loadingOverlay = document.createElement("div");
+        loadingOverlay.className = "loading-overlay";
+        loadingOverlay.innerHTML = `<div class="loading-spinner"></div>`;
+        document.body.appendChild(loadingOverlay);
+
+
         mainPageImageFlow.open("GET", "/base/anakki/friends-comment/list-comments", true);
         mainPageImageFlow.onreadystatechange = function () {
             if (mainPageImageFlow.readyState === 4 && mainPageImageFlow.status === 200) {
+                // 移除加载动画
+                document.body.removeChild(loadingOverlay);
+
                 let html = "";
                 const response = JSON.parse(mainPageImageFlow.responseText);
                 const itemList = response.data.data;
@@ -212,20 +233,15 @@
                             <div class="ms-3 w-100" style="margin: 0.5rem;">
                                 <div class="d-flex justify-content-between">
                                     <h5 class="card-title mb-1">${item.nickname}</h5>
-                                    <p class="card-text text-muted mb-0">${formattedDateTime}</p>
+                                    <p class="card-text text-muted mb-0">${daysBefore}-${formattedDateTime}</p>
                                 </div>
                                 <p class="card-text">${item.comment}</p>
                                 <div class="d-flex justify-content-between align-items-center mt-2">
                                     <a href="#">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-suit-heart" viewBox="0 0 16 16">
-                                          <path d="m8 6.236-.894-1.789c-.222-.443-.607-1.08-1.152-1.595C5.418 2.345 4.776 2 4 2 2.324 2 1 3.326 1 4.92c0 1.211.554 2.066 1.868 3.37.337.334.721.695 1.146 1.093C5.122 10.423 6.5 11.717 8 13.447c1.5-1.73 2.878-3.024 3.986-4.064.425-.398.81-.76 1.146-1.093C14.446 6.986 15 6.131 15 4.92 15 3.326 13.676 2 12 2c-.777 0-1.418.345-1.954.852-.545.515-.93 1.152-1.152 1.595L8 6.236zm.392 8.292a.513.513 0 0 1-.784 0c-1.601-1.902-3.05-3.262-4.243-4.381C1.3 8.208 0 6.989 0 4.92 0 2.755 1.79 1 4 1c1.6 0 2.719 1.05 3.404 2.008.26.365.458.716.596.992a7.55 7.55 0 0 1 .596-.992C9.281 2.049 10.4 1 12 1c2.21 0 4 1.755 4 3.92 0 2.069-1.3 3.288-3.365 5.227-1.193 1.12-2.642 2.48-4.243 4.38z"/>
-                                        </svg>
+                                        <i class="bi bi-suit-heart"></i>
                                     </a>
                                     <a href="#">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-chat-right-dots" viewBox="0 0 16 16">
-                                          <path d="M2 1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h9.586a2 2 0 0 1 1.414.586l2 2V2a1 1 0 0 0-1-1H2zm12-1a2 2 0 0 1 2 2v12.793a.5.5 0 0 1-.854.353l-2.853-2.853a1 1 0 0 0-.707-.293H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12z"/>
-                                          <path d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
-                                        </svg>
+                                        <i class="bi bi-chat-right-dots"></i>
                                     </a>
                                 </div>
                             </div>
@@ -246,9 +262,9 @@
             let token = localStorage.getItem('user-token');
             // 获取匿名留言开关的状态
             const isAnonymous = $('#anonymousSwitch').is(':checked');
-            let base="/base";
+            let base = "/base";
             if (!isAnonymous) {
-                base="/api";
+                base = "/api";
             }
             if (!isAnonymous && null == token) {
                 alert("请登录，游客仅支持匿名评论")
@@ -265,7 +281,7 @@
             });
 
             $.ajax({
-                url: base+'/anakki/friends-comment/create-comment',
+                url: base + '/anakki/friends-comment/create-comment',
                 type: 'POST',
                 data: formData, // 直接传递对象形式的数据
                 beforeSend: function (xhr) {

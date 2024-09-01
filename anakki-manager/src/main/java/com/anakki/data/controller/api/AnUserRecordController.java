@@ -11,10 +11,7 @@ import com.anakki.data.service.AnRecordService;
 import com.anakki.data.utils.IPUtils;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -35,7 +32,7 @@ public class AnUserRecordController {
     private AnRecordService anRecordService;
 
     @ApiOperation(value = "点赞")
-    @GetMapping("/like")
+    @PostMapping("/like")
     public ResponseDTO<Object> like(@RequestBody IdNotNullRequest id, HttpServletRequest request) {
         String ipAddr = IPUtils.getIpAddr(request);
         Object like = anRecordService.userOperate(id.getId(), ipAddr, "LIKE");
@@ -43,7 +40,7 @@ public class AnUserRecordController {
     }
 
     @ApiOperation(value = "不喜欢")
-    @GetMapping("/unLike")
+    @PostMapping("/unLike")
     public ResponseDTO<Object> unLike(@RequestBody IdNotNullRequest id,HttpServletRequest request) {
         String ipAddr = IPUtils.getIpAddr(request);
         Object unlike = anRecordService.userOperate(id.getId(), ipAddr, "UNLIKE");

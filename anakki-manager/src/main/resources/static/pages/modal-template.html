@@ -1,0 +1,21 @@
+<!-- modal-template.html -->
+<template id="modal-template">
+    <div class="modal-content-my">
+        <div class="modal-header-my" onclick="this.parentElement.parentElement.remove()">
+            <i class="bi bi-x-lg"></i>
+        </div>
+        <video controls id="modalVideo" style="display: none;">
+            <source id="videoSource" type="video/mp4">
+            您的浏览器不支持播放该视频。
+        </video>
+        <img id="modalImage" src="" alt="" style="display: none;">
+        <div class="heart-icons">
+            <div class="heart-icon" onclick="like(${item.id}, this)">
+                <div class="justify-content-lg-between" style="display: flex">
+                    <i class="bi bi-play-circle-fill"></i>
+                    <div id="likeCount">${item.likeCount}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
