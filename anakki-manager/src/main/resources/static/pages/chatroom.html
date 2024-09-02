@@ -958,11 +958,16 @@
         fetchChatNewData()
 
         let userMail = localStorage.getItem("user_mail");
-        if (!userMail){
+        if (userMail){
             document.getElementById('emailInput').value=userMail;
         }
     }
     function sendChatData() {
+        const token = localStorage.getItem('user-token');
+        if (null == token) {
+            alert("请登录")
+        }
+
         // 获取输入框的消息内容
         const messageInput = document.getElementById('message-input');
         const messageContent = messageInput.value;
@@ -982,11 +987,8 @@
             contentType: 'text' // 根据需求设置
         };
 
-        const token = localStorage.getItem('user-token');
-        if (null == token) {
-            alert("请登录")
-        }
         document.getElementById('send-button').disabled = true;
+
         // 发送请求到后端
         fetch('/api/anakki/chat/send-to-room', {
             method: 'POST',
@@ -1004,12 +1006,12 @@
                     // 处理消息发送成功的逻辑，例如将消息添加到聊天记录中
                     console.log('消息发送成功');
                     fetchChatNewData()
-                    sendButton.disabled = false;
                     scrollToBottom();
                 } else {
                     // 处理消息发送失败的逻辑
                     console.error('消息发送失败');
                 }
+                document.getElementById('send-button').disabled = false;
             })
             .catch(error => {
                 console.error('发送请求失败', error);

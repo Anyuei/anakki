@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.sql.Blob;
+import java.util.List;
 
 /**
  * ClassName: CreateNoteRequest
@@ -15,6 +16,9 @@ import java.sql.Blob;
  */
 @Data
 public class CreateNoteRequest {
+
+    @ApiModelProperty("共同编辑者id")
+    private List<Long> authorIds;
 
     @ApiModelProperty("笔记id")
     private Long id;

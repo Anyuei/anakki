@@ -235,6 +235,13 @@ public class AnRecordServiceImpl extends ServiceImpl<AnRecordMapper, AnRecord> i
     public void removeByAvatarUserId(Long id) {
         QueryWrapper<AnRecord> anRecordQueryWrapper = new QueryWrapper<>();
         anRecordQueryWrapper.eq("avatar_user_id",id);
-        remove(anRecordQueryWrapper);
+// 获取符合条件的记录
+        AnRecord record = getOne(anRecordQueryWrapper);
+        if (record != null) {
+            // 将 avatar_user_id 字段置空
+            record.setAvatarUserId(null);
+            // 更新记录
+            updateById(record);
+        }
     }
 }

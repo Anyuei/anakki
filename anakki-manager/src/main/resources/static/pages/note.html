@@ -7,10 +7,8 @@
           content="时光胶囊,Anakki的个人网站,摄影,博客,技术分享。                             ">
     <meta name="author" content="Anakki">
     <title>Anakki-World</title>
-    <!-- Fonts -->
-    <!-- Theme CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link type="text/css" href="../assets/css/theme.css" rel="stylesheet">
-    <!-- Demo CSS - No need to use these in your project -->
     <link type="text/css" href="../assets/css/demo.css" rel="stylesheet">
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
@@ -168,10 +166,20 @@
     }
 
     .modal-content {
-        background-color: #c8c8c8d1;
+        background-color: #d3d3d3;
     }
     .note-node-title-dropdown-icon{
         margin-top: 1rem;
+    }
+
+    .author-item .author-avatar{
+        height: 2rem;
+        width: 2rem;
+        border-radius: 1rem;
+    }
+    #viewModalNoteAuthors{
+        width: 30%;
+        display: flex;
     }
 </style>
 <body>
@@ -275,7 +283,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div style="display: none" id="noteDetailId"></div>
-            <div class="modal-header">
+            <div class="modal-header" style="margin: 1rem 1rem 0rem 0rem;">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -284,10 +292,10 @@
                 <!-- Data fetched from backend will be displayed here -->
             </div>
             <div class="modal-footer justify-content-between">
-                <div  id="viewModalNoteAuthor"></div>
+                <div  id="viewModalNoteAuthors"></div>
                 <div id="foot-right">
-                    <span  id="viewModalNoteTime"></span> |
-                    <span class="justify-content-between" id="viewCountView">
+                    <span  id="viewModalNoteTime" style="margin-right: 1rem;"></span> |
+                    <span class="justify-content-between" style="margin-left: 1rem;" id="viewCountView">
                         <a href="#" onclick="likeNote()">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-suit-heart-fill" viewBox="0 0 16 12">
                               <path d="M4 1c2.21 0 4 1.755 4 3.92C8 2.755 9.79 1 12 1s4 1.755 4 3.92c0 3.263-3.234 4.414-7.608 9.608a.513.513 0 0 1-.784 0C3.234 9.334 0 8.183 0 4.92 0 2.755 1.79 1 4 1z"/>
@@ -495,34 +503,59 @@
                 console.error('Error:', error);
             });
     }
+
     function viewNote(id) {
-        fetch('/base/anakki/note/note-detail?id='+id, {
+        fetch('/base/anakki/note/note-detail?id=' + id, {
             method: 'GET'
         })
-        .then(response => {
-            if (response.ok) {
-                return response.json(); // Parse JSON data
-            } else {
-                // Handle error response
-                console.error('网络错误，请联系管理员');
-            }
-        })
-        .then(data => {
-            if (data.code === 200) {
-                document.getElementById("viewModalBody").innerHTML = data.data.content;
-                document.getElementById("viewModalNoteTime").innerHTML = data.data.createTime.replace("T"," ");
-                document.getElementById("viewModalNoteAuthor").innerHTML = data.data.author;
-                document.getElementById("viewCount").innerHTML = data.data.viewCount;
-                document.getElementById("noteLikeCount").innerHTML = data.data.likeCount;
-                document.getElementById("noteDetailId").innerHTML = data.data.id;
-                $('#viewModal').modal('show');
-            } else {
-                alert(data.data)
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
+            .then(response => {
+                if (response.ok) {
+                    return response.json(); // Parse JSON data
+                } else {
+                    // Handle error response
+                    console.error('网络错误，请联系管理员');
+                }
+            })
+            .then(data => {
+                if (data.code === 200) {
+                    document.getElementById("viewModalBody").innerHTML = data.data.content;
+                    document.getElementById("viewModalNoteTime").innerHTML = data.data.createTime.replace("T", " ");
+
+                    let viewModalNoteAuthors = document.getElementById("viewModalNoteAuthors");
+
+                    // 清空当前内容
+                    viewModalNoteAuthors.innerHTML = '<span style="font-size: 2rem"><i class="bi bi-pen-fill"></i></span>';
+
+                    // 检查是否有协作者
+                    if (data.data.authorsDetail && data.data.authorsDetail.length > 0) {
+                        // 遍历协作者信息并生成HTML内容
+                        data.data.authorsDetail.forEach(author => {
+                            let authorHTML = `
+                                <span class="d-inline-block" style="align-content: center;" tabindex="0" data-toggle="tooltip" title="${author.nickname}">
+                                    <div class="author-item">
+                                        <img src="${author.avatar}" alt="${author.nickname}" class="author-avatar"/>
+                                    </div>
+                                </span>
+
+                            `;
+
+                            viewModalNoteAuthors.innerHTML += authorHTML;
+                        });
+
+                    }
+                    viewModalNoteAuthors.innerHTML += '<span style="font-size: 2rem"><i class="bi bi-plus-circle-dotted"></i></span>';
+                    // document.getElementById("viewModalNoteAuthor").innerHTML = data.data.author;
+                    document.getElementById("viewCount").innerHTML = data.data.viewCount;
+                    document.getElementById("noteLikeCount").innerHTML = data.data.likeCount;
+                    document.getElementById("noteDetailId").innerHTML = data.data.id;
+                    $('#viewModal').modal('show');
+                } else {
+                    alert(data.data)
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
     }
     function editNote(id) {
         fetch('/base/anakki/note/note-detail?id='+id, {

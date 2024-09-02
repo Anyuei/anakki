@@ -167,11 +167,11 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
 
         if (StringUtils.isNotBlank(selectedAvatar)) {
 
-            AnRecord avatarImg = anRecordService.getById(id);
-            if (null==avatarImg){
+            AnRecord newAvatarImg = anRecordService.getById(id);
+            if (null==newAvatarImg){
                 throw new RuntimeException("找不到此头像");
             }
-            Long avatarUserId = avatarImg.getAvatarUserId();
+            Long avatarUserId = newAvatarImg.getAvatarUserId();
             if (null!=avatarUserId){
                 if (!avatarUserId.equals(byNickname.getId())){
                     throw new RuntimeException("头像已经被其他用户使用");
@@ -179,11 +179,11 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
                     throw new RuntimeException("您正在使用此头像");
                 }
             }
-            avatarImg.setAvatarUserId(byNickname.getId());
+            newAvatarImg.setAvatarUserId(byNickname.getId());
             //移除旧占位，如果有的话
             anRecordService.removeByAvatarUserId(byNickname.getId());
             //占有新的头像
-            anRecordService.updateById(avatarImg);
+            anRecordService.updateById(newAvatarImg);
 
             byNickname.setAvatar(selectedAvatar);
         }else{
