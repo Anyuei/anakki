@@ -172,7 +172,7 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
                 throw new RuntimeException("找不到此头像");
             }
             Long avatarUserId = newAvatarImg.getAvatarUserId();
-            if (null!=avatarUserId){
+            if (null!=avatarUserId&&avatarUserId!=-1){
                 if (!avatarUserId.equals(byNickname.getId())){
                     throw new RuntimeException("头像已经被其他用户使用");
                 }else{

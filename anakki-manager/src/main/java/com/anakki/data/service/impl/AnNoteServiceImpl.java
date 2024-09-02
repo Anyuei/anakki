@@ -60,12 +60,13 @@ public class AnNoteServiceImpl extends ServiceImpl<AnNoteMapper, AnNote> impleme
     public Boolean save(CreateNoteRequest createNoteRequest, HttpServletRequest request) {
         String ipAddr = IPUtils.getIpAddr(request);
 
-        String currentNickname = BaseContext.getCurrentNickname(false);
+        String currentNickname = BaseContext.getCurrentNickname();
         AnUser user = anUserService.getByNickname(currentNickname);
         Long currentUserId = user.getId();
-        AnNote anNote = new AnNote();
+        AnNote anNote=null;
         Long noteId = createNoteRequest.getId();
         if (null != noteId) {
+            anNote = getById(noteId);
             if (!anNote.getCreateBy().equals(currentUserId)) {
                 Set<Long> authorIdSet = getAuthorIdList(anNote.getAuthorIds());
                 if (!authorIdSet.contains(currentUserId)) {
@@ -79,6 +80,7 @@ public class AnNoteServiceImpl extends ServiceImpl<AnNoteMapper, AnNote> impleme
 
             updateById(anNote);
         } else {
+            anNote = new AnNote();
             BeanUtils.copyProperties(createNoteRequest, anNote);
             anNote.setAuthor(user.getNickname());
             anNote.setLocation(ipAddr);

@@ -46,6 +46,9 @@ public class AnRecordServiceImpl extends ServiceImpl<AnRecordMapper, AnRecord> i
 
     @Autowired
     private AnUserService anUserService;
+
+    @Autowired
+    private AnRecordMapper anRecordMapper;
     @Override
     public BasePageResult<AnRecord> flow(GetContentRequest getContentRequest,String ipAddr) {
         IPage<AnRecord> anRecordIPage = new Page<>(
@@ -224,7 +227,7 @@ public class AnRecordServiceImpl extends ServiceImpl<AnRecordMapper, AnRecord> i
         anRecordQueryWrapper.ge(null != createTimeStart, "create_time", createTimeStart);
         anRecordQueryWrapper.le(null != createTimeEnd, "create_time", createTimeEnd);
         anRecordQueryWrapper.orderByDesc("create_time","id");
-        anRecordQueryWrapper.isNull("avatar_user_id");
+        anRecordQueryWrapper.eq("avatar_user_id",-1L);
         IPage<AnRecord> page = page(anRecordIPage, anRecordQueryWrapper);
         List<AnRecord> records = page.getRecords();
         List<AvatarImgListResponse> avatarImgListResponses = com.anakki.data.utils.common.BeanUtils.copyBeanList(records, AvatarImgListResponse.class);
@@ -239,9 +242,9 @@ public class AnRecordServiceImpl extends ServiceImpl<AnRecordMapper, AnRecord> i
         AnRecord record = getOne(anRecordQueryWrapper);
         if (record != null) {
             // 将 avatar_user_id 字段置空
-            record.setAvatarUserId(null);
+            record.setAvatarUserId(-1L);
             // 更新记录
-            updateById(record);
+            anRecordMapper.updateById(record);
         }
     }
 }
