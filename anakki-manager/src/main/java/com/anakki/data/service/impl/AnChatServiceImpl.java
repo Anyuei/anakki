@@ -1,7 +1,6 @@
 package com.anakki.data.service.impl;
 
 import com.anakki.data.bean.common.BaseContext;
-import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.entity.AnChat;
 import com.anakki.data.entity.AnChatRoom;
 import com.anakki.data.entity.AnChatRoomUser;
@@ -12,8 +11,6 @@ import com.anakki.data.service.*;
 import com.anakki.data.utils.common.EmailUtil;
 import com.anakki.data.utils.common.RedisUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,7 +121,7 @@ public class AnChatServiceImpl extends ServiceImpl<AnChatMapper, AnChat> impleme
             throw new RuntimeException("用户不存在！");
         }
 
-        if (!anChatRoomUserService.isRoomUser(roomId,byNickname.getId())) {
+        if (!anChatRoomUserService.isRoomUser(byNickname.getId(),roomId)) {
             throw new RuntimeException("请先进入聊天室");
         }
 
@@ -189,6 +186,14 @@ public class AnChatServiceImpl extends ServiceImpl<AnChatMapper, AnChat> impleme
         String currentNickname = BaseContext.getCurrentNickname();
         AnUser user = anUserService.getByNickname(currentNickname);
         user.setIsChatroomMailNotice(request.getStatus());
+        return anUserService.updateById(user);
+    }
+
+    @Override
+    public Boolean setIsEnterSendMessage(TurnOnOffRequest request) {
+        String currentNickname = BaseContext.getCurrentNickname();
+        AnUser user = anUserService.getByNickname(currentNickname);
+        user.setIsEnterSendMessage(request.getStatus());
         return anUserService.updateById(user);
     }
 }

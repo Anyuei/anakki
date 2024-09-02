@@ -47,6 +47,14 @@
         background-size: cover;
         background-position: center;
     }
+    .login-title{
+        display: flex;
+        justify-content: center;
+    }
+    .captcha-img {
+        margin-left: 0.5rem;
+        border-radius: 0.5rem;
+    }
 </style>
 <body>
 <!--通用顶部导航-->
@@ -63,11 +71,14 @@
                                 <i class="fas fa-arrow-left"></i>
                                 <a href="sign-up.html">
                                     <span style="font-weight: bold;">
-                                        注册
+                                        去注册
                                     </span>
                                 </a>
                                 <span class="clearfix"></span>
-                                <h4 class="heading h3 text-white pt-3 pb-5">欢迎回家</h4>
+                                <div class="login-title">
+                                    <h4 class="heading h3 text-white pt-3 pb-5">欢迎回家</h4>
+                                </div>
+
 
 
                                 <!--                                <&#45;&#45;验证码+提交验证&ndash;&gt;-->
@@ -89,7 +100,7 @@
                                         <input type="password" class="form-control" id="input_password" name="password"
                                                placeholder="密码" required>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group" style="display: flex;justify-content: space-between">
                                         <input type="text"
                                                class="form-control"
                                                placeholder="请输入验证码"
@@ -97,11 +108,11 @@
                                         <img class="captcha-img" src="/base/system/captcha" alt="验证码"
                                              style="width: 6rem; cursor: pointer;" onclick="refreshCaptcha()">
                                     </div>
-                                    <div class="text-right mt-4"><a href="#" class="text-white"
-                                                                    onclick="forgot()">忘记密码?</a></div>
+                                    <a href="#" class="text-white" onclick="forgot()">忘记密码?</a>
                                     <p id="login-notice" style="color: red"></p>
-                                    <button type="submit" class="btn btn-block btn-lg bg-white mt-4"
-                                            style="padding: 0.3rem 1rem;">登录
+                                    <button id="loginButton" type="submit" class="btn btn-block btn-lg bg-white mt-4" style="padding: 0.3rem 1rem;">
+                                        <span id="buttonText">登录</span>
+                                        <span id="buttonSpinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none;"></span>
                                     </button>
                                 </form>
                             </div>
@@ -164,26 +175,30 @@
         alert("忘了我有啥子办法？微信找我重置吧")
     }
 
-    function copyText() {
-        var text = document.getElementById("conflux-address").innerText;
-        navigator.clipboard.writeText(text)
-            .then(function () {
-                alert("Text copied to clipboard!");
-            })
-            .catch(function (error) {
-                console.error("Failed to copy text: ", error);
-            });
-    }
-
     $(document).ready(function () {
         $('#login-form').submit(function (e) {
             e.preventDefault(); // Prevent form submission
             var formData = $(this).serialize(); // Serialize form data
+            let loginButton = document.getElementById('loginButton');
+            // 获取按钮的文本和 spinner 元素
+            const buttonText = document.getElementById('buttonText');
+            const buttonSpinner = document.getElementById('buttonSpinner');
+
+            // 显示 spinner 并更改按钮文本
+            buttonText.textContent = '疯狂踹门ing...(#>д<)ﾉ';
+            buttonSpinner.style.display = 'inline-block';
+            // 禁用按钮以防止重复点击
+            loginButton.disabled = true;
             $.ajax({
                 url: '/base/anakki/user/login', // Replace with your server URL
                 type: 'POST',
                 data: formData,
                 success: function (response) {
+                    // 模拟完成操作后重置按钮状态
+                    buttonText.textContent = '登录';
+                    buttonSpinner.style.display = 'none';
+                    loginButton.disabled = false;
+
                     if (response.code === 101) {
                         document.getElementById("login-notice").innerHTML = response.data;
 

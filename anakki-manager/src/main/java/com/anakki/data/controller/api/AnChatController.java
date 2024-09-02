@@ -64,4 +64,11 @@ public class AnChatController {
         Boolean save= anChatService.userSettingMailNotice(request);
         return ResponseDTO.succData(save);
     }
+    @ApiOperation(value = "设置用户回车发送消息")
+    @PostMapping("/user-setting-enter-message")
+    public ResponseDTO<Boolean> setIsEnterSendMessage(@RequestBody TurnOnOffRequest request) {
+        Boolean save= anChatService.setIsEnterSendMessage(request);
+        return ResponseDTO.succData(save);
+    }
+
 }

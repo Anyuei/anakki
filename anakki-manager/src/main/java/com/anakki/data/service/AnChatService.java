@@ -26,4 +26,6 @@ public interface AnChatService extends IService<AnChat> {
     Boolean userSetting(ChatRoomSettingRequest request);
 
     Boolean userSettingMailNotice(TurnOnOffRequest request);
+
+    Boolean setIsEnterSendMessage(TurnOnOffRequest request);
 }

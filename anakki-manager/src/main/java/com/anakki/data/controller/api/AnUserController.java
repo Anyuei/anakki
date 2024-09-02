@@ -5,6 +5,7 @@ import com.anakki.data.bean.common.ResponseDTO;
 import com.anakki.data.entity.request.*;
 import com.anakki.data.entity.response.UserDetailResponse;
 import com.anakki.data.service.AnUserService;
+import com.anakki.data.utils.common.EmailMaskingUtil;
 import com.anakki.data.utils.common.JwtUtil;
 import com.ramostear.captcha.HappyCaptcha;
 import io.swagger.annotations.ApiOperation;
@@ -36,6 +37,7 @@ public class AnUserController {
     @GetMapping("/detail")
     public ResponseDTO<UserDetailResponse> detail(){
         UserDetailResponse detail = anUserService.detail();
+        detail.setMail(EmailMaskingUtil.maskEmail(detail.getMail()));
         return ResponseDTO.succData(detail);
     }
 

@@ -309,6 +309,8 @@ function loadPersonDetail() {
                     localStorage.setItem("nickname", nickname);
                     localStorage.setItem("avatar", avatar);
                     localStorage.setItem("isChatroomMailNotice", user.isChatroomMailNotice)
+                    localStorage.setItem("isEnterSendMessage", user.isEnterSendMessage)
+                    localStorage.setItem("user_mail", user.mail)
                 } else {
                     localStorage.removeItem('user-token')
                 }
@@ -727,3 +729,4 @@ async function like(id) {
         console.error('Error:', error);
     }
 }
+

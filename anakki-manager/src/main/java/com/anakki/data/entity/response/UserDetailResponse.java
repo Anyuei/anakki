@@ -32,9 +32,16 @@ public class UserDetailResponse {
     @ApiModelProperty("经验值")
     private Long exp;
 
+    @ApiModelProperty("邮箱地址")
+    private String mail;
+
     @ApiModelProperty("登录天数")
     private Integer loginDays;
 
     @ApiModelProperty("是否开启聊天室邮箱提醒")
     private Boolean isChatroomMailNotice;
+
+    @ApiModelProperty("是否回车发送消息")
+    private Boolean isEnterSendMessage;
+
 }

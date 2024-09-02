@@ -81,4 +81,9 @@ public class AnUser extends BaseEntity  implements Serializable {
     @ApiModelProperty("是否开启聊天室邮箱提醒")
     @TableField("is_chatroom_mail_notice")
     private Boolean isChatroomMailNotice;
+
+
+    @ApiModelProperty("是否回车发送消息")
+    @TableField("is_enter_send_message")
+    private Boolean isEnterSendMessage;
 }

@@ -7,7 +7,7 @@
     <meta name="author" content="Anakki">
     <title>Anakki-World</title>
     <!-- Fonts -->
-
+    <link rel="stylesheet" href="../assets/js/bootstrap5/css/bootstrap.min.css">
     <!-- Theme CSS -->
     <link type="text/css" href="../assets/css/theme.css" rel="stylesheet">
     <!-- Demo CSS - No need to use these in your project -->
@@ -254,9 +254,6 @@
             box-shadow: none;
             transition: all 0.2s ease-in-out;
         }
-        .modal-header {
-            margin: 0.5rem;
-        }
 
         .message-operate {
             background-color: rgba(0, 0, 0, 0.56);
@@ -275,7 +272,12 @@
             padding: 0.8rem;
             border-top: 1px solid #e9ecef;
         }
+        .form-group{
+            justify-content: space-between;
+            display: flex;
+        }
     </style>
+
 
 </head>
 <body>
@@ -358,38 +360,37 @@
 <div class="modal fade" id="chatroomSettingModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
-                        <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
-                        <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
-                    </svg>
-
+            <div class="modal-header" id="exampleModalLabel">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
+                    <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+                    <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
+                </svg>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
-                </button></h5>
+                </button>
             </div>
             <div class="modal-body">
                 <form id="emailSettingForm">
-
-<!--                    <button class="dropdown-item" type="button" data-toggle="tooltip" data-placement="left" title="有新消息时发送短信">-->
-<!--                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-telephone-forward-fill" viewBox="0 0 16 16">-->
-<!--                            <path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511zm10.761.135a.5.5 0 0 1 .708 0l2.5 2.5a.5.5 0 0 1 0 .708l-2.5 2.5a.5.5 0 0 1-.708-.708L14.293 4H9.5a.5.5 0 0 1 0-1h4.793l-1.647-1.646a.5.5 0 0 1 0-.708z"/>-->
-<!--                        </svg>-->
-<!--                        手机号-->
-<!--                    </button>-->
                     <div class="form-group">
                         <input type="email" class="form-control" id="emailInput" placeholder="请输入邮箱地址">
+                        <button type="button" class="btn btn-primary" onclick="saveChatRoomSetting()" style="width: 25%;">保存</button>
                     </div>
-                    <div class="form-group form-check">
-                        <input type="checkbox" class="form-check-input" id="emailNoticeSwitch">
-                        <label class="form-check-label" for="emailNoticeSwitch">开启邮箱提醒</label>
+
+                    <div class="form-group">
+                        <div class="form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="emailNoticeSwitch">
+                            <label class="" for="emailNoticeSwitch">开启邮箱提醒</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="isEnterSendMessage">
+                            <label class="" for="isEnterSendMessage">回车发送消息</label>
+                        </div>
                     </div>
                 </form>
             </div>
-            <div class="modal-footer" >
-                <button type="button" class="btn btn-primary" onclick="saveChatRoomSetting()" style="width: 25%;">保存</button>
-            </div>
+
         </div>
     </div>
 </div>
@@ -436,16 +437,11 @@
     let isLoading = false;
     const setRoomIdButton = document.getElementById('setRoomIdButton');
     const roomInput = document.getElementById('roomInput');
-    const roomIdElement = document.getElementById('roomId');
     const chatContent = document.getElementById('chatContent');
-    const roomName = document.getElementById('roomName');
     let oldRoomId;
     let roomId;
-
     let isChatroomMailNotice = localStorage.getItem("isChatroomMailNotice");
-
-    // 是否有更多数据的标志
-    let hasMoreData = true;
+    let isEnterSendMessage = localStorage.getItem("isEnterSendMessage");
     let currentMessageId='';
     let firstMessageId='';
     // 监听滚动事件
@@ -464,61 +460,71 @@
         }
     }
     const textarea = document.getElementById('message-input');
-    // 禁用回车键触发发送
+
     textarea.addEventListener('keydown', function(event) {
-        if (event.key === 'Enter' && !event.shiftKey) {
+        if (event.key === 'Enter' && !event.shiftKey &&isEnterSendMessage) {
             event.preventDefault(); // 阻止默认行为
-            // 这里可以选择自动发送或者什么也不做
-            // sendButton.click(); // 自动触发发送按钮
+            // 当用户设置回车发送消息时，回车则直接发送
+            sendChatData()
         }
     });
     document.addEventListener('DOMContentLoaded', function () {
         // 获取开关元素
         const emailNoticeSwitch = document.getElementById('emailNoticeSwitch');
-
+        const isEnterSendMessage = document.getElementById('isEnterSendMessage');
         // 从 localStorage 中获取邮箱提醒设置状态
         // 根据状态设置开关的初始状态
         emailNoticeSwitch.checked = localStorage.getItem("isChatroomMailNotice") === 'true';
-
+        isEnterSendMessage.checked = localStorage.getItem("isEnterSendMessage") === 'true';
         // 监听开关状态变化
         emailNoticeSwitch.addEventListener('change', function () {
             saveMailNoticeSetting(emailNoticeSwitch.checked)
+        });
+        // 监听开关状态变化
+        isEnterSendMessage.addEventListener('change', function () {
+            enterSendMessage(isEnterSendMessage.checked)
         });
     });
 
     document.addEventListener('DOMContentLoaded', function () {
         // 当模态框显示时触发
-        $('#chatroomInfoModal').on('show.bs.modal', function (event) {
+        $('#chatroomInfoModal').on('show.bs.modal', function () {
             const roomId = getRoomId(); // 获取当前roomId的逻辑
             if (!roomId){
+                alert("未加入聊天室")
                 return
             }
             let token = localStorage.getItem('user-token');
+            if (!token){
+                alert("请登录")
+                return
+            }
+
+
             // 发送请求获取聊天室信息
             fetch(`/api/anakki/chat-room/info?roomId=`+roomId,{
                 headers: {
                     'authorization': token
                 }
             })
-                .then(response => response.json())
-                .then(
-                    data => {
-                        let item = data.data;
-                    // 构建显示的HTML内容
-                    // 将构建的HTML插入到模态框中
-                    document.getElementById('currentChatroomInfo').innerHTML = `
-                    <p><strong>房间名称:</strong> ${item.roomName}</p>
-                    <p><strong>房间类型:</strong> ${item.roomType}</p>
-                    <p><strong>房主ID:</strong> ${item.roomMasterId}</p>
-                    <p><strong>介绍:</strong> ${item.description}</p>
-                    <p><strong>是否临时消息:</strong> ${item.isTemp ? '是' : '否'}</p>
-                    <p><strong>是否加密:</strong> ${item.isEncrypt ? '是' : '否'}</p>
-                    <p><strong>是否公开可搜索:</strong> ${item.isPublicForSearch ? '是' : '否'}</p>
-                    <p><strong>进入类型:</strong> ${getEnterTypeLabel(item.enterType)}</p>
-                    <p><strong>头像:</strong><br><img src="${item.avatar}" alt="头像" style="max-width: 100px;"></p>
-                `;
-                })
-                .catch(error => console.error('获取聊天室信息失败:', error));
+            .then(response => response.json())
+            .then(
+                data => {
+                    let item = data.data;
+                // 构建显示的HTML内容
+                // 将构建的HTML插入到模态框中
+                document.getElementById('currentChatroomInfo').innerHTML = `
+                <p><strong>房间名称:</strong> ${item.roomName}</p>
+                <p><strong>房间类型:</strong> ${item.roomType}</p>
+                <p><strong>房主ID:</strong> ${item.roomMasterId}</p>
+                <p><strong>介绍:</strong> ${item.description}</p>
+                <p><strong>是否临时消息:</strong> ${item.isTemp ? '是' : '否'}</p>
+                <p><strong>是否加密:</strong> ${item.isEncrypt ? '是' : '否'}</p>
+                <p><strong>是否公开可搜索:</strong> ${item.isPublicForSearch ? '是' : '否'}</p>
+                <p><strong>进入类型:</strong> ${getEnterTypeLabel(item.enterType)}</p>
+                <p><strong>头像:</strong><br><img src="${item.avatar}" alt="头像" style="max-width: 100px;"></p>
+            `;
+            }).catch(error => console.error('获取聊天室信息失败:', error));
         });
 
         // 根据enterType值返回对应的文字描述
@@ -539,16 +545,22 @@
             return urlParams.get('roomId');
         }
     });
+    function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(String(email).toLowerCase());
+    }
     function saveChatRoomSetting() {
-        let token = localStorage.getItem('user-token');
+        const token = localStorage.getItem('user-token');
+        if (null == token) {
+            alert("请登录")
+            return
+        }
         const email = document.getElementById('emailInput').value;
-
         // 验证邮箱格式
         if (!validateEmail(email)) {
             alert('请输入有效的邮箱地址');
             return;
         }
-
         // 发送请求到后端
         fetch('/api/anakki/chat/user-setting', {
             method: 'POST',
@@ -572,8 +584,40 @@
                 alert('邮箱设置失败');
             });
     }
+
+
+    function enterSendMessage(status) {
+
+        const token = localStorage.getItem('user-token');
+        if (null == token) {
+            alert("请登录")
+            return
+        }
+        // 发送请求到后端
+        fetch('/api/anakki/chat/user-setting-enter-message', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'authorization': token
+            },
+            body: JSON.stringify({status: status}),
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    localStorage.setItem("isEnterSendMessage", status)
+                } else {
+                    alert('设置失败: ' + data.message);
+                }
+            })
+    }
     function saveMailNoticeSetting(status) {
-        let token = localStorage.getItem('user-token');
+
+        const token = localStorage.getItem('user-token');
+        if (null == token) {
+            alert("请登录")
+            return
+        }
         // 发送请求到后端
         fetch('/api/anakki/chat/user-setting-mail-notice', {
             method: 'POST',
@@ -581,25 +625,19 @@
                 'Content-Type': 'application/json',
                 'authorization': token
             },
-            body: JSON.stringify({ status: status }),
+            body: JSON.stringify({status: status}),
         })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    localStorage.setItem("isChatroomMailNotice",status)
-                } else {
-                    alert('邮箱设置失败: ' + data.message);
-                }
-            })
-            .catch(error => {
-            });
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                localStorage.setItem("isChatroomMailNotice", status)
+            } else {
+                alert('邮箱设置失败: ' + data.message);
+            }
+        })
     }
-    function validateEmail(email) {
-        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return re.test(String(email).toLowerCase());
-    }
-    document.addEventListener('DOMContentLoaded', function () {
 
+    document.addEventListener('DOMContentLoaded', function () {
         setRoomIdButton.addEventListener('click', function () {
             if (roomInput.value.trim()) {
                 fetchChatNewData();
@@ -608,10 +646,10 @@
             }
         });
     });
+    //暗黑模式切换
     document.getElementById('themeToggle').addEventListener('click', function() {
         const chatBody = document.getElementById('chatContent');
         const button = document.getElementById('themeToggle');
-
         // Toggle dark mode
         if (chatBody.classList.contains('dark-mode')) {
             chatBody.classList.remove('dark-mode');
@@ -776,6 +814,7 @@
         const token = localStorage.getItem('user-token');
         if (null == token) {
             alert("请登录")
+            return token
         }
         fetch('/api/anakki/chat/receive-from-room', {
             method: 'POST',
@@ -814,15 +853,23 @@
         });
     }
     // setInterval(fetchChatNewData, 5000);
-
+    let loadingOverlay;
     async function fetchChatNewData() {
+        const urlParams = new URLSearchParams(window.location.search);
+        // 获取 roomId 参数的值
+
         let isFirst;
         // 禁用刷新按钮
         setRoomIdButton.disabled = true;
         if (!roomInput.value.trim()) {
-            alert('请设置房间号');
-            setRoomIdButton.disabled = false; // 确保在输入房间号后按钮不会禁用
-            return;
+            roomId = urlParams.get('roomId');
+            if (roomId) {
+                roomInput.value=roomId
+            }else{
+                alert('请设置房间号');
+                setRoomIdButton.disabled = false; // 确保在输入房间号后按钮不会禁用
+                return;
+            }
         }
         //第一次进入
         if (!oldRoomId) {
@@ -846,6 +893,13 @@
         }
 
         try {
+            loadingOverlay = document.createElement("div");
+            // 创建加载动画元素
+            loadingOverlay.className = "loading-overlay";
+            loadingOverlay.innerHTML = `<div class="loading-spinner"></div>`;
+            document.body.appendChild(loadingOverlay);
+
+
             const response = await fetch('/api/anakki/chat/receive-new-from-room', {
                 method: 'POST',
                 headers: {
@@ -872,6 +926,9 @@
                     scrollToBottom();
                 }
                 setRoomIdToPath(roomId);
+
+                // 移除加载动画
+                document.body.removeChild(loadingOverlay);
             } else {
                 alert(data.message);
             }
@@ -880,6 +937,8 @@
         } finally {
             // 完成后重新启用刷新按钮
             setRoomIdButton.disabled = false;
+            // 移除加载动画
+            document.body.removeChild(loadingOverlay);
         }
     }
     function setRoomIdToPath(roomId) {
@@ -893,62 +952,69 @@
 
         // 发送消息的按钮和输入框
         const sendButton = document.getElementById('send-button');
-        const messageInput = document.getElementById('message-input');
 
-        sendButton.addEventListener('click', function () {
-            // 获取输入框的消息内容
-            const messageContent = messageInput.value;
-            if (!roomId){
-                alert('请输入房号');
-            }
-            if (!messageContent||messageContent.trim() === '') {
-                alert('请输入消息内容');
-                return;
-            }
 
-            // 构造请求体
-            const requestPayload = {
-                isTemp: false, // 根据需求设置
-                roomId: roomId, // 替换为实际的房间ID
-                content: messageContent,
-                contentType: 'text' // 根据需求设置
-            };
+        sendButton.addEventListener('click', sendChatData);
+        fetchChatNewData()
 
-            const token = localStorage.getItem('user-token');
-            if (null == token) {
-                alert("请登录")
-            }
-            sendButton.disabled = true;
-            // 发送请求到后端
-            fetch('/api/anakki/chat/send-to-room', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'authorization': token
-                },
-                body: JSON.stringify(requestPayload)
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.data) {
-                        // 消息发送成功，清空输入框
-                        messageInput.value = '';
-                        // 处理消息发送成功的逻辑，例如将消息添加到聊天记录中
-                        console.log('消息发送成功');
-                        fetchChatNewData()
-                        sendButton.disabled = false;
-                        scrollToBottom();
-                    } else {
-                        // 处理消息发送失败的逻辑
-                        console.error('消息发送失败');
-                    }
-                })
-                .catch(error => {
-                    console.error('发送请求失败', error);
-                });
-        });
+        let userMail = localStorage.getItem("user_mail");
+        if (!userMail){
+            document.getElementById('emailInput').value=userMail;
+        }
     }
+    function sendChatData() {
+        // 获取输入框的消息内容
+        const messageInput = document.getElementById('message-input');
+        const messageContent = messageInput.value;
+        if (!roomId){
+            alert('请输入房号');
+        }
+        if (!messageContent||messageContent.trim() === '') {
+            alert('请输入消息内容');
+            return;
+        }
 
+        // 构造请求体
+        const requestPayload = {
+            isTemp: false, // 根据需求设置
+            roomId: roomId, // 替换为实际的房间ID
+            content: messageContent,
+            contentType: 'text' // 根据需求设置
+        };
+
+        const token = localStorage.getItem('user-token');
+        if (null == token) {
+            alert("请登录")
+        }
+        document.getElementById('send-button').disabled = true;
+        // 发送请求到后端
+        fetch('/api/anakki/chat/send-to-room', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'authorization': token
+            },
+            body: JSON.stringify(requestPayload)
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.data) {
+                    // 消息发送成功，清空输入框
+                    messageInput.value = '';
+                    // 处理消息发送成功的逻辑，例如将消息添加到聊天记录中
+                    console.log('消息发送成功');
+                    fetchChatNewData()
+                    sendButton.disabled = false;
+                    scrollToBottom();
+                } else {
+                    // 处理消息发送失败的逻辑
+                    console.error('消息发送失败');
+                }
+            })
+            .catch(error => {
+                console.error('发送请求失败', error);
+            });
+    }
     document.getElementById('message-input').addEventListener('focus', function() {
         // 让输入框滚动到视图中
         this.scrollIntoView({ behavior: 'smooth' });
