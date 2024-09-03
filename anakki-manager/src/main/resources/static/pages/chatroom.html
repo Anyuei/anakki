@@ -462,10 +462,13 @@
     const textarea = document.getElementById('message-input');
 
     textarea.addEventListener('keydown', function(event) {
-        if (event.key === 'Enter' && !event.shiftKey &&isEnterSendMessage) {
+        if (event.key === 'Enter' && !event.shiftKey &&isEnterSendMessage==='true'&&!isSending) {
             event.preventDefault(); // 阻止默认行为
             // 当用户设置回车发送消息时，回车则直接发送
-            sendChatData()
+            isSending=true;
+                sendChatData()
+
+            isSending=false;
         }
     });
     document.addEventListener('DOMContentLoaded', function () {
@@ -606,6 +609,7 @@
             .then(data => {
                 if (data.success) {
                     localStorage.setItem("isEnterSendMessage", status)
+                    isEnterSendMessage=status;
                 } else {
                     alert('设置失败: ' + data.message);
                 }
@@ -962,34 +966,29 @@
             document.getElementById('emailInput').value=userMail;
         }
     }
+
+    let isSending = false;
+
     function sendChatData() {
-        const token = localStorage.getItem('user-token');
-        if (null == token) {
-            alert("请登录")
-        }
-
-        // 获取输入框的消息内容
-        const messageInput = document.getElementById('message-input');
-        const messageContent = messageInput.value;
-        if (!roomId){
-            alert('请输入房号');
-        }
-        if (!messageContent||messageContent.trim() === '') {
-            alert('请输入消息内容');
-            return;
-        }
-
-        // 构造请求体
-        const requestPayload = {
-            isTemp: false, // 根据需求设置
-            roomId: roomId, // 替换为实际的房间ID
-            content: messageContent,
-            contentType: 'text' // 根据需求设置
-        };
-
+        if (isSending) return;
+        isSending = true;
         document.getElementById('send-button').disabled = true;
 
-        // 发送请求到后端
+        const token = localStorage.getItem('user-token');
+        const messageInput = document.getElementById('message-input');
+        const messageContent = messageInput.value.trim();
+
+        if (!token) return alertAndReset("请登录");
+        if (!roomId) return alertAndReset("请输入房号");
+        if (!messageContent) return alertAndReset("请输入消息内容");
+
+        const requestPayload = {
+            isTemp: false,
+            roomId: roomId,
+            content: messageContent,
+            contentType: 'text'
+        };
+
         fetch('/api/anakki/chat/send-to-room', {
             method: 'POST',
             headers: {
@@ -1001,22 +1000,26 @@
             .then(response => response.json())
             .then(data => {
                 if (data.data) {
-                    // 消息发送成功，清空输入框
                     messageInput.value = '';
-                    // 处理消息发送成功的逻辑，例如将消息添加到聊天记录中
-                    console.log('消息发送成功');
-                    fetchChatNewData()
+                    fetchChatNewData();
                     scrollToBottom();
                 } else {
-                    // 处理消息发送失败的逻辑
                     console.error('消息发送失败');
                 }
-                document.getElementById('send-button').disabled = false;
             })
-            .catch(error => {
-                console.error('发送请求失败', error);
+            .catch(error => console.error('发送请求失败', error))
+            .finally(() => {
+                isSending = false;
+                document.getElementById('send-button').disabled = false;
             });
     }
+
+    function alertAndReset(message) {
+        alert(message);
+        isSending = false;
+        document.getElementById('send-button').disabled = false;
+    }
+
     document.getElementById('message-input').addEventListener('focus', function() {
         // 让输入框滚动到视图中
         this.scrollIntoView({ behavior: 'smooth' });
