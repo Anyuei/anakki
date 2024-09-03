@@ -551,7 +551,7 @@
 
                         // 如果已有 Viewer 实例，则销毁
                         if (viewerInstance){
-                            viewerInstance.update(); // 更新 Viewer 实例以适应新图片
+                            viewerInstance.update();
                         }else {
                             // 获取现有图片容器元素
                             const existingContainer = document.getElementById("timeline");
@@ -575,6 +575,7 @@
                             });
                         }
                     }
+                    viewerInstance.view(0)
                 } else {
                     // 移除加载动画
                     document.body.removeChild(loadingOverlay);
@@ -586,7 +587,6 @@
         };
         xhr.send();
     }
-
 
 </script>
 </body>

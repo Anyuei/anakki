@@ -186,14 +186,16 @@
                     } else if (response.code === 200) {
                         document.getElementById("register-notice").innerHTML = "";
                         if (response.data === true) {
+                            alert("注册成功，跳转登录页<(￣︶￣)>")
                             window.location.href = "../pages/sign-in.html";
                             document.getElementById("register-notice").innerHTML = "注册成功";
+
                         }
                     }
                     console.log(response);
                 },
                 error: function (xhr, status, error) {
-
+                    alert("系统错误:"+error.data)
                 }
             });
         });

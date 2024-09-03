@@ -9,6 +9,7 @@ import com.anakki.data.utils.common.EmailMaskingUtil;
 import com.anakki.data.utils.common.JwtUtil;
 import com.ramostear.captcha.HappyCaptcha;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,7 +38,9 @@ public class AnUserController {
     @GetMapping("/detail")
     public ResponseDTO<UserDetailResponse> detail(){
         UserDetailResponse detail = anUserService.detail();
-        detail.setMail(EmailMaskingUtil.maskEmail(detail.getMail()));
+        if (StringUtils.isNotBlank(detail.getMail())){
+            detail.setMail(EmailMaskingUtil.maskEmail(detail.getMail()));
+        }
         return ResponseDTO.succData(detail);
     }
 
