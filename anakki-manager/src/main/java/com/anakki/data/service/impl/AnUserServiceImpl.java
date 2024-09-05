@@ -5,18 +5,20 @@ import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.bean.constant.CosBucketNameConst;
 import com.anakki.data.bean.constant.CosPathConst;
 import com.anakki.data.bean.constant.RedisKey;
+import com.anakki.data.entity.AnNote;
+import com.anakki.data.entity.AnNoteUserPermission;
 import com.anakki.data.entity.AnRecord;
 import com.anakki.data.entity.common.ExpKeyConst;
 import com.anakki.data.entity.AnUser;
 import com.anakki.data.bean.common.UserToken;
 import com.anakki.data.entity.common.SystemConfigConst;
 import com.anakki.data.entity.request.*;
+import com.anakki.data.entity.response.ListUserForNoteResponse;
 import com.anakki.data.entity.response.ListUserResponse;
+import com.anakki.data.entity.response.NoteUserPermissionResponse;
 import com.anakki.data.entity.response.UserDetailResponse;
 import com.anakki.data.mapper.AnUserMapper;
-import com.anakki.data.service.AnRecordService;
-import com.anakki.data.service.AnSystemConfigService;
-import com.anakki.data.service.AnUserService;
+import com.anakki.data.service.*;
 import com.anakki.data.utils.common.*;
 import com.anakki.data.utils.dealUtils.MD5SaltUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -28,15 +30,17 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -54,7 +58,12 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
     @Autowired
     @Lazy
     private AnRecordService anRecordService;
+    @Autowired
+    @Lazy
+    private AnNoteService anNoteService;
 
+    @Autowired
+    private  AnNoteUserPermissionService anNoteUserPermissionService;
     @Override
     public String login(UserLoginRequest userLoginRequest) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         String username = userLoginRequest.getUsername();
@@ -73,7 +82,6 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
         userToken.setNickname(username);
         return JwtUtil.createToken(userToken);
     }
-
     @Override
     public Boolean register(UserRegisterRequest userRegisterRequest) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         String username = userRegisterRequest.getUsername();
@@ -264,5 +272,65 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
             return true;
         }
         return null;
+    }
+
+    @Override
+    public BasePageResult<ListUserForNoteResponse> listForNote(ListUserForNoteRequest listUserForNoteRequest) {
+        Long noteId = listUserForNoteRequest.getNoteId();
+        String searchParams = listUserForNoteRequest.getKeyword();
+
+        // 查询笔记
+        AnNote note = anNoteService.getById(noteId);
+        if (note == null) {
+            throw new RuntimeException("笔记不存在");
+        }
+
+        String authorIds = note.getAuthorIds();
+        // 查询联合作者
+        Set<Long> oldAuthorIdList = anNoteService.getAuthorIdList(authorIds);
+
+        // 创建查询条件
+        IPage<AnUser> userPage = new Page<>(listUserForNoteRequest.getCurrent(), listUserForNoteRequest.getSize());
+        QueryWrapper<AnUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("state", "COMMON")
+                .eq("searchable", true);
+
+        // 如果搜索条件存在，增加搜索条件
+        if (StringUtils.isNotBlank(searchParams)) {
+            queryWrapper.and(wrapper -> wrapper.like("nickname", searchParams)
+                    .or().eq("id", searchParams)
+                    .or().eq("telephone", searchParams)
+                    .or().eq("mail", searchParams));
+        }
+
+        // 执行分页查询
+        IPage<AnUser> page = page(userPage, queryWrapper);
+        List<AnUser> records = page.getRecords();
+
+        // 转换用户列表
+        List<ListUserForNoteResponse> editUsers = com.anakki.data.utils.common.BeanUtils.copyBeanList(records, ListUserForNoteResponse.class);
+
+        // 查询笔记用户权限
+        List<AnNoteUserPermission> userPermissionsByNoteId = anNoteUserPermissionService.getUserPermissionsByNoteId(noteId);
+        // 按 userId 分组
+        Map<Long, List<AnNoteUserPermission>> permissionsGroupedByUserId = userPermissionsByNoteId.stream()
+                .collect(Collectors.groupingBy(AnNoteUserPermission::getUserId));
+
+        // 处理用户数据
+        editUsers.forEach(editUser -> {
+            Long userID = editUser.getId();
+            if (oldAuthorIdList.contains(userID)) {
+                editUser.setIsCollaborator(true);
+            }
+            // 装配用户权限
+            List<AnNoteUserPermission> permissions = permissionsGroupedByUserId.get(userID);
+            if (!CollectionUtils.isEmpty(permissions)) {
+                List<NoteUserPermissionResponse> permissionResponses =
+                        com.anakki.data.utils.common.BeanUtils.copyBeanList(permissions, NoteUserPermissionResponse.class);
+                editUser.setPermissions(permissionResponses);
+            }
+        });
+
+        return new BasePageResult<>(editUsers, page.getTotal());
     }
 }

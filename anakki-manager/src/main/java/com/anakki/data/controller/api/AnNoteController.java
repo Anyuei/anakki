@@ -34,6 +34,18 @@ public class AnNoteController {
         anNoteService.save(createNoteRequest,request);
         return ResponseDTO.succData(true);
     }
+    @ApiOperation(value = "添加协作者到笔记")
+    @PostMapping("/addAuthorToNotes")
+    public ResponseDTO<Boolean> addAuthorToNotes(@RequestBody AddNoteOtherAuthorRequest createNoteRequest){
+        anNoteService.addAuthorToNotes(createNoteRequest);
+        return ResponseDTO.succData(true);
+    }
+    @ApiOperation(value = "移除协作者到笔记")
+    @PostMapping("/removeAuthorToNotes")
+    public ResponseDTO<Boolean> removeAuthorToNotes(@RequestBody RemoveNoteOtherAuthorRequest request){
+        anNoteService.removeAuthorToNotes(request);
+        return ResponseDTO.succData(true);
+    }
     @ApiOperation(value = "查看笔记草稿")
     @GetMapping("/listDraftNote")
     public ResponseDTO<BasePageResult<AnNote>> listDraftNote(ListNoteRequest listNoteRequest){

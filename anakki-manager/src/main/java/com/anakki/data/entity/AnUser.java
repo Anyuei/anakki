@@ -86,4 +86,8 @@ public class AnUser extends BaseEntity  implements Serializable {
     @ApiModelProperty("是否回车发送消息")
     @TableField("is_enter_send_message")
     private Boolean isEnterSendMessage;
+
+    @ApiModelProperty("是否可被站内其他人搜索")
+    @TableField("searchable")
+    private Boolean searchable;
 }

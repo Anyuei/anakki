@@ -27,7 +27,7 @@ public class ListUserResponse {
     @ApiModelProperty("用户姓名")
     private String userName;
 
-    @ApiModelProperty("管理员昵称")
+    @ApiModelProperty("用户昵称")
     private String nickname;
 
     @ApiModelProperty("用户生日")

@@ -73,6 +73,7 @@ public class AnNoteServiceImpl extends ServiceImpl<AnNoteMapper, AnNote> impleme
                     throw new RuntimeException("无权限修改，请申请成为协作人");
                 }
             }
+            anNote.setContent(createNoteRequest.getContent());
             anNote.setCoverImage(HtmlUtil.getFirstImg(createNoteRequest.getContent()));
             anNote.setTitle(HtmlUtil.getFirstH1(createNoteRequest.getContent()));
             anNote.setDescription(HtmlUtil.getFirstP(createNoteRequest.getContent()));

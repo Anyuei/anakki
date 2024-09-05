@@ -3,6 +3,7 @@ package com.anakki.data.service;
 import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.entity.AnUser;
 import com.anakki.data.entity.request.*;
+import com.anakki.data.entity.response.ListUserForNoteResponse;
 import com.anakki.data.entity.response.ListUserResponse;
 import com.anakki.data.entity.response.UserDetailResponse;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -11,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 /**
  * <p>
@@ -47,4 +49,6 @@ public interface AnUserService extends IService<AnUser> {
     Boolean verifyCode(String telephone, String code);
 
     Boolean telephoneChange(String telephone, String code);
+
+    BasePageResult<ListUserForNoteResponse> listForNote(ListUserForNoteRequest request);
 }

@@ -1,8 +1,10 @@
 package com.anakki.data.controller.api;
 
 import com.anakki.data.bean.common.BaseContext;
+import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.bean.common.ResponseDTO;
 import com.anakki.data.entity.request.*;
+import com.anakki.data.entity.response.ListUserForNoteResponse;
 import com.anakki.data.entity.response.UserDetailResponse;
 import com.anakki.data.service.AnUserService;
 import com.anakki.data.utils.common.EmailMaskingUtil;
@@ -18,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 /**
  * <p>
@@ -69,5 +72,12 @@ public class AnUserController {
     public ResponseDTO<String> telephoneChange(@RequestBody CodeVerifyRequest codeVerifyRequest){
         anUserService.telephoneChange(codeVerifyRequest.getTelephone(),codeVerifyRequest.getCode());
         return ResponseDTO.succData("验证成功");
+    }
+
+    @ApiOperation(value = "获取协作者候选用户")
+    @GetMapping("/list-for-note")
+    public ResponseDTO<BasePageResult<ListUserForNoteResponse>> listForNote(ListUserForNoteRequest listUserForNoteRequest){
+        BasePageResult<ListUserForNoteResponse> list =  anUserService.listForNote(listUserForNoteRequest);
+        return ResponseDTO.succData(list);
     }
 }

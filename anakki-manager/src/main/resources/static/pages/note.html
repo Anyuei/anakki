@@ -165,6 +165,10 @@
         100% { transform: scale(1.1); }
     }
 
+    .modal-header {
+        display: flex;
+        margin: 0.5rem 1rem;
+    }
     .modal-content {
         background-color: #e6e6e6;
     }
@@ -180,6 +184,26 @@
     #viewModalNoteAuthors{
         width: 30%;
         display: flex;
+    }
+
+    #viewModalNoteAuthorsForEditor{
+        left: 1rem;
+        position: absolute;
+    }
+
+    #editor-area{
+        display: flex;
+        padding: 1rem;
+        position: absolute;
+        left: 0;
+    }
+
+    .modal-footer {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 1rem;
+        border-top: 1px solid #e9ecef;
     }
 </style>
 <body>
@@ -252,6 +276,23 @@
                 </div>
             </form>
             <div class="publish-area" id="publish-area">
+                <!--    编辑者 区域-->
+                <div id="editor-area">
+                    <div style="font-size: 1.2rem;margin-right: 0.5rem;">
+                        <span>
+                            <i class="bi bi-pencil"></i>
+                        </span>
+                    </div>
+                    <div id="current-editors">
+
+
+                    </div>
+                    <div id="operate-editors">
+                        <span id="addUserToNoteArea" style="font-size: 2rem;line-height: 30px;cursor: pointer;" onclick="listUsersForNote()">
+                            <i class="bi bi-plus-circle-dotted"></i>
+                        </span>
+                    </div>
+                </div>
                 <div class="button-container" onclick="saveDraft()">
                     <button class="btn">
                         保存草稿
@@ -292,7 +333,13 @@
                 <!-- Data fetched from backend will be displayed here -->
             </div>
             <div class="modal-footer justify-content-between">
-                <div  id="viewModalNoteAuthors"></div>
+                <div  id="viewModalNoteAuthors">
+
+
+                </div>
+                <div class="editor-operate-area">
+
+                </div>
                 <div id="foot-right">
                     <span  id="viewModalNoteTime" style="margin-right: 1rem;"></span> |
                     <span class="justify-content-between" style="margin-left: 1rem;" id="viewCountView">
@@ -332,6 +379,37 @@
     </div>
 </div>
 
+<div class="modal fade"
+     id="userModalForNoteEdit"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="userModalForNoteEditLabel"
+     aria-hidden="true"
+     style="padding-right: 0;">
+
+    <div class="modal-dialog" role="document" style="max-width: 35rem;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- 搜索框和查询按钮 -->
+                <input type="text" id="userSearchInput" class="form-control" placeholder="搜索用户" style="width: 70%;" />
+                <button type="button" class="btn btn-primary" id="searchButton" style="margin-left: 10px;">查询</button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="userListContainer" style="height: 400px; overflow-y: auto;">
+                    <div id="userListForNoteEdit" class="list-group"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="submitButton" onclick="submitSelectedUsers()">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Core -->
 <script src="../assets/vendor/jquery/jquery.min.js"></script>
 <script src="../assets/vendor/popper/popper.min.js"></script>
@@ -348,6 +426,7 @@
 <script src="../assets/js/theme.js"></script>
 <script>
     let thisAdEditor;
+    let editNoteId;
     window.onload = function () {
         $('#header').load("../pages/header.html", loadPersonDetail);
         listNotes(1, 10);
@@ -538,7 +617,6 @@
                                 </span>
 
                             `;
-
                             viewModalNoteAuthors.innerHTML += authorHTML;
                         });
 
@@ -557,7 +635,7 @@
                 console.error('Error:', error);
             });
     }
-    function editNote(id) {
+    function editNote(id,refreshContent) {
         fetch('/base/anakki/note/note-detail?id='+id, {
             method: 'GET'
         })
@@ -571,10 +649,30 @@
             })
             .then(data => {
                 if (data.code === 200) {
-                    const content = data.data.content;
-                    thisAdEditor.setData(content);
+                    editNoteId=id;
+
                     document.getElementById("noteId").innerHTML = data.data.id;
-                    editDraftNoteButton();
+                    let currentEditors = document.getElementById("current-editors");
+                    currentEditors.innerHTML='';
+                    // 检查是否有协作者
+                    if (data.data.authorsDetail && data.data.authorsDetail.length > 0) {
+                        // 遍历协作者信息并生成HTML内容
+                        data.data.authorsDetail.forEach(author => {
+                            currentEditors.innerHTML += `
+                                <span class="d-inline-block" style="align-content: center;"
+                                 tabindex="0" data-toggle="tooltip" title="${author.nickname}">
+                                    <div class="author-item">
+                                        <img src="${author.avatar}" alt="${author.nickname}" class="author-avatar"/>
+                                    </div>
+                                </span>
+
+                            `;
+                        });
+
+                    }
+                        const content = data.data.content;
+                        thisAdEditor.setData(content);
+                        editDraftNoteButton();
                 } else {
                     alert(data.data)
                 }
@@ -583,6 +681,142 @@
                 console.error('Error:', error);
             });
     }
+
+
+    let currentPage = 1; // 当前页码
+    let hasMoreData = true; // 是否有更多数据
+    let searchKeyword = ''; // 搜索关键词
+    // 监听查询按钮点击事件
+    document.getElementById('searchButton').addEventListener('click', function() {
+        searchKeyword = document.getElementById('userSearchInput').value;
+        listUsersForNote(false, searchKeyword); // 点击查询时重置数据
+    });
+    function listUsersForNote(loadMore = false, keyword = '') {
+        if (!editNoteId) {
+            alert("文章加载失败");
+            return;
+        }
+
+        const token = localStorage.getItem('user-token');
+        if (!token) {
+            alert("请登录");
+            return;
+        }
+
+        if (!loadMore) {
+            currentPage = 1;
+            hasMoreData = true;
+            document.getElementById("userListForNoteEdit").innerHTML = ''; // 清空旧数据
+        }
+
+        if (!hasMoreData) {
+            return; // 如果没有更多数据则不再请求
+        }
+
+        fetch(`/api/anakki/user/list-for-note?noteId=${editNoteId}&current=${currentPage}&size=10&keyword=${encodeURIComponent(keyword)}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': token
+            },
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    alert('网络错误，请联系管理员');
+                }
+            })
+            .then(data => {
+                if (data.code === 200) {
+                    let userList = data.data.data;
+
+                    // 如果没有更多数据，停止加载
+                    if (userList.length === 0) {
+                        hasMoreData = false;
+                        return;
+                    }
+
+                    let html = '';
+                    userList.forEach(user => {
+                        html += `
+                    <div class="list-group-item">
+                        <img src="${user.avatar}" alt="${user.nickname}" style="width: 30px; height: 30px; border-radius: 50%;">
+                        <span>${user.nickname}</span>
+                        <div class="form-check form-switch form-check-reverse" style="display:inline-block;margin-left:15px;">
+                          <input class="form-check-input collaborator-switch" type="checkbox" id="flexSwitch_${user.id}" ${user.isCollaborator ? 'checked' : ''} data-user-id="${user.id}">
+                          <label class="form-check-label" for="flexSwitch_${user.id}">协作者</label>
+                        </div>
+                    </div>`;
+                    });
+
+                    document.getElementById("userListForNoteEdit").innerHTML += html;
+
+                    // 显示模态框
+                    if (!loadMore) {
+                        $('#userModalForNoteEdit').modal('show');
+                    }
+
+                    // 更新页码
+                    currentPage += 1;
+
+                    // 监听滚动事件
+                    document.getElementById("userListContainer").addEventListener('scroll', handleScroll);
+                } else {
+                    alert(data.data);
+                }
+            })
+            .catch(error => {
+                alert('系统错误: ' + error);
+            });
+    }
+    // 处理滚动事件
+    function handleScroll() {
+        const container = document.getElementById("userListContainer");
+
+        // 当滚动到底部时加载更多数据
+        if (container.scrollTop + container.clientHeight >= container.scrollHeight - 100) {
+            container.removeEventListener('scroll', handleScroll);
+            listUsersForNote(true, searchKeyword);
+        }
+    }
+
+    function submitSelectedUsers() {
+        const token = localStorage.getItem('user-token');
+        if (!token){
+            alert("请登录")
+        }
+
+        const selectedUsers = Array.from(document.querySelectorAll(".collaborator-switch"))
+            .filter(switchElement => switchElement.checked) // 仅选择打开开关的用户
+            .map(switchElement => switchElement.getAttribute('data-user-id')); // 获取用户ID
+
+        const payload = {
+            authorIds: selectedUsers,  // 已选中的用户ID
+            targetNoteId: editNoteId
+        };
+
+        fetch('/api/anakki/note/addAuthorToNotes', {
+            method: 'POST',
+            headers: {
+                'Authorization': token,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.code === 200) {
+                    alert('协作者已成功添加');
+                    $('#userModal').modal('hide');
+                } else {
+                    alert('添加协作者失败: ' + data.message);
+                }
+            })
+            .catch(error => {
+                alert('系统错误: ' + error);
+            });
+    }
+
     function viewDraftNote(id) {
         fetch('/base/anakki/note/note-detail?id='+id, {
             method: 'GET'
@@ -689,19 +923,49 @@
         const input = document.getElementById("searchInputText").value;
         if (draftListDiv.style.display === 'block') {
             listDrafts(1, 10, input);
-        }
-        if (noteListDiv.style.display === 'block') {
+        }else if (noteListDiv.style.display === 'block') {
             listNotes(1, 10, input);
         }
     }
+    let initialLoad = true;
+
+    function handleViewNoteScroll() {
+        const scrollableElement = document.documentElement || document.body;
+        if (scrollableElement.scrollHeight - scrollableElement.scrollTop === scrollableElement.clientHeight && !initialLoad) {
+            loadMoreNotes();
+        }
+    }
+    window.addEventListener('scroll', () => {
+         // 用户滚动之后关闭初始状态
+        handleViewNoteScroll();
+        initialLoad = false;
+    });
+    // 当前页数和每页数据大小
+    let currentViewNotePage = 1;
+    const pageSize = 10;
+    let isLoading = false; // 防止重复加载
+    let hasMoreNotes = true; // 判断是否还有更多数据
+    // 加载数据函数
+    function loadMoreNotes() {
+        if (isLoading) return; // 防止重复加载
+        isLoading = true;
+        currentViewNotePage++; // 页数递增
+        listNotes(currentViewNotePage, pageSize, document.getElementById('searchInputText').value);
+    }
+    // 监听滚动事件
+    window.addEventListener('scroll', handleViewNoteScroll);
+
     function listNotes(current, pageSize, searchInput) {
+        if (!hasMoreNotes){
+            return
+        }
         let searchUrl="";
         if (null != searchInput && "" !== searchInput) {
             searchUrl = searchUrl+"&content=" + searchInput;
         }
         const url = window.location.href;
         // Make an AJAX POST request
-        fetch('/base/anakki/note/listNote?' + current + "&size=" + pageSize + searchUrl, {
+        fetch('/base/anakki/note/listNote?current=' + current + "&size=" + pageSize + searchUrl, {
             method: 'GET',
         })
             .then(response => {
@@ -714,6 +978,9 @@
             .then(data => {
                 const itemList = data.data.data;
                 let html = "";
+                if (itemList.length < pageSize){
+                    hasMoreNotes=false;
+                }
                 for (let i = 0; i < itemList.length; i++) {
                     const item = itemList[i];
 
@@ -780,10 +1047,11 @@
                                             "</div>\n" +
                         "                </div>\n"
                 }
-                document.getElementById("noteList").innerHTML = html;
+                document.getElementById("noteList").innerHTML += html;
                 // 拼接分页参数到地址栏
                 const newUrl = url.split("?")[0] + "?current=" + current + "&size=" + pageSize + searchUrl;
                 window.history.replaceState(null, null, newUrl);
+                isLoading = false;
             })
             .catch(error => {
                 console.error('Error:', error);
