@@ -62,13 +62,14 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
     private AnNoteService anNoteService;
 
     @Autowired
-    private  AnNoteUserPermissionService anNoteUserPermissionService;
+    private AnNoteUserPermissionService anNoteUserPermissionService;
 
     @Autowired
     private EmailUtil emailUtil;
 
     @Autowired
-    private AnSystemConfigService  anSystemConfigService;
+    private AnSystemConfigService anSystemConfigService;
+
     @Override
     public String login(UserLoginRequest userLoginRequest) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         String username = userLoginRequest.getUsername();
@@ -87,6 +88,7 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
         userToken.setNickname(username);
         return JwtUtil.createToken(userToken);
     }
+
     @Override
     public Boolean register(UserRegisterRequest userRegisterRequest) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         String username = userRegisterRequest.getUsername();
@@ -96,11 +98,11 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
         if (nicknameExist(username)) {
             throw new RuntimeException("昵称已存在");
         }
-        if (emailExist(email)){
+        if (emailExist(email)) {
             throw new RuntimeException("邮箱已注册");
         }
 
-        if (!verifyEmail(email,verify)) {
+        if (!verifyEmail(email, verify, "EmailVerify_")) {
             throw new RuntimeException("验证码不正确");
         }
 
@@ -122,30 +124,40 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
         userQueryWrapper.eq("nickname", nickname);
         return 0 < anUserMapper.selectCount(userQueryWrapper);
     }
+
     @Override
     public Boolean emailExist(String email) {
         QueryWrapper<AnUser> userQueryWrapper = new QueryWrapper<>();
         userQueryWrapper.eq("mail", email);
         return 0 < anUserMapper.selectCount(userQueryWrapper);
     }
+
     @Override
-    public Boolean verifyEmail(String email, String verifyCode) {
-        if (StringUtils.isBlank(email)){
+    public Boolean verifyEmail(String email, String verifyCode, String businessKey) {
+        if (StringUtils.isBlank(email)) {
             throw new RuntimeException("请输入邮箱");
         }
-        if (StringUtils.isBlank(verifyCode)){
+        if (StringUtils.isBlank(verifyCode)) {
             throw new RuntimeException("请输入验证码");
         }
-        String realVerifyCode = RedisUtil.StringOps.get("EmailVerify_" + email);
-        if (StringUtils.isBlank(realVerifyCode)){
+        String realVerifyCode = RedisUtil.StringOps.get(businessKey + email);
+        if (StringUtils.isBlank(realVerifyCode)) {
             throw new RuntimeException("验证码已失效");
         }
         return verifyCode.equals(realVerifyCode);
     }
+
     @Override
     public AnUser getByNickname(String nickname) {
         QueryWrapper<AnUser> userQueryWrapper = new QueryWrapper<>();
         userQueryWrapper.eq("nickname", nickname);
+        return anUserMapper.selectOne(userQueryWrapper);
+    }
+
+    @Override
+    public AnUser getByEmail(String email) {
+        QueryWrapper<AnUser> userQueryWrapper = new QueryWrapper<>();
+        userQueryWrapper.eq("mail", email);
         return anUserMapper.selectOne(userQueryWrapper);
     }
 
@@ -211,14 +223,14 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
         if (StringUtils.isNotBlank(selectedAvatar)) {
 
             AnRecord newAvatarImg = anRecordService.getById(id);
-            if (null==newAvatarImg){
+            if (null == newAvatarImg) {
                 throw new RuntimeException("找不到此头像");
             }
             Long avatarUserId = newAvatarImg.getAvatarUserId();
-            if (null!=avatarUserId&&avatarUserId!=-1){
-                if (!avatarUserId.equals(byNickname.getId())){
+            if (null != avatarUserId && avatarUserId != -1) {
+                if (!avatarUserId.equals(byNickname.getId())) {
                     throw new RuntimeException("头像已经被其他用户使用");
-                }else{
+                } else {
                     throw new RuntimeException("您正在使用此头像");
                 }
             }
@@ -229,7 +241,7 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
             anRecordService.updateById(newAvatarImg);
 
             byNickname.setAvatar(selectedAvatar);
-        }else{
+        } else {
             long sizeInBytes = file.getSize();
             long sizeInMB = sizeInBytes / (1024 * 1024);
             if (sizeInMB > 2) {
@@ -263,7 +275,7 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
         String smsLimit = RedisUtil.StringOps.get(RedisKey.USER_SMS_SEND_LIMIT_FOR_EVERY_24HOURS_COUNT_KEY + user.getId());
         if (null == smsLimit) {
             RedisUtil.StringOps.setEx(RedisKey.USER_SMS_SEND_LIMIT_FOR_EVERY_24HOURS_COUNT_KEY + user.getId(), "1", 24, TimeUnit.HOURS);
-            smsLimit="1";
+            smsLimit = "1";
         } else {
             long userCount = Long.parseLong(smsLimit);
             String systemLimit = SystemConfigConst.CONFIG_MAP.get(SystemConfigConst.USER_SMS_SEND_LIMIT_FOR_EVERY_24HOURS);
@@ -273,11 +285,11 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
             }
             long systemLimitLong = Long.parseLong(systemLimit);
             if (systemLimitLong >= userCount) {
-                throw new RuntimeException("每天只能发送"+systemLimit+"条短信");
+                throw new RuntimeException("每天只能发送" + systemLimit + "条短信");
             }
         }
         boolean state = SmsTencentUtil.sendSms(telephone, randomNumber);
-        RedisUtil.StringOps.set(RedisKey.USER_SMS_SEND_LIMIT_FOR_EVERY_24HOURS_COUNT_KEY + user.getId(), Long.parseLong(smsLimit)+1+"");
+        RedisUtil.StringOps.set(RedisKey.USER_SMS_SEND_LIMIT_FOR_EVERY_24HOURS_COUNT_KEY + user.getId(), Long.parseLong(smsLimit) + 1 + "");
         return state;
     }
 
@@ -371,33 +383,90 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
 
     @Override
     public Boolean registerEmailSend(UserRegisterVerifyRequest request) {
-        Long registerEmailSendInterval = anSystemConfigService.getNumberConfigValue("registerEmailSendInterval");
+        Long emailSendInterval = anSystemConfigService.getNumberConfigValue("emailSendInterval");
         String email = request.getEmail();
         String verifyCode = VerificationCodeGenerator.generateVerificationCode();
         boolean sent = RedisUtil.KeyOps.hasKey("EmailVerify_" + email);
-        if (sent){
-            throw new RuntimeException(registerEmailSendInterval+"分钟请勿重复发送");
+        if (sent) {
+            throw new RuntimeException(emailSendInterval + "分钟请勿重复发送");
         }
         emailUtil.sendMessage(
                 email,
                 "【ANAKKIX】欢迎注册",
-                getVerificationEmailContent(email, verifyCode));
-        boolean success = RedisUtil.StringOps.setIfAbsent("EmailVerify_" + email, verifyCode, registerEmailSendInterval, TimeUnit.MINUTES);
-        if (!success){
-            throw new RuntimeException(registerEmailSendInterval+"分钟请勿重复发送");
+                getVerificationEmailContent(email, verifyCode,emailSendInterval));
+        boolean success = RedisUtil.StringOps.setIfAbsent("EmailVerify_" + email, verifyCode, emailSendInterval, TimeUnit.MINUTES);
+        if (!success) {
+            throw new RuntimeException(emailSendInterval + "分钟请勿重复发送");
         }
         return true;
     }
 
-    public static String getVerificationEmailContent(String userName, String verificationCode) {
+
+    @Override
+    public Boolean resetEmailSend(UserResetPasswordEmailVerifyRequest request) {
+        Long emailSendInterval = anSystemConfigService.getNumberConfigValue("emailSendInterval");
+        String email = request.getEmail();
+        String verifyCode = VerificationCodeGenerator.generateVerificationCode();
+        boolean sent = RedisUtil.KeyOps.hasKey("EmailReset_" + email);
+        if (sent) {
+            throw new RuntimeException(emailSendInterval + "分钟请勿重复发送");
+        }
+        emailUtil.sendMessage(
+                email,
+                "【ANAKKIX】密码重置",
+                getResetPasswordEmailContent(email, verifyCode,emailSendInterval));
+        boolean success = RedisUtil.StringOps.setIfAbsent("EmailReset_" + email, verifyCode, emailSendInterval, TimeUnit.MINUTES);
+        if (!success) {
+            throw new RuntimeException(emailSendInterval + "分钟请勿重复发送");
+        }
+        return true;
+    }
+
+    @Override
+    public Boolean resetPassword(UserResetPasswordRequest request) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+        String verify = request.getVerificationCode();
+        String email = request.getEmail();
+        String newPassword = request.getNewPassword();
+        if (!emailExist(email)) {
+            throw new RuntimeException("邮箱不存在!");
+        }
+        boolean sent = RedisUtil.KeyOps.hasKey("EmailReset_" + email);
+        if (!sent) {
+            throw new RuntimeException("验证码失效");
+        }
+        if (!verifyEmail(email, verify, "EmailReset_")) {
+            throw new RuntimeException("验证码不正确");
+        }
+        String encryptedData = MD5SaltUtil.getEncryptedData(newPassword);
+        AnUser user = getByEmail(email);
+        user.setPassword(encryptedData);
+        updateById(user);
+
+        return true;
+    }
+
+    public static String getVerificationEmailContent(String userName, String verificationCode,Long emailSendInterval) {
         return "<html>" +
                 "<body>" +
                 "<h2>尊敬的 " + userName + "，您好！</h2>" +
                 "<p>感谢您注册我的网站 O(∩_∩)O。</p>" +
                 "<p>您的验证码是：<strong>" + verificationCode + "</strong></p>" +
+                "<p>请在 "+emailSendInterval+" 分钟内使用该验证码完成验证。</p>" +
+                "<br/>" +
+                "<p>如有问题，请联系我们：https://anakkix.cn</p>" +
+                "</body>" +
+                "</html>";
+    }
+
+    public static String getResetPasswordEmailContent(String userName, String verificationCode,Long emailSendInterval) {
+        return "<html>" +
+                "<body>" +
+                "<h2>尊敬的 " + userName + "，您好！</h2>" +
+                "<p>您正在重置密码</p>" +
+                "<p>您的验证码是：<strong>" + verificationCode + "</strong></p>" +
                 "<p>请在 2 分钟内使用该验证码完成验证。</p>" +
                 "<br/>" +
-                "<p>如有问题，请联系我们：</p>" +
+                "<p>如有问题，请联系我们：https://anakkix.cn</p>" +
                 "</body>" +
                 "</html>";
     }

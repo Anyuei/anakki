@@ -8,11 +8,13 @@
     <meta name="author" content="Anakki">
     <title>Anakki-World</title>
     <!-- Fonts -->
-
+    <link rel="stylesheet" href="../assets/js/bootstrap5/css/bootstrap.min.css">
     <!-- Theme CSS -->
     <link type="text/css" href="../assets/css/theme.css" rel="stylesheet">
     <!-- Demo CSS - No need to use these in your project -->
     <link type="text/css" href="../assets/css/demo.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
 
 </head>
 <style>
@@ -46,6 +48,7 @@
         height: 100vh; /* 使背景区域覆盖整个视口高度 */
         background-size: cover;
         background-position: center;
+        min-height: 55rem;
     }
     .login-title{
         display: flex;
@@ -55,6 +58,9 @@
         margin-left: 0.5rem;
         border-radius: 0.5rem;
     }
+#loginButton:hover{
+    background-color: rgba(190, 10, 10, 0.99);
+}
 
 </style>
 <body>
@@ -65,8 +71,13 @@
         <!--        <span class="mask bg-primary alpha-6"></span>-->
         <div class="container-fluid d-flex align-items-center no-padding">
             <div class="col" style="margin-top: 10rem;">
+                <div >
+                    <div>听风八百遍</div>
+                    <div>才知是人间</div>
+                </div>
                 <div class="row justify-content-center">
                     <div style="width: 20rem;">
+
                         <div>
                             <div class="card-body">
                                 <i class="fas fa-arrow-left"></i>
@@ -109,10 +120,13 @@
                                         <img class="captcha-img" src="/base/system/captcha" alt="验证码"
                                              style="width: 6rem; cursor: pointer;" onclick="refreshCaptcha()">
                                     </div>
-                                    <a href="#" class="text-white" onclick="forgot()">忘记密码?</a>
+                                    <a href="#" class="text-white" data-toggle="modal" data-target="#forgotPasswordModal">忘记密码?</a>
                                     <p id="login-notice" style="color: red"></p>
-                                    <button id="loginButton" type="submit" class="btn btn-block btn-lg bg-white mt-4" style="padding: 0.3rem 1rem;">
-                                        <span id="buttonText">登录</span>
+                                    <button id="loginButton" type="submit" class="btn btn-block btn-lg mt-4" style="padding: 0.3rem 1rem;">
+                                        <span id="buttonText">
+                                            <i class="bi bi-box-arrow-in-right"></i>
+                                            登录
+                                        </span>
                                         <span id="buttonSpinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none;"></span>
                                     </button>
                                 </form>
@@ -124,6 +138,43 @@
         </div>
     </section>
 </main>
+
+<!-- 重置模态框 -->
+<!-- 模态框 -->
+<div class="modal fade" id="forgotPasswordModal" tabindex="-1" role="dialog" aria-labelledby="forgotPasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="max-width: 30rem;margin-top: 5rem;">
+        <div class="modal-content">
+            <div class="modal-header" style="justify-content: center">
+                <div class="modal-title" id="forgotPasswordModalLabel" style="border-radius: 0.8rem;font-size: 3rem;">
+                    <i class="bi bi-person-circle"></i>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div id="alertContainer"></div>
+                <form id="forgotPasswordForm">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="email" class="form-control" id="email" placeholder="请输入邮箱" required>
+                            <div class="input-group-append">
+                                <button class="btn btn-secondary" type="button" id="sendResetVerifyBtn">发送验证码</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="verificationCode" placeholder="请输入验证码" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" id="newPassword" placeholder="请输入新密码" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" id="confirmPassword" placeholder="再次输入新密码" required>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="resetPasswordBtn">重置密码</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- 页面底部 -->
 <div id="footer"></div>
 <!-- Core -->
@@ -172,9 +223,6 @@
         $('#footer').load("../pages/footer.html", insertCreateTime);
     };
 
-    function forgot() {
-        alert("  (　ﾟдﾟ)你脑子里装的浆糊吗,都是找我重置吧,诶嘿你猜怎么着,修改密码的功能还没做，密码也是加密的，我也看不见，等着吧_(:з」∠)_")
-    }
 
     $(document).ready(function () {
         $('#login-form').submit(function (e) {
@@ -196,7 +244,7 @@
                 data: formData,
                 success: function (response) {
                     // 模拟完成操作后重置按钮状态
-                    buttonText.textContent = '登录';
+                    buttonText.textContent = '<i class="bi bi-box-arrow-in-right"></i>登录';
                     buttonSpinner.style.display = 'none';
                     loginButton.disabled = false;
 
@@ -220,6 +268,79 @@
         });
     });
 
+
+    document.getElementById('resetPasswordBtn').onclick = async function() {
+
+        const email = document.getElementById('email').value;
+        const verificationCode = document.getElementById('verificationCode').value;
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+
+        const alertContainer = document.getElementById('alertContainer');
+        alertContainer.innerHTML = '';
+
+        if (newPassword !== confirmPassword) {
+            alertContainer.innerHTML = '<div class="alert alert-danger">新密码和确认密码不匹配</div>';
+            return;
+        }
+
+        try {
+            document.getElementById('resetPasswordBtn').disabled = true;
+            const response = await fetch('/base/anakki/user/reset-password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, verificationCode, newPassword }),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                if (result.code===200){
+                    alertContainer.innerHTML = '<div class="alert alert-success">密码重置成功</div>';
+                    // 可以在这里执行其他操作，比如清空表单
+                    document.getElementById('forgotPasswordForm').reset();
+                }else{
+                    alertContainer.innerHTML = '<div class="alert alert-danger">result.data</div>';
+                }
+            } else {
+                alertContainer.innerHTML = `<div class="alert alert-danger">${result.message || '网络错误'}</div>`;
+            }
+            document.getElementById('resetPasswordBtn').disabled = false;
+        } catch (error) {
+            alertContainer.innerHTML = '<div class="alert alert-danger">网络错误，请重试</div>';
+            document.getElementById('resetPasswordBtn').disabled = false;
+        }
+    };
+
+
+    document.getElementById('sendResetVerifyBtn').onclick = async function() {
+        const email = document.getElementById('email').value;
+
+        if (!email) {
+            alert('请输入邮箱');
+            return;
+        }
+
+        try {
+            const response = await fetch('/base/anakki/user/reset-password-email-send', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email }),
+            });
+            const result = await response.json();
+            if (response.ok) {
+                alert('验证码已发送');
+            } else {
+                alert(result.message || '发送验证码失败');
+            }
+        } catch (error) {
+            alert('网络错误，请重试');
+        }
+    };
 </script>
 </body>
 </html>

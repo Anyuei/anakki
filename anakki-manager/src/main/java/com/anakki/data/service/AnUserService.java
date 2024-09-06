@@ -33,9 +33,11 @@ public interface AnUserService extends IService<AnUser> {
 
     Boolean emailExist(String email);
 
-    Boolean verifyEmail(String email, String verifyCode);
+    Boolean verifyEmail(String email, String verifyCode,String businessKey);
 
     AnUser getByNickname(String nickname);
+
+    AnUser getByEmail(String email);
 
     BasePageResult<ListUserResponse> listUser(ListUserRequest listUserRequest);
 
@@ -62,4 +64,8 @@ public interface AnUserService extends IService<AnUser> {
      * @return
      */
     Boolean registerEmailSend(UserRegisterVerifyRequest request);
+
+    Boolean resetEmailSend(UserResetPasswordEmailVerifyRequest request);
+
+    Boolean resetPassword(UserResetPasswordRequest request) throws UnsupportedEncodingException, NoSuchAlgorithmException;
 }

@@ -18,8 +18,7 @@
 </head>
 <style>
     .bg-primary {
-        background-color: rgba(122, 122, 122, 0.86) !important;
-
+        background-color: rgba(0, 0, 0, 0.75) !important;
     }
     a {
         color: #515151;
@@ -58,6 +57,23 @@
     .send-verify:focus{
         background-color: #a52a2ad1 !important;
     }
+
+    .heading {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        color: white;
+    }
+    .heading span {
+        position: relative;
+    }
+    .heading .offset-1 {
+        top: -10px; /* 上移量 */
+    }
+    .heading .offset-2 {
+        top: 10px; /* 下移量 */
+    }
 </style>
 <body>
 <!--通用顶部导航-->
@@ -67,7 +83,7 @@
              style="
              background-image: url('https://securex-1258150206.cos.ap-beijing.myqcloud.com/backend/DSC07382_1.jpg');
              align-items: center;
-             display: flex;min-height: 50rem;"
+             display: flex;min-height: 50rem;height: 100vh;"
     >
         <span class="mask bg-primary alpha-5"></span>
         <div class="container d-flex align-items-center no-padding">
@@ -86,9 +102,14 @@
                                 </span>
 
                                 <span class="clearfix"></span>
-                                <h4 class="heading h3 text-white pt-3 pb-5" style="justify-content:center;display: flex">初次见面
-                                    <br>请多关照</h4>
-
+                                <h4 class="heading h3 pt-3 pb-5">
+                                    <div style="width: 9rem;">
+                                        <span class="offset-1" style="left: 0.1rem;">初次</span><span class="offset-2" style="left: -1rem;color: brown;">见面</span>
+                                    </div>
+                                    <div style="width: 11rem;">
+                                        <span class="offset-1" style="left: 1rem;color: brown;">请多</span><span class="offset-2" style="left: -0.5rem;">关照</span>
+                                    </div>
+                                </h4>
 
                                 <form class="form-primary" id="register-form">
                                     <div class="form-group" style="display: flex;">
@@ -123,7 +144,11 @@
                                                maxlength="6" name="verify" required>
                                     </div>
                                     <p id="register-notice" style="color: red"></p>
-                                    <button type="submit" class="btn btn-block btn-lg bg-white mt-4" style="padding: 0.3rem 1rem;">注册</button>
+                                    <button type="submit" class="btn btn-block btn-lg bg-white mt-4" style="padding: 0.3rem 1rem;">
+                                        <span id="buttonText">注册</span>
+                                        <span id="buttonSpinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none;"></span>
+                                    </button>
+
                                 </form>
                             </div>
                         </div>
@@ -224,6 +249,15 @@
             if (!passwordCheck()) {
                 return
             }
+
+            // 获取按钮的文本和 spinner 元素
+            const buttonText = document.getElementById('buttonText');
+            const buttonSpinner = document.getElementById('buttonSpinner');
+
+            // 显示 spinner 并更改按钮文本
+            buttonText.textContent = '注册中ʕ •ᴥ•ʔ ';
+            buttonSpinner.style.display = 'inline-block';
+
             e.preventDefault(); // Prevent form submission
             const formData = $(this).serialize(); // Serialize form data
             $.ajax({
@@ -231,6 +265,10 @@
                 type: 'POST',
                 data: formData,
                 success: function (response) {
+                    // 模拟完成操作后重置按钮状态
+                    buttonText.textContent = '注册';
+                    buttonSpinner.style.display = 'none';
+
                     if (response.code === 101) {
                         document.getElementById("register-notice").innerHTML = response.data;
                     } else if (response.code === 200) {
