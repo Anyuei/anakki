@@ -41,6 +41,23 @@
         text-overflow: ellipsis;
         white-space: nowrap;
     }
+    .captcha-img {
+        margin-left: 0.5rem;
+        border-radius: 0.5rem;
+    }
+    .send-verify{
+        width: 10rem;
+        border-radius: 0.5rem;
+        text-align: center;
+        align-content: center;
+        cursor: pointer;
+        margin-left: 1rem;
+        background-color: rgba(165, 42, 42, 0.79);
+        transition: background-color 0.3s ease; /* 动画过渡效果 */
+    }
+    .send-verify:focus{
+        background-color: #a52a2ad1 !important;
+    }
 </style>
 <body>
 <!--通用顶部导航-->
@@ -63,17 +80,26 @@
                                     <i class="fas fa-arrow-left"></i>
                                     <a href="sign-in.html">
                                         <span style="font-weight: bold;">
-                                        登录
+                                        去登录
                                         </span>
                                     </a>
                                 </span>
 
                                 <span class="clearfix"></span>
-                                <h4 class="heading h3 text-white pt-3 pb-5">初次见面
+                                <h4 class="heading h3 text-white pt-3 pb-5" style="justify-content:center;display: flex">初次见面
                                     <br>请多关照</h4>
 
 
                                 <form class="form-primary" id="register-form">
+                                    <div class="form-group" style="display: flex;">
+                                        <label for="email"></label>
+                                        <input id="email" type="email"
+                                              class="form-control"
+                                              name="email"
+                                              placeholder="邮箱"
+                                              maxlength="50" required>
+                                        <span onclick="sendRegisterVerify()" class="send-verify">发送验证码</span>
+                                    </div>
                                     <div class="form-group">
                                         <input type="text"
                                                class="form-control"
@@ -86,16 +112,15 @@
                                                class="form-control"
                                                name="password"
                                                id="passwordField"
-                                               placeholder="密码(大于八位,需包含大小写字母以及数字)"
+                                               placeholder="密码(大于八位,包含大小写字母以及数字)"
                                                minlength="6"
                                                required>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group" style="display: flex;justify-content: space-between">
                                         <input type="text"
                                                class="form-control"
-                                               placeholder="请输入验证码(点击验证码刷新)"
+                                               placeholder="请输入邮箱验证码"
                                                maxlength="6" name="verify" required>
-                                        <img class="captcha-img" src="/base/system/captcha" alt="验证码" style="width: 6rem; cursor: pointer;" onclick="refreshCaptcha()">
                                     </div>
                                     <p id="register-notice" style="color: red"></p>
                                     <button type="submit" class="btn btn-block btn-lg bg-white mt-4" style="padding: 0.3rem 1rem;">注册</button>
@@ -137,6 +162,31 @@
 
     function forgot() {
         alert("忘了我有啥子办法？微信找我重置吧")
+    }
+    function sendRegisterVerify(){
+        let email = document.getElementById("email").value;
+
+        $.ajax({
+            url: '/base/anakki/user/register-email-send', // Replace with your server URL
+            type: 'POST',
+            data: {
+                email: email
+            },
+            success: function (response) {
+                if (response.code === 101) {
+                    document.getElementById("register-notice").innerHTML = response.data;
+                } else if (response.code === 200) {
+                    document.getElementById("register-notice").innerHTML = "";
+                    if (response.data === true) {
+                        alert("验证码发送成功!5分钟内有效")
+                    }
+                }
+                console.log(response);
+            },
+            error: function (xhr, status, error) {
+                alert("系统错误:"+error.data)
+            }
+        });
     }
     function passwordCheck() {
         const password = passwordField.value;

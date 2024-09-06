@@ -31,6 +31,10 @@ public interface AnUserService extends IService<AnUser> {
 
     Boolean nicknameExist(String nickname);
 
+    Boolean emailExist(String email);
+
+    Boolean verifyEmail(String email, String verifyCode);
+
     AnUser getByNickname(String nickname);
 
     BasePageResult<ListUserResponse> listUser(ListUserRequest listUserRequest);
@@ -51,4 +55,11 @@ public interface AnUserService extends IService<AnUser> {
     Boolean telephoneChange(String telephone, String code);
 
     BasePageResult<ListUserForNoteResponse> listForNote(ListUserForNoteRequest request);
+
+    /**
+     * 注册发生邮箱验证码
+     * @param request
+     * @return
+     */
+    Boolean registerEmailSend(UserRegisterVerifyRequest request);
 }

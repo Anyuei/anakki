@@ -3,6 +3,7 @@ package com.anakki.data.controller.base;
 import com.anakki.data.bean.common.ResponseDTO;
 import com.anakki.data.entity.request.UserLoginRequest;
 import com.anakki.data.entity.request.UserRegisterRequest;
+import com.anakki.data.entity.request.UserRegisterVerifyRequest;
 import com.anakki.data.service.AnUserService;
 import com.ramostear.captcha.HappyCaptcha;
 import io.swagger.annotations.ApiOperation;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
@@ -46,11 +48,13 @@ public class AnBaseUserController {
 
     @ApiOperation(value = "注册")
     @PostMapping("/register")
-    public ResponseDTO<Boolean> register(UserRegisterRequest userRegisterRequest, HttpServletRequest request) throws UnsupportedEncodingException, NoSuchAlgorithmException {
-        boolean verification = HappyCaptcha.verification(request, userRegisterRequest.getVerify(), true);
-        if (!verification) {
-            throw new RuntimeException("验证码错误");
-        }
+    public ResponseDTO<Boolean> register(@Valid UserRegisterRequest userRegisterRequest) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         return ResponseDTO.succData(anUserService.register(userRegisterRequest));
     }
+    @ApiOperation(value = "注册验证码发送")
+    @PostMapping("/register-email-send")
+    public ResponseDTO<Boolean> registerEmailSend(@Valid UserRegisterVerifyRequest request){
+        return ResponseDTO.succData(anUserService.registerEmailSend(request));
+    }
+
 }

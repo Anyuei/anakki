@@ -927,18 +927,15 @@
             listNotes(1, 10, input);
         }
     }
-    let initialLoad = true;
-
     function handleViewNoteScroll() {
         const scrollableElement = document.documentElement || document.body;
-        if (scrollableElement.scrollHeight - scrollableElement.scrollTop === scrollableElement.clientHeight && !initialLoad) {
+        if (scrollableElement.scrollHeight - scrollableElement.scrollTop === scrollableElement.clientHeight) {
             loadMoreNotes();
         }
     }
     window.addEventListener('scroll', () => {
          // 用户滚动之后关闭初始状态
         handleViewNoteScroll();
-        initialLoad = false;
     });
     // 当前页数和每页数据大小
     let currentViewNotePage = 1;
@@ -952,8 +949,6 @@
         currentViewNotePage++; // 页数递增
         listNotes(currentViewNotePage, pageSize, document.getElementById('searchInputText').value);
     }
-    // 监听滚动事件
-    window.addEventListener('scroll', handleViewNoteScroll);
 
     function listNotes(current, pageSize, searchInput) {
         if (!hasMoreNotes){

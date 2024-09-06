@@ -33,7 +33,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
@@ -64,6 +63,12 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
 
     @Autowired
     private  AnNoteUserPermissionService anNoteUserPermissionService;
+
+    @Autowired
+    private EmailUtil emailUtil;
+
+    @Autowired
+    private AnSystemConfigService  anSystemConfigService;
     @Override
     public String login(UserLoginRequest userLoginRequest) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         String username = userLoginRequest.getUsername();
@@ -86,9 +91,19 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
     public Boolean register(UserRegisterRequest userRegisterRequest) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         String username = userRegisterRequest.getUsername();
         String password = userRegisterRequest.getPassword();
+        String email = userRegisterRequest.getEmail();
+        String verify = userRegisterRequest.getVerify();
         if (nicknameExist(username)) {
             throw new RuntimeException("昵称已存在");
         }
+        if (emailExist(email)){
+            throw new RuntimeException("邮箱已注册");
+        }
+
+        if (!verifyEmail(email,verify)) {
+            throw new RuntimeException("验证码不正确");
+        }
+
         String encryptedData = MD5SaltUtil.getEncryptedData(password);
 
         AnUser anUser = new AnUser();
@@ -96,6 +111,7 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
         anUser.setPassword(encryptedData);
         anUser.setLoginDays(0);
         anUser.setNickname(username);
+        anUser.setMail(email);
         save(anUser);
         return true;
     }
@@ -106,7 +122,26 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
         userQueryWrapper.eq("nickname", nickname);
         return 0 < anUserMapper.selectCount(userQueryWrapper);
     }
-
+    @Override
+    public Boolean emailExist(String email) {
+        QueryWrapper<AnUser> userQueryWrapper = new QueryWrapper<>();
+        userQueryWrapper.eq("mail", email);
+        return 0 < anUserMapper.selectCount(userQueryWrapper);
+    }
+    @Override
+    public Boolean verifyEmail(String email, String verifyCode) {
+        if (StringUtils.isBlank(email)){
+            throw new RuntimeException("请输入邮箱");
+        }
+        if (StringUtils.isBlank(verifyCode)){
+            throw new RuntimeException("请输入验证码");
+        }
+        String realVerifyCode = RedisUtil.StringOps.get("EmailVerify_" + email);
+        if (StringUtils.isBlank(realVerifyCode)){
+            throw new RuntimeException("验证码已失效");
+        }
+        return verifyCode.equals(realVerifyCode);
+    }
     @Override
     public AnUser getByNickname(String nickname) {
         QueryWrapper<AnUser> userQueryWrapper = new QueryWrapper<>();
@@ -332,5 +367,38 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
         });
 
         return new BasePageResult<>(editUsers, page.getTotal());
+    }
+
+    @Override
+    public Boolean registerEmailSend(UserRegisterVerifyRequest request) {
+        Long registerEmailSendInterval = anSystemConfigService.getNumberConfigValue("registerEmailSendInterval");
+        String email = request.getEmail();
+        String verifyCode = VerificationCodeGenerator.generateVerificationCode();
+        boolean sent = RedisUtil.KeyOps.hasKey("EmailVerify_" + email);
+        if (sent){
+            throw new RuntimeException(registerEmailSendInterval+"分钟请勿重复发送");
+        }
+        emailUtil.sendMessage(
+                email,
+                "【ANAKKIX】欢迎注册",
+                getVerificationEmailContent(email, verifyCode));
+        boolean success = RedisUtil.StringOps.setIfAbsent("EmailVerify_" + email, verifyCode, registerEmailSendInterval, TimeUnit.MINUTES);
+        if (!success){
+            throw new RuntimeException(registerEmailSendInterval+"分钟请勿重复发送");
+        }
+        return true;
+    }
+
+    public static String getVerificationEmailContent(String userName, String verificationCode) {
+        return "<html>" +
+                "<body>" +
+                "<h2>尊敬的 " + userName + "，您好！</h2>" +
+                "<p>感谢您注册我的网站 O(∩_∩)O。</p>" +
+                "<p>您的验证码是：<strong>" + verificationCode + "</strong></p>" +
+                "<p>请在 2 分钟内使用该验证码完成验证。</p>" +
+                "<br/>" +
+                "<p>如有问题，请联系我们：</p>" +
+                "</body>" +
+                "</html>";
     }
 }
