@@ -707,7 +707,7 @@
                     </div>
                     </div>`;
             // 处理时间戳
-            const currentTimestamp = new Date(message.createTime);
+            let currentTimestamp = new Date(message.createTime);
             if (lastTimestamp != null && (lastTimestamp - currentTimestamp) >= 5 * 60 * 1000) {
                 const timestampHTML = `
                 <div class="chat-timestamp">${formatTimestamp(currentTimestamp)}</div>

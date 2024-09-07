@@ -3,6 +3,7 @@ package com.anakki.data.entity.request;
 import com.anakki.data.entity.common.Pagination;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.time.LocalDateTime;
 
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
  * @author Anakki
  * @date 2024/6/6 3:39
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class ListNoteRequest extends Pagination {
     @ApiModelProperty("笔记类型")
