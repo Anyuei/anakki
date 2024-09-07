@@ -9,6 +9,7 @@ import com.anakki.data.entity.response.AnFriendsCommentResponse;
 import com.anakki.data.mapper.AnFriendsCommentMapper;
 import com.anakki.data.service.AnFriendsCommentService;
 import com.anakki.data.service.AnUserService;
+import com.anakki.data.utils.common.EmailUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -34,6 +35,9 @@ public class AnFriendsCommentServiceImpl extends ServiceImpl<AnFriendsCommentMap
     @Autowired
     private AnUserService anUserService;
 
+
+    @Autowired
+    private EmailUtil emailUtil;
     @Override
     public BasePageResult<AnFriendsCommentResponse> listComments(ListCommentsRequest listCommentsRequest) {
         IPage<AnFriendsComment> anFriendsCommentPage = new Page<>(
@@ -104,6 +108,11 @@ public class AnFriendsCommentServiceImpl extends ServiceImpl<AnFriendsCommentMap
             anFriendsComment.setUserName(byNickname.getUserName());
             anFriendsComment.setStatus("IN_REVIEW");
         }
+        emailUtil.sendMessage("ayp199645aabb@qq.com","您收到一条留言!",
+                "内容:"+createCommentsRequest.getComment()
+        );
+
+
         return save(anFriendsComment);
     }
 

@@ -112,6 +112,12 @@
     /* 为每个字设置不同的动画延迟 */
     .div-trans-3 span:nth-child(1) { animation-delay: 1s; }
     .div-trans-3 span:nth-child(2) { animation-delay: 3s; }
+
+    @media (max-width: 600px) {
+        .hide-on-small-screen {
+            display: none;
+        }
+    }
 </style>
 <body>
 <!--通用顶部导航-->
@@ -121,9 +127,14 @@
         <!--        <span class="mask bg-primary alpha-6"></span>-->
         <div class="container-fluid d-flex align-items-center no-padding">
             <div class="col" style="margin-top: 10rem;display: flex;justify-content: space-evenly;">
-                <div class="hwxw-font div-trans-3" style="font-size: 2rem;align-content: space-evenly;">
-                    <span class="font-hover">听风八百遍</span>
-                    <span class="font-hover">才知是人间</span>
+                <div class="hwxw-font hide-on-small-screen" style="font-size: 2rem;align-content: space-evenly;">
+                    <div class="div-trans-3">
+                        <span class="font-hover">听风八百遍</span>
+                        <span class="font-hover">才知是人间</span>
+                    </div>
+                    <div class="div-trans-3">
+                        <span class="" style="font-size: small">日照金山，2022年摄于川藏线骑行-理塘禾尼乡</span>
+                    </div>
                 </div>
                 <div class="row justify-content-center">
                     <div style="width: 20rem;">

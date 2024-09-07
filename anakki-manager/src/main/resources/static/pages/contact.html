@@ -45,13 +45,19 @@
                 margin: 6.75rem auto;
             }
         }
-
         .comment-card {
             border: 0px 1px solid #020202;
             border-radius: 15px;
             background-color: #0000004f;
+            width: 100%;
+            transition: width 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
         }
 
+        .comment-card:hover {
+            background-color: rgba(0, 0, 0, 0.32);
+            box-shadow: 0 0 24px rgba(0, 0, 0, 0.35);
+            width: 98%; /* 宽度平滑增加 */
+        }
         .avatar-size {
             width: 50px;
             height: 50px;
@@ -114,6 +120,45 @@
         .spinner-border {
             margin: 20px auto; /* 使加载动画居中 */
         }
+        p {
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+
+        .page-link {
+            position: relative;
+            display: block;
+            padding: .5rem .75rem;
+            margin-left: -0.0625rem;
+            line-height: 1.25;
+            color: #d0d0d0;
+            background-color: #0000005c;
+            border: .0625rem solid #dee2e600;
+        }
+        .commentSendBtn{
+            justify-content: center;
+            display: flex;
+        }
+
+        .breathing-effect {
+            display: inline-block; /* 使 span 元素支持 transform */
+            animation: breathing 2s ease-in-out infinite; /* 动画名称、时长、速度曲线、循环次数 */
+        }
+
+        @keyframes breathing {
+            0% {
+                transform: scale(1); /* 初始状态 */
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.2); /* 扩大 1.2 倍 */
+                opacity: 0.7;
+            }
+            100% {
+                transform: scale(1); /* 恢复到原始状态 */
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 <body>
@@ -126,24 +171,31 @@
             <div class="col-lg-7">
                 <div class="text-center pt-lg-md">
                     <h2 class="heading h1 mb-2">
-                        来都来了 o(￣ヘ￣*o)
+                        来都来了 <span class="breathing-effect">o</span>(￣ヘ￣*o)
                     </h2>
                 </div>
             </div>
         </div>
         <div class="container-fluid" style="justify-content: center;display: flex;">
             <div class="col-lg-7">
-                <div class="heading h3 mb-2">
-                    <div class="comment-open-button" type="button" data-toggle="modal" data-target="#commentModal"
-                         style="width: 4rem">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
-                             class="bi bi-envelope-plus" viewBox="0 0 16 16">
-                            <path d="M2 2a2 2 0 0 0-2 2v8.01A2 2 0 0 0 2 14h5.5a.5.5 0 0 0 0-1H2a1 1 0 0 1-.966-.741l5.64-3.471L8 9.583l7-4.2V8.5a.5.5 0 0 0 1 0V4a2 2 0 0 0-2-2H2Zm3.708 6.208L1 11.105V5.383l4.708 2.825ZM1 4.217V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v.217l-7 4.2-7-4.2Z"/>
-                            <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Zm-3.5-2a.5.5 0 0 0-.5.5v1h-1a.5.5 0 0 0 0 1h1v1a.5.5 0 0 0 1 0v-1h1a.5.5 0 0 0 0-1h-1v-1a.5.5 0 0 0-.5-.5Z"/>
-                        </svg>
+                <div class="row" style="justify-content: space-between;">
+                    <div class="heading h3 mb-2">
+                        <div class="comment-open-button" type="button" data-toggle="modal" data-target="#commentModal"
+                             style="width: 4rem">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                                 class="bi bi-envelope-plus" viewBox="0 0 16 16">
+                                <path d="M2 2a2 2 0 0 0-2 2v8.01A2 2 0 0 0 2 14h5.5a.5.5 0 0 0 0-1H2a1 1 0 0 1-.966-.741l5.64-3.471L8 9.583l7-4.2V8.5a.5.5 0 0 0 1 0V4a2 2 0 0 0-2-2H2Zm3.708 6.208L1 11.105V5.383l4.708 2.825ZM1 4.217V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v.217l-7 4.2-7-4.2Z"/>
+                                <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Zm-3.5-2a.5.5 0 0 0-.5.5v1h-1a.5.5 0 0 0 0 1h1v1a.5.5 0 0 0 1 0v-1h1a.5.5 0 0 0 0-1h-1v-1a.5.5 0 0 0-.5-.5Z"/>
+                            </svg>
+                        </div>
                     </div>
+                    <!-- 评论列表表头部分，加入分页组件 -->
+                    <nav aria-label="Page navigation" class="d-flex justify-content-between align-items-center">
+                        <ul class="pagination justify-content-end" id="pagination">
+                            <!-- 分页按钮将通过 JavaScript 动态生成 -->
+                        </ul>
+                    </nav>
                 </div>
-
                 <div id="friend-comment" class="list-group align-items-center">
 
 
@@ -171,8 +223,10 @@
                                     <textarea class="form-control" rows="5" placeholder="留言内容" name="comment"
                                               required></textarea>
                         </div>
-                        <div class="mt-4">
-                            <button type="submit" class="btn btn-primary px-4">发送</button>
+                        <div class="commentSendBtn">
+                            <button type="submit" class="btn" style="font-size: 2rem;background-color: #f0f8ff00;padding:0">
+                                <i class="bi bi-send-check"></i>
+                            </button>
                         </div>
                     </form>
 
@@ -181,6 +235,23 @@
         </div>
     </div>
 </main>
+
+<!-- 模态框，用于显示评论详情 -->
+<div class="modal fade" id="commentDetailModal" tabindex="-1" aria-labelledby="commentDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="top: 4rem;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="commentDetailModalLabel">评论详情</h5>
+            </div>
+            <div class="modal-body">
+                <p id="modal-comment-content"></p>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- 页面底部 -->
 <div id="footer"></div>
 <!-- Core -->
@@ -199,12 +270,29 @@
 <script src="../assets/js/theme.js"></script>
 
 <script>
-    window.onload = function () {
+    // 初始页面与页面大小
+    let currentPage = 1;
+    const pageSize = 5; // 每页显示5条评论
 
+    window.onload = function () {
         $('#header').load("../pages/header.html", loadPersonDetail);
         $('#footer').load("../pages/footer.html", insertCreateTime);
-        const mainPageImageFlow = new XMLHttpRequest();
+        // 页面加载时，默认加载第一页
+        fetchComments(currentPage);
 
+        // 显示评论详情模态框
+        window.showCommentDetails = function(comment) {
+            const modalCommentContent = document.getElementById("modal-comment-content");
+            modalCommentContent.textContent = decodeURIComponent(comment);
+            const commentDetail = new bootstrap.Modal(document.getElementById('commentDetailModal'));
+            commentDetail.show();
+        };
+    };
+
+    const maxCommentLength = 100; // 评论显示最大长度
+
+    function fetchComments(page) {
+        const mainPageImageFlow = new XMLHttpRequest();
 
         // 创建加载动画元素
         const loadingOverlay = document.createElement("div");
@@ -212,54 +300,91 @@
         loadingOverlay.innerHTML = `<div class="loading-spinner"></div>`;
         document.body.appendChild(loadingOverlay);
 
-
-        mainPageImageFlow.open("GET", "/base/anakki/friends-comment/list-comments", true);
+        // 请求评论接口，加入分页参数
+        mainPageImageFlow.open("GET", `/base/anakki/friends-comment/list-comments?page=${page}&size=${pageSize}`, true);
         mainPageImageFlow.onreadystatechange = function () {
             if (mainPageImageFlow.readyState === 4 && mainPageImageFlow.status === 200) {
                 // 移除加载动画
                 document.body.removeChild(loadingOverlay);
 
-                let html = "";
                 const response = JSON.parse(mainPageImageFlow.responseText);
                 const itemList = response.data.data;
+                const totalItems = response.data.totalNum; // 后端返回的总条数
+                const totalPages = Math.ceil(totalItems / pageSize); // 计算总页数
+
+                let html = "";
                 for (let i = 0; i < itemList.length; i++) {
                     const item = itemList[i];
                     let time = item.createTime;
                     const formattedDateTime = time.replace("T", " ");
-                    //计算距离现在时间
                     const targetDate = new Date(time);
                     const currentDate = new Date();
                     const timeDiff = currentDate.getTime() - targetDate.getTime();
                     const daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
                     let daysBefore = (daysDiff === 0) ? "今天" : daysDiff + "天以前";
 
+                    // 检查评论长度是否超出
+                    const truncatedComment = item.comment.length > maxCommentLength
+                        ? item.comment.substring(0, maxCommentLength) + "..."
+                        : item.comment;
+
+                    // 显示评论内容，如果内容超出显示“查看更多”
                     html += `
-                    <div class="card mb-3 comment-card" style="width: 100%;">
-                        <div class="d-flex align-items-start">
-                            <img src="${item.avatar ? item.avatar : "../assets/images/default-avatar.jpg"}" class="rounded-circle avatar-size" alt="avatar">
-                            <div class="ms-3 w-100" style="margin: 0.5rem;">
-                                <div class="d-flex justify-content-between">
-                                    <h5 class="card-title mb-1">${item.nickname}</h5>
-                                    <p class="card-time text-muted mb-0">${daysBefore}-${formattedDateTime}</p>
-                                </div>
-                                <p class="card-text">${item.comment}</p>
-                                <div class="d-flex justify-content-between align-items-center mt-2">
-                                    <a href="#">
-                                        <i class="bi bi-suit-heart"></i>
-                                    </a>
-                                    <a href="#">
-                                        <i class="bi bi-chat-right-dots"></i>
-                                    </a>
+                        <div class="card mb-3 comment-card">
+                            <div class="d-flex align-items-start">
+                                <img src="${item.avatar ? item.avatar : '../assets/images/default-avatar.jpg'}" class="rounded-circle avatar-size" alt="avatar">
+                                <div class="ms-3 w-100" style="margin: 0.5rem;">
+                                    <div class="d-flex justify-content-between">
+                                        <h5 class="card-title mb-1">${item.nickname}</h5>
+                                        <p class="card-time text-muted mb-0">${daysBefore}-${formattedDateTime}</p>
+                                    </div>
+                                    <p class="card-text">${truncatedComment}</p>
+                                    ${item.comment.length > maxCommentLength ? `<a href="javascript:void(0);" onclick="showCommentDetails('${encodeURIComponent(item.comment)}')">查看更多</a>` : ''}
+                                    <div class="d-flex justify-content-between align-items-center mt-2">
+                                        <a href="#"><i class="bi bi-suit-heart"></i></a>
+                                        <a href="#"><i class="bi bi-chat-right-dots"></i></a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>`;
+                        </div>`;
                 }
                 document.getElementById("friend-comment").innerHTML = html;
+                renderPagination(totalPages, page); // 渲染分页按钮
             }
         };
         mainPageImageFlow.send();
-    };
+    }
+    function renderPagination(totalPages, currentPage) {
+        const pagination = document.getElementById('pagination');
+        let paginationHtml = '';
+
+        // 上一页按钮
+        if (currentPage > 1) {
+            paginationHtml += `<li class="page-item">
+                                    <a class="page-link" href="javascript:void(0)" onclick="fetchComments(${currentPage - 1})">
+                                    <i class="bi bi-caret-left-fill"></i>
+                                    </a>
+                               </li>`;
+        }
+
+        // 页码按钮
+        for (let page = 1; page <= totalPages; page++) {
+            paginationHtml += `<li class="page-item ${page === currentPage ? 'active' : ''}">
+                    <a class="page-link" href="javascript:void(0)" onclick="fetchComments(${page})">${page}</a>
+                </li>`;
+        }
+
+        // 下一页按钮
+        if (currentPage < totalPages) {
+            paginationHtml += `<li class="page-item"><a class="page-link" href="javascript:void(0)" onclick="fetchComments(${currentPage + 1})">
+                                    <i class="bi bi-caret-right-fill"></i>
+                                </a></li>`;
+        }
+
+        pagination.innerHTML = paginationHtml;
+    }
+
+
 
     $(document).ready(function () {
         $('#commentForm').submit(function (e) {
@@ -296,8 +421,8 @@
                 },
                 success: function (response) {
                     if (response.code === 200) {
+                        alert("发送成功~！")
                         location.reload();
-
                     } else {
                         alert("系统错误，请联系管理员！")
                     }

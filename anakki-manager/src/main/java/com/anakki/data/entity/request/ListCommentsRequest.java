@@ -4,6 +4,7 @@ import com.anakki.data.entity.common.PageEntity;
 import com.anakki.data.entity.common.Pagination;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.time.LocalDateTime;
 
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
  * @author Anakki
  * @date 2023/11/14 12:01
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class ListCommentsRequest extends Pagination {
 
