@@ -13319,3 +13319,14 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
         transform: rotate(360deg);
     }
 }
+
+@font-face {
+    font-family: 'MyCustomFont'; /* 自定义字体名称 */
+    src: url('../fonts/华文新魏.TTF') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.hwxw-font {
+    font-family: 'MyCustomFont', sans-serif; /* 仅应用于特定类 */
+}

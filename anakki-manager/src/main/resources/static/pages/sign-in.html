@@ -23,7 +23,12 @@
     }
 
     .form-primary .form-control {
-        background-color: rgba(73, 95, 119, 0.65);
+        background-color: rgba(0, 0, 0, 0.04);
+        border: .0525rem;
+    }
+
+    .form-primary .form-control:hover {
+        background-color: rgba(0, 0, 0, 0.12);
         border: .0525rem;
     }
 
@@ -50,18 +55,63 @@
         background-position: center;
         min-height: 55rem;
     }
-    .login-title{
+
+    .login-title {
         display: flex;
         justify-content: center;
     }
+
     .captcha-img {
         margin-left: 0.5rem;
         border-radius: 0.5rem;
     }
-#loginButton:hover{
-    background-color: rgba(190, 10, 10, 0.99);
-}
 
+    #loginButton:hover {
+        background-color: rgba(190, 10, 10, 0.99);
+    }
+    /* 定义渐显动画 */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+    /* 初始状态下文本透明 */
+    .div-trans {
+        opacity: 0; /* 初始状态为透明 */
+        animation: fadeIn 2s ease forwards; /* 应用渐显动画 */
+        animation-delay: 1s; /* 动画延迟 2 秒开始 */
+    }
+
+    /* 当动画完成后，确保文本完全可见 */
+    .div-trans {
+        animation: fadeIn 2s ease forwards; /* 渐变时间和效果 */
+        animation-delay: 3s; /* 动画延迟 2 秒开始 */
+    }
+    .div-trans-3 span{
+        display: inline-block;
+        opacity: 0; /* 初始状态为透明 */
+        animation: fadeIn 2s ease forwards; /* 应用渐显动画 */
+        animation-delay: 4s; /* 动画延迟 2 秒开始 */
+    }
+    @font-face {
+        font-family: 'MyCustomFont'; /* 自定义字体名称 */
+        src: url('../assets/fonts/华文新魏.TTF') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    .hwxw-font {
+        font-family: 'MyCustomFont', sans-serif; /* 仅应用于特定类 */
+    }
+    .font-hover:hover{
+        font-weight: bold; /* hover 时字体变粗 */
+    }
+    /* 为每个字设置不同的动画延迟 */
+    .div-trans-3 span:nth-child(1) { animation-delay: 1s; }
+    .div-trans-3 span:nth-child(2) { animation-delay: 3s; }
 </style>
 <body>
 <!--通用顶部导航-->
@@ -70,16 +120,16 @@
     <section class="spotlight parallax bg-cover bg-size--cover" data-spotlight="fullscreen">
         <!--        <span class="mask bg-primary alpha-6"></span>-->
         <div class="container-fluid d-flex align-items-center no-padding">
-            <div class="col" style="margin-top: 10rem;">
-                <div >
-                    <div>听风八百遍</div>
-                    <div>才知是人间</div>
+            <div class="col" style="margin-top: 10rem;display: flex;justify-content: space-evenly;">
+                <div class="hwxw-font div-trans-3" style="font-size: 2rem;align-content: space-evenly;">
+                    <span class="font-hover">听风八百遍</span>
+                    <span class="font-hover">才知是人间</span>
                 </div>
                 <div class="row justify-content-center">
                     <div style="width: 20rem;">
 
                         <div>
-                            <div class="card-body">
+                            <div class="card-body div-trans">
                                 <i class="fas fa-arrow-left"></i>
                                 <a href="sign-up.html">
                                     <span style="font-weight: bold;">
@@ -90,7 +140,6 @@
                                 <div class="login-title">
                                     <h4 class="heading h3 text-white pt-3 pb-5">欢迎回家</h4>
                                 </div>
-
 
 
                                 <!--                                <&#45;&#45;验证码+提交验证&ndash;&gt;-->
@@ -120,14 +169,17 @@
                                         <img class="captcha-img" src="/base/system/captcha" alt="验证码"
                                              style="width: 6rem; cursor: pointer;" onclick="refreshCaptcha()">
                                     </div>
-                                    <a href="#" class="text-white" data-toggle="modal" data-target="#forgotPasswordModal">忘记密码?</a>
+                                    <a href="#" class="text-white" data-toggle="modal"
+                                       data-target="#forgotPasswordModal">忘记密码?</a>
                                     <p id="login-notice" style="color: red"></p>
-                                    <button id="loginButton" type="submit" class="btn btn-block btn-lg mt-4" style="padding: 0.3rem 1rem;">
+                                    <button id="loginButton" type="submit" class="btn btn-block btn-lg mt-4"
+                                            style="padding: 0.3rem 1rem;">
                                         <span id="buttonText">
                                             <i class="bi bi-box-arrow-in-right"></i>
                                             登录
                                         </span>
-                                        <span id="buttonSpinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none;"></span>
+                                        <span id="buttonSpinner" class="spinner-border spinner-border-sm" role="status"
+                                              aria-hidden="true" style="display: none;"></span>
                                     </button>
                                 </form>
                             </div>
@@ -141,12 +193,13 @@
 
 <!-- 重置模态框 -->
 <!-- 模态框 -->
-<div class="modal fade" id="forgotPasswordModal" tabindex="-1" role="dialog" aria-labelledby="forgotPasswordModalLabel" aria-hidden="true">
+<div class="modal fade" id="forgotPasswordModal" tabindex="-1" role="dialog" aria-labelledby="forgotPasswordModalLabel"
+     aria-hidden="true">
     <div class="modal-dialog" role="document" style="max-width: 30rem;margin-top: 5rem;">
         <div class="modal-content">
             <div class="modal-header" style="justify-content: center">
                 <div class="modal-title" id="forgotPasswordModalLabel" style="border-radius: 0.8rem;font-size: 3rem;">
-                    <i class="bi bi-person-circle"></i>
+                    <i class="bi bi-person-circle" style="color: brown;"></i>
                 </div>
             </div>
             <div class="modal-body">
@@ -156,20 +209,24 @@
                         <div class="input-group">
                             <input type="email" class="form-control" id="email" placeholder="请输入邮箱" required>
                             <div class="input-group-append">
-                                <button class="btn btn-secondary" type="button" id="sendResetVerifyBtn">发送验证码</button>
+                                <button class="btn btn-secondary" type="button" id="sendResetVerifyBtn">发送验证码
+                                </button>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" id="verificationCode" placeholder="请输入验证码" required>
+                        <input type="text" class="form-control" id="verificationCode" placeholder="请输入验证码"
+                               required>
                     </div>
                     <div class="form-group">
-                        <input type="password" class="form-control" id="newPassword" placeholder="请输入新密码" required>
+                        <input type="password" class="form-control" id="newPassword" placeholder="请输入新密码"
+                               required>
                     </div>
                     <div class="form-group">
-                        <input type="password" class="form-control" id="confirmPassword" placeholder="再次输入新密码" required>
+                        <input type="password" class="form-control" id="confirmPassword" placeholder="再次输入新密码"
+                               required>
                     </div>
-                    <button type="button" class="btn btn-primary" id="resetPasswordBtn">重置密码</button>
+                    <button type="button" id="resetPasswordBtn" style="width: 100%;color: white;background: brown;" class="btn">重置密码</button>
                 </form>
             </div>
         </div>
@@ -192,6 +249,7 @@
 <!-- Theme JS -->
 <script src="../assets/js/theme.js"></script>
 <script>
+
     async function setBackgroundImage() {
         try {
             // 从后端获取封面图片 URL
@@ -221,6 +279,7 @@
     window.onload = function () {
         $('#header').load("../pages/header.html", loadPersonDetail);
         $('#footer').load("../pages/footer.html", insertCreateTime);
+
     };
 
 
@@ -244,7 +303,7 @@
                 data: formData,
                 success: function (response) {
                     // 模拟完成操作后重置按钮状态
-                    buttonText.textContent = '<i class="bi bi-box-arrow-in-right"></i>登录';
+                    buttonText.innerHTML = '<i class="bi bi-box-arrow-in-right"></i>登录';
                     buttonSpinner.style.display = 'none';
                     loginButton.disabled = false;
 
@@ -269,7 +328,7 @@
     });
 
 
-    document.getElementById('resetPasswordBtn').onclick = async function() {
+    document.getElementById('resetPasswordBtn').onclick = async function () {
 
         const email = document.getElementById('email').value;
         const verificationCode = document.getElementById('verificationCode').value;
@@ -291,17 +350,17 @@
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email, verificationCode, newPassword }),
+                body: JSON.stringify({email, verificationCode, newPassword}),
             });
 
             const result = await response.json();
 
             if (response.ok) {
-                if (result.code===200){
+                if (result.code === 200) {
                     alertContainer.innerHTML = '<div class="alert alert-success">密码重置成功</div>';
                     // 可以在这里执行其他操作，比如清空表单
                     document.getElementById('forgotPasswordForm').reset();
-                }else{
+                } else {
                     alertContainer.innerHTML = '<div class="alert alert-danger">result.data</div>';
                 }
             } else {
@@ -315,7 +374,7 @@
     };
 
 
-    document.getElementById('sendResetVerifyBtn').onclick = async function() {
+    document.getElementById('sendResetVerifyBtn').onclick = async function () {
         const email = document.getElementById('email').value;
 
         if (!email) {
@@ -329,7 +388,7 @@
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email }),
+                body: JSON.stringify({email}),
             });
             const result = await response.json();
             if (response.ok) {
