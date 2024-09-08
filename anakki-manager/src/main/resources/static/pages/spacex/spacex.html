@@ -13,7 +13,7 @@
     <style>
         body {
             color: #aeaeae;
-            background-color: #000000b8;
+            background-color: #000000d9;
         }
 
         .image-item {
@@ -322,7 +322,9 @@
                     </div>
                 </div>
                 <div class="tab-pane fade" id="img" role="tabpanel" aria-labelledby="nav-img-tab">
-                    <div class="timeline" id="imgtimeline"></div>
+                    <div class="timeline" id="imgtimeline">
+
+                    </div>
                     <div class="load-more">
                         <button id="imgloadMoreBtn">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-down" viewBox="0 0 16 16">
@@ -430,7 +432,7 @@
                                 `;
                         } else {
                             gridHtml += `
-                                <div class="image-item">
+                                <div class="image-item" id="img-container-${item.id}">
                                     <img id="img${item.id}" src="${item.imgUrl}?imageMogr2/thumbnail/400x" class="image-spacex-list img-fluid" alt="${item.id}" onclick="showModal(this.alt)">
                                     ${commonHtml}
                                 </div>
@@ -551,10 +553,11 @@
 
                         // 如果已有 Viewer 实例，则销毁
                         if (viewerInstance){
-                            viewerInstance.update();
-                        }else {
+                            viewerInstance.destroy();
+                        }
                             // 获取现有图片容器元素
-                            const existingContainer = document.getElementById("timeline");
+                        const existingContainer = document.getElementById("img-container-"+imgId);
+                        if (existingContainer) {
                             // 初始化 Viewer.js
                             viewerInstance = new Viewer(existingContainer, {
                                 zoomable: true,
