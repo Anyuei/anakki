@@ -61,6 +61,7 @@ public class AnNoteController {
     @ApiOperation(value = "上传媒体文件")
     @PostMapping("/uploadFiles")
     public ResponseDTO<String> uploadFiles(UploadNoteMediaRequest uploadNoteMediaRequest) throws IOException {
+
         String url = anNoteService.uploadFiles(uploadNoteMediaRequest);
         return ResponseDTO.succData(url);
     }

@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.NotNull;
 import java.sql.Blob;
 
 /**
@@ -16,5 +17,6 @@ import java.sql.Blob;
  */
 @Data
 public class UploadNoteMediaRequest {
+    @NotNull(message = "文件为空")
     private MultipartFile uploadFiles;
 }

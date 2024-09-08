@@ -543,6 +543,11 @@
     }
     function deleteNote(id) {
         const token = localStorage.getItem('user-token');
+        if (!token){
+            alert("请登录")
+        }
+
+        document.getElementById('loading-overlay').style.display = 'flex';
         fetch('/api/anakki/note/deleteNote', {
             method: 'POST',
             headers: {
@@ -564,13 +569,16 @@
                 }
             })
             .then(data => {
+                document.getElementById('loading-overlay').style.display = 'none';
                 if (data.code === 200) {
+                    document.getElementById("noteList").innerHTML='';
                     listNotes(1, 10)
                 } else {
                     alert(data.data)
                 }
             })
             .catch(error => {
+                document.getElementById('loading-overlay').style.display = 'none';
                 console.error('Error:', error);
             });
     }
@@ -660,6 +668,13 @@
                 console.error('Error:', error);
             });
     }
+
+
+    /**
+     * 编辑文章
+     * @param id
+     * @param refreshContent
+     */
     function editNote(id,refreshContent) {
         fetch('/base/anakki/note/note-detail?id='+id, {
             method: 'GET'
@@ -869,10 +884,17 @@
         var textarea = document.getElementById('adContent');
         textarea.scrollTop = textarea.scrollHeight - textarea.clientHeight;
     }
+
+    /**
+     * 保存草稿
+     */
     function saveDraft() {
         const data = thisAdEditor.getData()
 
         const token = localStorage.getItem('user-token');
+        if (!token){
+            alert("请登录")
+        }
         // Make an AJAX POST request
         fetch('/api/anakki/an-note-draft/saveNoteDraft', {
             method: 'POST',
@@ -904,11 +926,20 @@
             });
     }
 
+    /**
+     * 发布新作品
+     */
     function publish() {
+        const token = localStorage.getItem('user-token');
+        if (!token){
+            alert("请登录")
+        }
         const data = thisAdEditor.getData()
+        if (!data){
+            alert("请输入内容")
+        }
         const noteId = document.getElementById("noteId").innerHTML;
-        const token = localStorage.getItem('user-token'); // Get the JWT token from localStorage
-        // Make an AJAX POST request
+        document.getElementById('loading-overlay').style.display = 'flex';
         fetch('/api/anakki/note/createNote', {
             method: 'POST',
             headers: {
@@ -930,10 +961,12 @@
                 }
             })
             .then(data => {
+                document.getElementById('loading-overlay').style.display = 'none';
                 if (data.code === 200) {
                     const noteId = data.data.data;
-                    localStorage.setItem('noteId', noteId);
                     alert("发布成功")
+                    document.getElementById('publish-area').style.display= '';
+                    document.getElementById("noteId").innerHTML='';
                     listNotesButton()
                 } else {
                     alert(data.data)
