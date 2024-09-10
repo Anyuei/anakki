@@ -91,7 +91,14 @@
         white-space: nowrap;
         background: #527c5c;
     }
+    .resource-row{
+        transition: all 0.3s ease; /* 添加平滑过渡效果 */
+    }
 
+    .resource-row:hover{
+        background-color: #0a362263;
+        transform: translateY(-5px);
+    }
 </style>
 <body>
 <!--通用顶部导航-->
@@ -472,7 +479,7 @@
                         }
 
 
-                        html = html + "                           <tr>\n" +
+                        html = html + "                           <tr class='resource-row'>\n" +
                             "                                    <td>" + resourceName + "</td>\n" +
                             "                                    <td class=\"truncate\">" + description + "</td>\n" +
                             "                                    <td>" + downloadCount + "</td>\n" +
