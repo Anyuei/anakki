@@ -174,7 +174,9 @@
         background-color: #e6e6e6;
     }
     .note-node-title-dropdown-icon{
-        margin-top: 1rem;
+        margin-top: 0.5rem;
+        font-size: 1.3rem;
+        cursor: pointer;
     }
 
     .author-item .author-avatar{
@@ -241,7 +243,7 @@
             </div>
             <!--      打开笔记按钮      -->
             <div class="col-2" style="padding-right: 5px;padding-left: 5px;">
-                <button id="listNoteButton" class="btn" style="width: 100%;height: 2.5rem;">
+                <button onclick="showNotesButton()" id="listNoteButton" class="btn" style="width: 100%;height: 2.5rem;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                          class="bi bi-files" viewBox="0 0 16 16">
                         <path d="M13 0H6a2 2 0 0 0-2 2 2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2 2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 13V4a2 2 0 0 0-2-2H5a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1zM3 4a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4z"/>
@@ -250,7 +252,7 @@
             </div>
             <!--      打开草稿列表按钮      -->
             <div class="col-2" style="padding-right: 5px;padding-left: 5px;">
-                <button id="listDraftButton" class="btn" style="width: 100%;height: 2.5rem;">
+                <button onclick="showDraftNotesButton()" id="listDraftButton" class="btn" style="width: 100%;height: 2.5rem;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                          class="bi bi-ui-checks" viewBox="0 0 16 16">
                         <path d="M7 2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1zM2 1a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2zm0 8a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2H2zm.854-3.646a.5.5 0 0 1-.708 0l-1-1a.5.5 0 1 1 .708-.708l.646.647 1.646-1.647a.5.5 0 1 1 .708.708l-2 2zm0 8a.5.5 0 0 1-.708 0l-1-1a.5.5 0 0 1 .708-.708l.646.647 1.646-1.647a.5.5 0 0 1 .708.708l-2 2zM7 10.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1zm0-5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 8a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
@@ -259,7 +261,7 @@
             </div>
             <!--      编辑新笔记按钮      -->
             <div class="col-2" style="padding-right: 0px;padding-left: 5px;">
-                <button id="editDraftButton" class="btn" style="width: 100%;height: 2.5rem;">
+                <button onclick="showEditDraftNoteButton()" id="editDraftButton" class="btn" style="width: 100%;height: 2.5rem;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                          class="bi bi-plus-circle-dotted" viewBox="0 0 16 16">
                         <path d="M8 0c-.176 0-.35.006-.523.017l.064.998a7.117 7.117 0 0 1 .918 0l.064-.998A8.113 8.113 0 0 0 8 0zM6.44.152c-.346.069-.684.16-1.012.27l.321.948c.287-.098.582-.177.884-.237L6.44.153zm4.132.271a7.946 7.946 0 0 0-1.011-.27l-.194.98c.302.06.597.14.884.237l.321-.947zm1.873.925a8 8 0 0 0-.906-.524l-.443.896c.275.136.54.29.793.459l.556-.831zM4.46.824c-.314.155-.616.33-.905.524l.556.83a7.07 7.07 0 0 1 .793-.458L4.46.824zM2.725 1.985c-.262.23-.51.478-.74.74l.752.66c.202-.23.418-.446.648-.648l-.66-.752zm11.29.74a8.058 8.058 0 0 0-.74-.74l-.66.752c.23.202.447.418.648.648l.752-.66zm1.161 1.735a7.98 7.98 0 0 0-.524-.905l-.83.556c.169.253.322.518.458.793l.896-.443zM1.348 3.555c-.194.289-.37.591-.524.906l.896.443c.136-.275.29-.54.459-.793l-.831-.556zM.423 5.428a7.945 7.945 0 0 0-.27 1.011l.98.194c.06-.302.14-.597.237-.884l-.947-.321zM15.848 6.44a7.943 7.943 0 0 0-.27-1.012l-.948.321c.098.287.177.582.237.884l.98-.194zM.017 7.477a8.113 8.113 0 0 0 0 1.046l.998-.064a7.117 7.117 0 0 1 0-.918l-.998-.064zM16 8a8.1 8.1 0 0 0-.017-.523l-.998.064a7.11 7.11 0 0 1 0 .918l.998.064A8.1 8.1 0 0 0 16 8zM.152 9.56c.069.346.16.684.27 1.012l.948-.321a6.944 6.944 0 0 1-.237-.884l-.98.194zm15.425 1.012c.112-.328.202-.666.27-1.011l-.98-.194c-.06.302-.14.597-.237.884l.947.321zM.824 11.54a8 8 0 0 0 .524.905l.83-.556a6.999 6.999 0 0 1-.458-.793l-.896.443zm13.828.905c.194-.289.37-.591.524-.906l-.896-.443c-.136.275-.29.54-.459.793l.831.556zm-12.667.83c.23.262.478.51.74.74l.66-.752a7.047 7.047 0 0 1-.648-.648l-.752.66zm11.29.74c.262-.23.51-.478.74-.74l-.752-.66c-.201.23-.418.447-.648.648l.66.752zm-1.735 1.161c.314-.155.616-.33.905-.524l-.556-.83a7.07 7.07 0 0 1-.793.458l.443.896zm-7.985-.524c.289.194.591.37.906.524l.443-.896a6.998 6.998 0 0 1-.793-.459l-.556.831zm1.873.925c.328.112.666.202 1.011.27l.194-.98a6.953 6.953 0 0 1-.884-.237l-.321.947zm4.132.271a7.944 7.944 0 0 0 1.012-.27l-.321-.948a6.954 6.954 0 0 1-.884.237l.194.98zm-2.083.135a8.1 8.1 0 0 0 1.046 0l-.064-.998a7.11 7.11 0 0 1-.918 0l-.064.998zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
@@ -407,7 +409,7 @@
             <div class="modal-header">
                 <!-- 搜索框和查询按钮 -->
                 <input type="text" id="userSearchInput" class="form-control" placeholder="搜索用户" style="width: 70%;" />
-                <button type="button" class="btn btn-primary" id="searchButton" style="margin-left: 10px;">查询</button>
+                <button type="button" class="btn btn-primary" onclick="searchUserButton()" style="margin-left: 10px;">查询</button>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -458,9 +460,8 @@
         }
     });
 
-    // Get the color input element
+    // 背景调色
     const colorInput = document.getElementById('color');
-
     // Add an event listener to the color input element
     colorInput.addEventListener('input', function() {
         document.body.style.backgroundColor = colorInput.value;
@@ -560,27 +561,27 @@
                 }
             ),
         })
-            .then(response => {
-                if (response.ok) {
-                    return response.json(); // Parse JSON data
-                } else {
-                    // Handle error response
-                    console.error('网络错误，请联系管理员');
-                }
-            })
-            .then(data => {
-                document.getElementById('loading-overlay').style.display = 'none';
-                if (data.code === 200) {
-                    document.getElementById("noteList").innerHTML='';
-                    listNotes(1, 10)
-                } else {
-                    alert(data.data)
-                }
-            })
-            .catch(error => {
-                document.getElementById('loading-overlay').style.display = 'none';
-                console.error('Error:', error);
-            });
+        .then(response => {
+            if (response.ok) {
+                return response.json(); // Parse JSON data
+            } else {
+                // Handle error response
+                console.error('网络错误，请联系管理员');
+            }
+        })
+        .then(data => {
+            document.getElementById('loading-overlay').style.display = 'none';
+            if (data.code === 200) {
+                document.getElementById("noteList").innerHTML='';
+                listNotes(1, 10)
+            } else {
+                alert(data.data)
+            }
+        })
+        .catch(error => {
+            document.getElementById('loading-overlay').style.display = 'none';
+            console.error('Error:', error);
+        });
     }
     function deleteDraftNote(id) {
         const token = localStorage.getItem('user-token');
@@ -648,7 +649,6 @@
                                         <img src="${author.avatar}" alt="${author.nickname}" class="author-avatar"/>
                                     </div>
                                 </span>
-
                             `;
                             viewModalNoteAuthors.innerHTML += authorHTML;
                         });
@@ -712,7 +712,7 @@
                     }
                         const content = data.data.content;
                         thisAdEditor.setData(content);
-                        editDraftNoteButton();
+                        showEditDraftNoteButton();
                 } else {
                     alert(data.data)
                 }
@@ -725,29 +725,27 @@
     let currentPage = 1; // 当前页码
     let hasMoreData = true; // 是否有更多数据
     let searchKeyword = ''; // 搜索关键词
-    // 监听查询按钮点击事件
-    document.getElementById('searchButton').addEventListener('click', function() {
+
+
+    function searchUserButton() {
         searchKeyword = document.getElementById('userSearchInput').value;
         listUsersForNote(false, searchKeyword); // 点击查询时重置数据
-    });
+    }
     function listUsersForNote(loadMore = false, keyword = '') {
         if (!editNoteId) {
             alert("文章加载失败");
             return;
         }
-
         const token = localStorage.getItem('user-token');
         if (!token) {
             alert("请登录");
             return;
         }
-
         if (!loadMore) {
             currentPage = 1;
             hasMoreData = true;
             document.getElementById("userListForNoteEdit").innerHTML = ''; // 清空旧数据
         }
-
         if (!hasMoreData) {
             return; // 如果没有更多数据则不再请求
         }
@@ -953,28 +951,27 @@
                 }
             ),
         })
-            .then(response => {
-                if (response.ok) {
-                    return response.json(); // Parse JSON data
-                } else {
-                    throw new Error('Network response was not ok');
-                }
-            })
-            .then(data => {
-                document.getElementById('loading-overlay').style.display = 'none';
-                if (data.code === 200) {
-                    const noteId = data.data.data;
-                    alert("发布成功")
-                    document.getElementById('publish-area').style.display= '';
-                    document.getElementById("noteId").innerHTML='';
-                    listNotesButton()
-                } else {
-                    alert(data.data)
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+        .then(response => {
+            if (response.ok) {
+                return response.json(); // Parse JSON data
+            } else {
+                throw new Error('Network response was not ok');
+            }
+        })
+        .then(data => {
+            document.getElementById('loading-overlay').style.display = 'none';
+            if (data.code === 200) {
+                alert("发布成功")
+                document.getElementById('publish-area').style.display= '';
+                document.getElementById("noteId").innerHTML='';
+                showNotesButton()
+            } else {
+                alert(data.data)
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
     }
     // 当前页数和每页数据大小
     let currentViewNotePage = 1;
@@ -984,7 +981,6 @@
 
     let loadingOverlay;
     function searchButton() {
-
         const input = document.getElementById("searchInputText").value;
         if (draftListDiv.style.display === 'block') {
             document.getElementById("draftList").innerHTML = "";
@@ -1020,23 +1016,22 @@
     }
 
     function listNotes(current, pageSize, searchInput) {
-        if (!hasMoreNotes){
-            return
+        if (!hasMoreNotes) {
+            return;
         }
+
         document.getElementById('loading-overlay').style.display = 'flex';
 
-        let searchUrl="";
-        if (null != searchInput && "" !== searchInput) {
-            searchUrl = searchUrl+"&content=" + searchInput;
-        }
+        let searchUrl = searchInput ? `&content=${searchInput}` : "";
         const url = window.location.href;
-        // Make an AJAX POST request
-        fetch('/base/anakki/note/listNote?current=' + current + "&size=" + pageSize + searchUrl, {
+
+        // 发送 AJAX 请求
+        fetch(`/base/anakki/note/listNote?current=${current}&size=${pageSize}${searchUrl}`, {
             method: 'GET',
         })
             .then(response => {
                 if (response.ok) {
-                    return response.json(); // Parse JSON data
+                    return response.json();
                 } else {
                     throw new Error('Network response was not ok');
                 }
@@ -1044,85 +1039,64 @@
             .then(data => {
                 const itemList = data.data.data;
                 let html = "";
-                if (itemList.length < pageSize){
-                    hasMoreNotes=false;
+                if (itemList.length < pageSize) {
+                    hasMoreNotes = false;
                 }
-                for (let i = 0; i < itemList.length; i++) {
-                    const item = itemList[i];
+                // 遍历每个项目
+                itemList.forEach(item => {
+                    const coverImgHtml = item.coverImage
+                        ? `<img class="cover-img" src="${item.coverImage}">`
+                        : "";
 
-                    let coverImgHtml="";
-                    if (null!=item.coverImage){
-                        coverImgHtml=
-                            "                    <img class=\"cover-img\"\n" +
-                            "                         src="+item.coverImage+">"
-                    }
-
-                    html +=
-                        // "                <div class=\"note-node-cover col-2\">\n" +
-                        //                     coverImgHtml+
-                        //                 "</div>"+
-                        "                <div class=\"note-node-content col-12 note-node\">\n" +
-                        "                    <div class=\"note-node-title\">\n" +
-                        "                        <h4 style=\"margin-top: 0.5rem;\">" +
-                                                        "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-grip-vertical breathing-icon\" viewBox=\"0 0 16 16\">\n" +
-                                                        "  <path d=\"M7 2a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zM7 5a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zM7 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm-3 3a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm-3 3a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z\"/>\n" +
-                                                        "</svg>" +
-                                                ""+item.title+"" +
-                                                "</h4>\n" +
-                                    "        <div class=\"dropdown\">\n" +
-                                    "            <div class=\"note-node-title-dropdown-icon\" type=\"button\" id=\"dropdownMenuButton\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\n" +
-                                                    "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-grid-fill\" viewBox=\"0 0 16 16\">\n" +
-                                                    "  <path d=\"M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zm8 0A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm-8 8A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm8 0A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3z\"/>\n" +
-                                                    "</svg>"+
-                                    "            </div>\n" +
-                                    "            <div class=\"dropdown-menu\" aria-labelledby=\"dropdownMenuButton\">\n" +
-                                    "                <a class=\"dropdown-item\" href=\"#\" onclick='viewNote("+item.id+")'>" +
-                                                        "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-view-list\" viewBox=\"0 0 16 16\">\n" +
-                                                        "  <path d=\"M3 4.5h10a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1H3zM1 2a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 2zm0 12a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 14z\"/>\n" +
-                                                        "</svg>"+
-                                    "                </a>\n" +
-                                    "                <a class=\"dropdown-item\" href=\"#\" onclick='editNote("+item.id+")'>" +
-                                                        "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-pencil-square\" viewBox=\"0 0 16 16\">\n" +
-                                                        "  <path d=\"M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z\"/>\n" +
-                                                        "  <path fill-rule=\"evenodd\" d=\"M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z\"/>\n" +
-                                                        "</svg>"+
-                                    "                </a>\n" +
-                                    "                <a class=\"dropdown-item\" href=\"#\" onclick='deleteNote("+item.id+")'>" +
-                                                         "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-trash\" viewBox=\"0 0 16 16\">\n" +
-                                                        "  <path d=\"M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z\"/>\n" +
-                                                        "  <path fill-rule=\"evenodd\" d=\"M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z\"/>\n" +
-                                                        "</svg>"+
-                                    "                </a>\n" +
-                                    "                <a class=\"dropdown-item\" href=\"#\" onclick='listNoteHistory("+item.id+")'>" +
-                                                        "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-clock-history\" viewBox=\"0 0 16 16\">\n" +
-                                                        "  <path d=\"M8.515 1.019A7 7 0 0 0 8 1V0a8 8 0 0 1 .589.022l-.074.997zm2.004.45a7.003 7.003 0 0 0-.985-.299l.219-.976c.383.086.76.2 1.126.342l-.36.933zm1.37.71a7.01 7.01 0 0 0-.439-.27l.493-.87a8.025 8.025 0 0 1 .979.654l-.615.789a6.996 6.996 0 0 0-.418-.302zm1.834 1.79a6.99 6.99 0 0 0-.653-.796l.724-.69c.27.285.52.59.747.91l-.818.576zm.744 1.352a7.08 7.08 0 0 0-.214-.468l.893-.45a7.976 7.976 0 0 1 .45 1.088l-.95.313a7.023 7.023 0 0 0-.179-.483zm.53 2.507a6.991 6.991 0 0 0-.1-1.025l.985-.17c.067.386.106.778.116 1.17l-1 .025zm-.131 1.538c.033-.17.06-.339.081-.51l.993.123a7.957 7.957 0 0 1-.23 1.155l-.964-.267c.046-.165.086-.332.12-.501zm-.952 2.379c.184-.29.346-.594.486-.908l.914.405c-.16.36-.345.706-.555 1.038l-.845-.535zm-.964 1.205c.122-.122.239-.248.35-.378l.758.653a8.073 8.073 0 0 1-.401.432l-.707-.707z\"/>\n" +
-                                                        "  <path d=\"M8 1a7 7 0 1 0 4.95 11.95l.707.707A8.001 8.001 0 1 1 8 0v1z\"/>\n" +
-                                                        "  <path d=\"M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5z\"/>\n" +
-                                                        "</svg>"+
-                                    "                </a>\n" +
-                                    "            </div>\n" +
-                                    "        </div>"+
-                        "                    </div><hr style='margin-bottom: 0.5rem;margin-top: 0.5rem;'>\n" +
-                        "                    <div class=\"note-node-description\">"+item.description+"<a href='#' onclick='viewNote("+item.id+")'>...查看更多</a></div><hr style='margin-bottom: 0.5rem;'>\n" +
-                        "                    <div class=\"note-node-time\">" +
-                                                "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-eye-fill\" viewBox=\"0 0 16 12\">\n" +
-                                                "  <path d=\"M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z\"/>\n" +
-                                                "  <path d=\"M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z\"/>\n" +
-                                                "</svg>"+
-                        "                            "+item.viewCount+" | "+item.createTime.replace("T"," ")+
-                                            "</div>\n" +
-                        "                </div>\n"
-                }
+                    html += `
+                    <div class="note-node-content col-12 note-node">
+                        <div class="note-node-title">
+                            <h4 style="margin-top: 0.5rem;">
+                                <i class="bi bi-bookmark-check-fill"></i> ${item.title}
+                            </h4>
+                            <div class="dropdown">
+                                <div class="note-node-title-dropdown-icon" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="bi bi-grid-fill"></i>
+                                </div>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" href="#" onclick='viewNote(${item.id})'>
+                                        <i class="bi bi-chevron-bar-contract"></i>
+                                    </a>
+                                    <a class="dropdown-item" href="#" onclick='editNote(${item.id})'>
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <a class="dropdown-item" href="#" onclick='deleteNote(${item.id})'>
+                                        <i class="bi bi-trash-fill"></i>
+                                    </a>
+                                    <a class="dropdown-item" href="#" onclick='listNoteHistory(${item.id})'>
+                                        <i class="bi bi-clock-history"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <hr style="margin-bottom: 0.5rem; margin-top: 0.5rem;">
+                        <div class="note-node-description">${item.description}
+                            <a href="#" onclick='viewNote(${item.id})'>...查看更多</a>
+                        </div>
+                        <hr style="margin-bottom: 0.5rem;">
+                        <div class="note-node-time">
+                            <i class="bi bi-eye"></i> ${item.viewCount} | ${item.createTime.replace("T", " ")}
+                        </div>
+                    </div>
+                `;
+                });
                 document.getElementById("noteList").innerHTML += html;
                 // 拼接分页参数到地址栏
-                const newUrl = url.split("?")[0] + "?current=" + current + "&size=" + pageSize + searchUrl;
+                const newUrl = `${url.split("?")[0]}?current=${current}&size=${pageSize}${searchUrl}`;
                 window.history.replaceState(null, null, newUrl);
+
                 isLoading = false;
                 document.getElementById('buttonSpinner').style.display = 'none';
                 document.getElementById('loading-overlay').style.display = 'none';
             })
             .catch(error => {
                 console.error('Error:', error);
+                alert('加载失败，请稍后重试！');
             });
     }
     function listDrafts(current, pageSize, searchInput) {
@@ -1147,71 +1121,76 @@
                 }
             })
             .then(data => {
-                const itemList = data.data.data;
-                let html = "";
-                for (let i = 0; i < itemList.length; i++) {
-                    const item = itemList[i];
+                if (data.code===200){
+                    const itemList = data.data.data;
+                    let html = "";
+                    for (let i = 0; i < itemList.length; i++) {
+                        const item = itemList[i];
 
-                    let coverImgHtml="";
-                    if (null!=item.coverImage){
-                        coverImgHtml=
-                            "                    <img class=\"cover-img\"\n" +
-                            "                         src="+item.coverImage+">"
+                        let coverImgHtml="";
+                        if (null!=item.coverImage){
+                            coverImgHtml=
+                                "                    <img class=\"cover-img\"\n" +
+                                "                         src="+item.coverImage+">"
+                        }
+
+                        html +=
+                            "<span class=\"note-node row\">\n" +
+                            "                <div class=\"note-node-cover col-2\">\n" +
+                            coverImgHtml+
+                            "</div>"+
+                            "                <div class=\"note-node-content col-10\">\n" +
+                            "                    <div class=\"note-node-title\">\n" +
+                            "                        <h4>"+item.title+"</h4>\n" +
+                            "        <div class=\"dropdown\">\n" +
+                            "            <div class=\"\" type=\"button\" id=\"dropdownMenuButton\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\n" +
+                            "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-grid-3x2-gap-fill\" viewBox=\"0 0 16 16\">\n" +
+                            "  <path d=\"M1 4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V4zM1 9a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V9zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V9zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V9z\"/>\n" +
+                            "</svg>"+
+                            "            </div>\n" +
+                            "            <div class=\"dropdown-menu\" aria-labelledby=\"dropdownMenuButton\">\n" +
+                            "                <a class=\"dropdown-item\" href=\"#\" onclick='viewDraftNote("+item.id+")'>" +
+                            "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-view-list\" viewBox=\"0 0 16 16\">\n" +
+                            "  <path d=\"M3 4.5h10a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1H3zM1 2a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 2zm0 12a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 14z\"/>\n" +
+                            "</svg>"+
+                            "                </a>\n" +
+                            "                <a class=\"dropdown-item\" href=\"#\" >" +
+                            "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-pencil-square\" viewBox=\"0 0 16 16\">\n" +
+                            "  <path d=\"M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z\"/>\n" +
+                            "  <path fill-rule=\"evenodd\" d=\"M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z\"/>\n" +
+                            "</svg>"+
+                            "                </a>\n" +
+                            "                <a class=\"dropdown-item\" href=\"#\" onclick='deleteDraftNote("+item.id+")'>" +
+                            "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-trash\" viewBox=\"0 0 16 16\">\n" +
+                            "  <path d=\"M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z\"/>\n" +
+                            "  <path fill-rule=\"evenodd\" d=\"M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z\"/>\n" +
+                            "</svg>"+
+                            "                </a>\n" +
+                            "                <a class=\"dropdown-item\" href=\"#\" onclick='listDraftNoteHistory("+item.id+")'>" +
+                            "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-clock-history\" viewBox=\"0 0 16 16\">\n" +
+                            "  <path d=\"M8.515 1.019A7 7 0 0 0 8 1V0a8 8 0 0 1 .589.022l-.074.997zm2.004.45a7.003 7.003 0 0 0-.985-.299l.219-.976c.383.086.76.2 1.126.342l-.36.933zm1.37.71a7.01 7.01 0 0 0-.439-.27l.493-.87a8.025 8.025 0 0 1 .979.654l-.615.789a6.996 6.996 0 0 0-.418-.302zm1.834 1.79a6.99 6.99 0 0 0-.653-.796l.724-.69c.27.285.52.59.747.91l-.818.576zm.744 1.352a7.08 7.08 0 0 0-.214-.468l.893-.45a7.976 7.976 0 0 1 .45 1.088l-.95.313a7.023 7.023 0 0 0-.179-.483zm.53 2.507a6.991 6.991 0 0 0-.1-1.025l.985-.17c.067.386.106.778.116 1.17l-1 .025zm-.131 1.538c.033-.17.06-.339.081-.51l.993.123a7.957 7.957 0 0 1-.23 1.155l-.964-.267c.046-.165.086-.332.12-.501zm-.952 2.379c.184-.29.346-.594.486-.908l.914.405c-.16.36-.345.706-.555 1.038l-.845-.535zm-.964 1.205c.122-.122.239-.248.35-.378l.758.653a8.073 8.073 0 0 1-.401.432l-.707-.707z\"/>\n" +
+                            "  <path d=\"M8 1a7 7 0 1 0 4.95 11.95l.707.707A8.001 8.001 0 1 1 8 0v1z\"/>\n" +
+                            "  <path d=\"M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5z\"/>\n" +
+                            "</svg>"+
+                            "                </a>\n" +
+                            "            </div>\n" +
+                            "        </div>"+
+                            "                    </div>\n" +
+                            "                    <div class=\"note-node-description\" onclick='viewNote("+item.id+")'>"+item.description+"</div>\n" +
+                            "                </div>\n" +
+                            "            </span>";
                     }
-
-                    html +=
-                        "<span class=\"note-node row\">\n" +
-                        "                <div class=\"note-node-cover col-2\">\n" +
-                        coverImgHtml+
-                        "</div>"+
-                        "                <div class=\"note-node-content col-10\">\n" +
-                        "                    <div class=\"note-node-title\">\n" +
-                        "                        <h4>"+item.title+"</h4>\n" +
-                        "        <div class=\"dropdown\">\n" +
-                        "            <div class=\"\" type=\"button\" id=\"dropdownMenuButton\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\n" +
-                        "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-grid-3x2-gap-fill\" viewBox=\"0 0 16 16\">\n" +
-                        "  <path d=\"M1 4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V4zM1 9a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V9zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V9zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V9z\"/>\n" +
-                        "</svg>"+
-                        "            </div>\n" +
-                        "            <div class=\"dropdown-menu\" aria-labelledby=\"dropdownMenuButton\">\n" +
-                        "                <a class=\"dropdown-item\" href=\"#\" onclick='viewDraftNote("+item.id+")'>" +
-                                            "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-view-list\" viewBox=\"0 0 16 16\">\n" +
-                                            "  <path d=\"M3 4.5h10a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1H3zM1 2a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 2zm0 12a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 14z\"/>\n" +
-                                            "</svg>"+
-                        "                </a>\n" +
-                        "                <a class=\"dropdown-item\" href=\"#\" >" +
-                                            "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-pencil-square\" viewBox=\"0 0 16 16\">\n" +
-                                            "  <path d=\"M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z\"/>\n" +
-                                            "  <path fill-rule=\"evenodd\" d=\"M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z\"/>\n" +
-                                            "</svg>"+
-                        "                </a>\n" +
-                        "                <a class=\"dropdown-item\" href=\"#\" onclick='deleteDraftNote("+item.id+")'>" +
-                                            "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-trash\" viewBox=\"0 0 16 16\">\n" +
-                                            "  <path d=\"M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z\"/>\n" +
-                                            "  <path fill-rule=\"evenodd\" d=\"M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z\"/>\n" +
-                                            "</svg>"+
-                        "                </a>\n" +
-                        "                <a class=\"dropdown-item\" href=\"#\" onclick='listDraftNoteHistory("+item.id+")'>" +
-                                            "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-clock-history\" viewBox=\"0 0 16 16\">\n" +
-                                            "  <path d=\"M8.515 1.019A7 7 0 0 0 8 1V0a8 8 0 0 1 .589.022l-.074.997zm2.004.45a7.003 7.003 0 0 0-.985-.299l.219-.976c.383.086.76.2 1.126.342l-.36.933zm1.37.71a7.01 7.01 0 0 0-.439-.27l.493-.87a8.025 8.025 0 0 1 .979.654l-.615.789a6.996 6.996 0 0 0-.418-.302zm1.834 1.79a6.99 6.99 0 0 0-.653-.796l.724-.69c.27.285.52.59.747.91l-.818.576zm.744 1.352a7.08 7.08 0 0 0-.214-.468l.893-.45a7.976 7.976 0 0 1 .45 1.088l-.95.313a7.023 7.023 0 0 0-.179-.483zm.53 2.507a6.991 6.991 0 0 0-.1-1.025l.985-.17c.067.386.106.778.116 1.17l-1 .025zm-.131 1.538c.033-.17.06-.339.081-.51l.993.123a7.957 7.957 0 0 1-.23 1.155l-.964-.267c.046-.165.086-.332.12-.501zm-.952 2.379c.184-.29.346-.594.486-.908l.914.405c-.16.36-.345.706-.555 1.038l-.845-.535zm-.964 1.205c.122-.122.239-.248.35-.378l.758.653a8.073 8.073 0 0 1-.401.432l-.707-.707z\"/>\n" +
-                                            "  <path d=\"M8 1a7 7 0 1 0 4.95 11.95l.707.707A8.001 8.001 0 1 1 8 0v1z\"/>\n" +
-                                            "  <path d=\"M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5z\"/>\n" +
-                                            "</svg>"+
-                        "                </a>\n" +
-                        "            </div>\n" +
-                        "        </div>"+
-                        "                    </div>\n" +
-                        "                    <div class=\"note-node-description\" onclick='viewNote("+item.id+")'>"+item.description+"</div>\n" +
-                        "                </div>\n" +
-                        "            </span>";
+                    document.getElementById("draftList").innerHTML = html;
+                    // 拼接分页参数到地址栏
+                    const newUrl = url.split("?")[0] + "?current=" + current + "&size=" + pageSize + searchUrl;
+                    window.history.replaceState(null, null, newUrl);
+                }else{
+                    alert(data.data)
                 }
-                document.getElementById("draftList").innerHTML = html;
-                // 拼接分页参数到地址栏
-                const newUrl = url.split("?")[0] + "?current=" + current + "&size=" + pageSize + searchUrl;
-                window.history.replaceState(null, null, newUrl);
+
             })
             .catch(error => {
-                console.error('Error:', error);
+                alert(error)
             });
     }
 
@@ -1305,48 +1284,38 @@
     }
 
     const noteListDiv = document.getElementById('noteList');
-    const listNoteButton = document.getElementById('listNoteButton');
-
     const draftListDiv = document.getElementById('draftList');
-    const listDraftButton = document.getElementById('listDraftButton');
-
     const createDraftDiv = document.getElementById('createDraft');
-    const editDraftButton = document.getElementById('editDraftButton');
-    listNoteButton.addEventListener('click', function () {
-        if (noteListDiv.style.display === 'none') {
-            listNotesButton()
+
+    function showNotesButton(){
+        if (noteListDiv.style.display === 'none'||noteListDiv.style.display === '') {
+            noteListDiv.style.display = 'block';
+            createDraftDiv.style.display = 'none';
+            draftListDiv.style.display = 'none';
+
+            document.getElementById('publish-area').style.display= 'none';
+            document.getElementById("noteList").innerHTML = "";
+            hasMoreNotes=true;
+            listNotes(1, 10,document.getElementById("searchInputText").value);
         }
-    });
-    function listNotesButton(){
-
-        noteListDiv.style.display = 'block';
-        createDraftDiv.style.display = 'none';
-        draftListDiv.style.display = 'none';
-
-        document.getElementById('publish-area').style.display= 'none';
-        document.getElementById("noteList").innerHTML = "";
-        hasMoreNotes=true;
-        listNotes(1, 10,document.getElementById("searchInputText").value);
     }
-    listDraftButton.addEventListener('click', function () {
-        if (draftListDiv.style.display === 'none') {
+    function showDraftNotesButton() {
+        if (draftListDiv.style.display === 'none'||draftListDiv.style.display === '') {
             draftListDiv.style.display = 'block';
             noteListDiv.style.display = 'none';
             createDraftDiv.style.display = 'none';
             document.getElementById('publish-area').style.display= 'none';
             listDrafts(1, 10, document.getElementById("searchInputText").value)
         }
-    });
-    editDraftButton.addEventListener('click', function () {
-        if (createDraftDiv.style.display === 'none') {
-            editDraftNoteButton()
+    }
+
+    function showEditDraftNoteButton(){
+        if (createDraftDiv.style.display === 'none'||createDraftDiv.style.display === '') {
+            document.getElementById('publish-area').style.display= '';
+            createDraftDiv.style.display = 'block';
+            noteListDiv.style.display = 'none';
+            draftListDiv.style.display = 'none';
         }
-    });
-    function editDraftNoteButton(){
-        createDraftDiv.style.display = 'block';
-        document.getElementById('publish-area').style.display= '';
-        noteListDiv.style.display = 'none';
-        draftListDiv.style.display = 'none';
     }
 
 </script>
