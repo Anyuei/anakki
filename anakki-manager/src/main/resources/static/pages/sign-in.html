@@ -69,15 +69,7 @@
     #loginButton:hover {
         background-color: rgba(190, 10, 10, 0.99);
     }
-    /* 定义渐显动画 */
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-        }
-        to {
-            opacity: 1;
-        }
-    }
+
     /* 初始状态下文本透明 */
     .div-trans {
         opacity: 0; /* 初始状态为透明 */
@@ -88,13 +80,21 @@
     /* 当动画完成后，确保文本完全可见 */
     .div-trans {
         animation: fadeIn 2s ease forwards; /* 渐变时间和效果 */
-        animation-delay: 3s; /* 动画延迟 2 秒开始 */
+        animation-delay: 3s; /* 动画延迟 3 秒开始 */
     }
-    .div-trans-3 span{
+
+
+    .div-trans-4 span{
         display: inline-block;
         opacity: 0; /* 初始状态为透明 */
         animation: fadeIn 2s ease forwards; /* 应用渐显动画 */
-        animation-delay: 4s; /* 动画延迟 2 秒开始 */
+        animation-delay: 4s; /* 动画延迟 4 秒开始 */
+    }
+    .div-trans-5 span{
+        display: inline-block;
+        opacity: 0; /* 初始状态为透明 */
+        animation: fadeIn 2s ease forwards; /* 应用渐显动画 */
+        animation-delay: 5s; /* 动画延迟 5 秒开始 */
     }
     @font-face {
         font-family: 'MyCustomFont'; /* 自定义字体名称 */
@@ -110,8 +110,8 @@
         font-weight: bold; /* hover 时字体变粗 */
     }
     /* 为每个字设置不同的动画延迟 */
-    .div-trans-3 span:nth-child(1) { animation-delay: 1s; }
-    .div-trans-3 span:nth-child(2) { animation-delay: 3s; }
+    .div-trans-4 span:nth-child(1) { animation-delay: 1s; }
+    .div-trans-4 span:nth-child(2) { animation-delay: 3s; }
 
     @media (max-width: 600px) {
         .hide-on-small-screen {
@@ -128,11 +128,11 @@
         <div class="container-fluid d-flex align-items-center no-padding">
             <div class="col" style="margin-top: 10rem;display: flex;justify-content: space-evenly;">
                 <div class="hwxw-font hide-on-small-screen" style="font-size: 2rem;align-content: space-evenly;">
-                    <div class="div-trans-3">
+                    <div class="div-trans-4">
                         <span class="font-hover">听风八百遍</span>
                         <span class="font-hover">才知是人间</span>
                     </div>
-                    <div class="div-trans-3">
+                    <div class="div-trans-4">
                         <span class="" style="font-size: small">日照金山，2022年摄于川藏线骑行-理塘禾尼乡</span>
                     </div>
                 </div>
@@ -140,18 +140,17 @@
                     <div style="width: 20rem;">
 
                         <div>
-                            <div class="card-body div-trans">
-                                <i class="fas fa-arrow-left"></i>
-                                <a href="sign-up.html">
+                            <div class="card-body">
+                                <i class="fas fa-arrow-left div-trans-2500"></i>
+                                <a href="sign-up.html" class="div-trans-2500">
                                     <span style="font-weight: bold;">
                                         去注册
                                     </span>
                                 </a>
                                 <span class="clearfix"></span>
-                                <div class="login-title">
+                                <div class="login-title div-trans-2">
                                     <h4 class="heading h3 text-white pt-3 pb-5">欢迎回家</h4>
                                 </div>
-
 
                                 <!--                                <&#45;&#45;验证码+提交验证&ndash;&gt;-->
                                 <!--                                <div>-->
@@ -164,15 +163,15 @@
                                 <!--                                </div>-->
 
                                 <form class="form-primary" id="login-form">
-                                    <div class="form-group">
+                                    <div class="form-group div-trans-3000">
                                         <input type="text" class="form-control" id="input_email" name="username"
                                                placeholder="昵称" required>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group div-trans-3500">
                                         <input type="password" class="form-control" id="input_password" name="password"
                                                placeholder="密码" required>
                                     </div>
-                                    <div class="form-group" style="display: flex;justify-content: space-between">
+                                    <div class="form-group div-trans-4000" style="display: flex;justify-content: space-between">
                                         <input type="text"
                                                class="form-control"
                                                placeholder="请输入验证码"
@@ -180,18 +179,20 @@
                                         <img class="captcha-img" src="/base/system/captcha" alt="验证码"
                                              style="width: 6rem; cursor: pointer;" onclick="refreshCaptcha()">
                                     </div>
-                                    <a href="#" class="text-white" data-toggle="modal"
-                                       data-target="#forgotPasswordModal">忘记密码?</a>
-                                    <p id="login-notice" style="color: red"></p>
-                                    <button id="loginButton" type="submit" class="btn btn-block btn-lg mt-4"
-                                            style="padding: 0.3rem 1rem;">
+                                    <div class="form-group div-trans-4500">
+                                        <a href="#" class="text-white" data-toggle="modal"
+                                           data-target="#forgotPasswordModal">忘记密码?</a>
+                                        <p id="login-notice" style="color: red"></p>
+                                        <button id="loginButton" type="submit" class="btn btn-block btn-lg mt-4"
+                                                style="padding: 0.3rem 1rem;">
                                         <span id="buttonText">
                                             <i class="bi bi-box-arrow-in-right"></i>
                                             登录
                                         </span>
-                                        <span id="buttonSpinner" class="spinner-border spinner-border-sm" role="status"
-                                              aria-hidden="true" style="display: none;"></span>
-                                    </button>
+                                            <span id="buttonSpinner" class="spinner-border spinner-border-sm" role="status"
+                                                  aria-hidden="true" style="display: none;"></span>
+                                        </button>
+                                    </div>
                                 </form>
                             </div>
                         </div>

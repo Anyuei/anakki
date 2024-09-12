@@ -1045,6 +1045,7 @@
                 }
             })
             .then(data => {
+                let index=1000;
                 const itemList = data.data.data;
                 let html = "";
                 if (itemList.length < pageSize) {
@@ -1052,12 +1053,13 @@
                 }
                 // 遍历每个项目
                 itemList.forEach(item => {
+                    index+=200;
                     const coverImgHtml = item.coverImage
                         ? `<img class="cover-img" src="${item.coverImage}">`
                         : "";
 
                     html += `
-                    <div class="note-node-content col-12 note-node">
+                    <div class="note-node-content col-12 note-node div-trans-${index}">
                         <div class="note-node-title">
                             <h4 style="margin-top: 0.5rem;">
                                 <i class="bi bi-bookmark-check-fill"></i> ${item.title}
@@ -1093,7 +1095,8 @@
                     </div>
                 `;
                 });
-                document.getElementById("noteList").innerHTML += html;
+                document.getElementById("noteList").insertAdjacentHTML('beforeend', html);
+
                 // 拼接分页参数到地址栏
                 const newUrl = `${url.split("?")[0]}?current=${current}&size=${pageSize}${searchUrl}`;
                 window.history.replaceState(null, null, newUrl);

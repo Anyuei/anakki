@@ -8,7 +8,7 @@
     <meta name="author" content="Anakki">
     <title>Anakki-World</title>
     <!-- Fonts -->
-
+    <link rel="stylesheet" href="../assets/js/bootstrap5/css/bootstrap.min.css">
     <!-- Theme CSS -->
     <link type="text/css" href="../assets/css/theme.css" rel="stylesheet">
     <!-- Demo CSS - No need to use these in your project -->
@@ -24,10 +24,13 @@
         color: #515151;
     }
     .form-primary .form-control {
-        background-color: #0000002e;
+        background-color: #00000024;
         border: .0525rem;
     }
-
+    .form-primary .form-control:hover {
+        background-color: rgba(72, 72, 72, 0.73);
+        border: .0625rem solid rgba(100, 100, 100, 0.62);
+    }
     .form-primary .form-control:focus {
         background-color: rgba(72, 72, 72, 0.73);
         border: .0625rem solid rgba(100, 100, 100, 0.62);
@@ -104,15 +107,15 @@
                                 <span class="clearfix"></span>
                                 <h4 class="heading h3 pt-3 pb-5">
                                     <div style="width: 9rem;">
-                                        <span class="offset-1" style="left: 0.1rem;">初次</span><span class="offset-2" style="left: -1rem;color: brown;">见面</span>
+                                        <span class="offset-1 div-trans-1500" style="left: 0.1rem;">初次</span><span class="offset-2 div-trans-2500" style="left: -1rem;color: brown;">见面</span>
                                     </div>
                                     <div style="width: 11rem;">
-                                        <span class="offset-1" style="left: 1rem;color: brown;">请多</span><span class="offset-2" style="left: -0.5rem;">关照</span>
+                                        <span class="offset-1 div-trans-2500" style="left: 1rem;color: brown;">请多</span><span class="offset-2 div-trans-1500" style="left: -0.5rem;">关照</span>
                                     </div>
                                 </h4>
 
                                 <form class="form-primary" id="register-form">
-                                    <div class="form-group" style="display: flex;">
+                                    <div class="form-group div-trans-1000" style="display: flex;">
                                         <label for="email"></label>
                                         <input id="email" type="email"
                                               class="form-control"
@@ -121,14 +124,14 @@
                                               maxlength="50" required>
                                         <span onclick="sendRegisterVerify()" class="send-verify">发送验证码</span>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group div-trans-2000">
                                         <input type="text"
                                                class="form-control"
                                                name="username"
                                                placeholder="昵称"
                                                maxlength="10" required>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group div-trans-3000">
                                         <input type="password"
                                                class="form-control"
                                                name="password"
@@ -137,14 +140,14 @@
                                                minlength="6"
                                                required>
                                     </div>
-                                    <div class="form-group" style="display: flex;justify-content: space-between">
+                                    <div class="form-group div-trans-4000" style="display: flex;justify-content: space-between">
                                         <input type="text"
                                                class="form-control"
                                                placeholder="请输入邮箱验证码"
                                                maxlength="6" name="verify" required>
                                     </div>
                                     <p id="register-notice" style="color: red"></p>
-                                    <button type="submit" class="btn btn-block btn-lg bg-white mt-4" style="padding: 0.3rem 1rem;">
+                                    <button type="submit" class="btn btn-block btn-lg bg-white mt-4 div-trans-4500" style="padding: 0.3rem 1rem;">
                                         <span id="buttonText">注册</span>
                                         <span id="buttonSpinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none;"></span>
                                     </button>

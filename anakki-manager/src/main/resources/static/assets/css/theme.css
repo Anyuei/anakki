@@ -13330,3 +13330,237 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 .hwxw-font {
     font-family: 'MyCustomFont', sans-serif; /* 仅应用于特定类 */
 }
+
+.div-trans-200 {
+    opacity: 0;
+    animation: fadeIn 2s ease forwards;
+    animation-delay: 200ms;
+}
+.div-trans-300 {
+    opacity: 0;
+    animation: fadeIn 2s ease forwards;
+    animation-delay: 300ms;
+}
+.div-trans-400 {
+    opacity: 0;
+    animation: fadeIn 2s ease forwards;
+    animation-delay: 400ms;
+}
+.div-trans-500 {
+    opacity: 0;
+    animation: fadeIn 2s ease forwards;
+    animation-delay: 500ms;
+}
+.div-trans-600 {
+    opacity: 0;
+    animation: fadeIn 2s ease forwards;
+    animation-delay: 600ms;
+}
+.div-trans-700 {
+    opacity: 0;
+    animation: fadeIn 2s ease forwards;
+    animation-delay: 700ms;
+}
+.div-trans-800 {
+    opacity: 0;
+    animation: fadeIn 2s ease forwards;
+    animation-delay: 800ms;
+}
+.div-trans-900 {
+    opacity: 0;
+    animation: fadeIn 2s ease forwards;
+    animation-delay: 900ms;
+}
+.div-trans-1000 {
+    opacity: 0; /* 初始状态为透明 */
+    animation: fadeIn 2s ease forwards; /* 应用渐显动画 */
+    animation-delay: 1000ms;
+}
+/* 初始状态下文本透明 */
+.div-trans-1100 {
+    opacity: 0; /* 初始状态为透明 */
+    animation: fadeIn 2s ease forwards; /* 应用渐显动画 */
+    animation-delay: 1100ms;
+}
+.div-trans-1200 {
+    opacity: 0;
+    animation: fadeIn 2s ease forwards;
+    animation-delay: 1200ms;
+}
+.div-trans-1300 {
+    opacity: 0;
+    animation: fadeIn 2s ease forwards;
+    animation-delay: 1300ms;
+}
+.div-trans-1400 {
+    opacity: 0;
+    animation: fadeIn 2s ease forwards;
+    animation-delay: 1400ms;
+}
+.div-trans-1500 {
+    opacity: 0;
+    animation: fadeIn 2s ease forwards;
+    animation-delay: 1500ms;
+}
+.div-trans-1600 {
+    opacity: 0;
+    animation: fadeIn 2s ease forwards;
+    animation-delay: 1600ms;
+}
+.div-trans-1700 {
+    opacity: 0;
+    animation: fadeIn 2s ease forwards;
+    animation-delay: 1700ms;
+}
+.div-trans-1800 {
+    opacity: 0;
+    animation: fadeIn 2s ease forwards;
+    animation-delay: 1800ms;
+}
+.div-trans-1900 {
+    opacity: 0;
+    animation: fadeIn 2s ease forwards;
+    animation-delay: 1900ms;
+}
+.div-trans-2000 {
+    opacity: 0;
+    animation: fadeIn 2s ease forwards;
+    animation-delay: 2000ms;
+}
+.div-trans-2100 {
+    opacity: 0;
+    animation: fadeIn 2s ease forwards;
+    animation-delay: 2100ms;
+}
+.div-trans-2200 {
+     opacity: 0;
+     animation: fadeIn 2s ease forwards;
+     animation-delay: 2200ms;
+ }
+.div-trans-2300 {
+    opacity: 0;
+    animation: fadeIn 2s ease forwards;
+    animation-delay: 2300ms;
+}
+.div-trans-2400 {
+    opacity: 0;
+    animation: fadeIn 2s ease forwards;
+    animation-delay: 2400ms;
+}
+.div-trans-2500 {
+    opacity: 0;
+    animation: fadeIn 2s ease forwards;
+    animation-delay: 2500ms;
+}
+.div-trans-2600 {
+    opacity: 0;
+    animation: fadeIn 2s ease forwards;
+    animation-delay: 2600ms;
+}
+.div-trans-2700 {
+    opacity: 0;
+    animation: fadeIn 2s ease forwards;
+    animation-delay: 2700ms;
+}
+.div-trans-2800 {
+    opacity: 0;
+    animation: fadeIn 2s ease forwards;
+    animation-delay: 2800ms;
+}
+.div-trans-2900 {
+    opacity: 0;
+    animation: fadeIn 2s ease forwards;
+    animation-delay: 2900ms;
+}
+.div-trans-3000 {
+    opacity: 0;
+    animation: fadeIn 2s ease forwards;
+    animation-delay: 3000ms;
+}
+.div-trans-3100 {
+    opacity: 0;
+    animation: fadeIn 2s ease forwards;
+    animation-delay: 3100ms;
+}
+.div-trans-3200 {
+    opacity: 0;
+    animation: fadeIn 2s ease forwards;
+    animation-delay: 3200ms;
+}
+.div-trans-3300 {
+    opacity: 0;
+    animation: fadeIn 2s ease forwards;
+    animation-delay: 3300ms;
+}
+.div-trans-3400 {
+    opacity: 0;
+    animation: fadeIn 2s ease forwards;
+    animation-delay: 3400ms;
+}
+.div-trans-3500 {
+     opacity: 0;
+     animation: fadeIn 2s ease forwards;
+     animation-delay: 3500ms;
+ }
+.div-trans-3600 {
+    opacity: 0;
+    animation: fadeIn 2s ease forwards;
+    animation-delay: 3600ms;
+}
+.div-trans-3700 {
+    opacity: 0;
+    animation: fadeIn 2s ease forwards;
+    animation-delay: 3700ms;
+}
+.div-trans-3800 {
+    opacity: 0;
+    animation: fadeIn 2s ease forwards;
+    animation-delay: 3800ms;
+}
+.div-trans-3900 {
+    opacity: 0;
+    animation: fadeIn 2s ease forwards;
+    animation-delay: 3900ms;
+}
+.div-trans-4000 {
+    opacity: 0;
+    animation: fadeIn 2s ease forwards;
+    animation-delay: 4000ms;
+}
+.div-trans-4100 {
+     opacity: 0;
+     animation: fadeIn 2s ease forwards;
+     animation-delay: 4100ms;
+ }
+.div-trans-4200 {
+      opacity: 0;
+      animation: fadeIn 2s ease forwards;
+      animation-delay: 4200ms;
+  }
+.div-trans-4300 {
+       opacity: 0;
+       animation: fadeIn 2s ease forwards;
+       animation-delay: 4300ms;
+}
+.div-trans-4400 {
+    opacity: 0;
+    animation: fadeIn 2s ease forwards;
+    animation-delay: 4400ms;
+}
+.div-trans-4500 {
+     opacity: 0;
+     animation: fadeIn 2s ease forwards;
+     animation-delay: 4500ms;
+ }
+/* 定义渐显动画 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+
+
