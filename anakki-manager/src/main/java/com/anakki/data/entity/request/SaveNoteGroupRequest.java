@@ -23,8 +23,8 @@ public class SaveNoteGroupRequest {
     @ApiModelProperty("介绍")
     private String description;
 
-    @ApiModelProperty("封面图片")
-    private String coverImage;
+    @ApiModelProperty("封面信息")
+    private FileInfoRequest[] files;
 
     @ApiModelProperty("分组状态")
     private String status="COMMON";

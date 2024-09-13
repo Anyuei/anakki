@@ -1,7 +1,9 @@
 package com.anakki.data.service;
 
+import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.bean.common.request.IdListRequest;
 import com.anakki.data.entity.AnNoteGroup;
+import com.anakki.data.entity.request.ListNoteGroupForManageRequest;
 import com.anakki.data.entity.request.SaveNoteGroupRequest;
 import com.anakki.data.entity.request.UpdateNoteGroupRequest;
 import com.anakki.data.entity.response.AnNoteGroupResponse;
@@ -26,4 +28,6 @@ public interface AnNoteGroupService extends IService<AnNoteGroup> {
     List<AnNoteGroupResponse> listNoteGroup();
 
     void updateNoteGroup(UpdateNoteGroupRequest request);
+
+    BasePageResult<AnNoteGroup> listNoteGroup(ListNoteGroupForManageRequest request);
 }
