@@ -313,7 +313,9 @@
                 const totalPages = Math.ceil(totalItems / pageSize); // 计算总页数
 
                 let html = "";
+                let index=0;
                 for (let i = 0; i < itemList.length; i++) {
+                    index+=200;
                     const item = itemList[i];
                     let time = item.createTime;
                     const formattedDateTime = time.replace("T", " ");
@@ -330,7 +332,7 @@
 
                     // 显示评论内容，如果内容超出显示“查看更多”
                     html += `
-                        <div class="card mb-3 comment-card">
+                        <div class="card mb-3 comment-card div-trans-${index}">
                             <div class="d-flex align-items-start">
                                 <img src="${item.avatar ? item.avatar : '../assets/images/default-avatar.jpg'}" class="rounded-circle avatar-size" alt="avatar">
                                 <div class="ms-3 w-100" style="margin: 0.5rem;">

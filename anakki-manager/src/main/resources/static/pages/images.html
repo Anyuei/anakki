@@ -451,12 +451,13 @@
                 }, {});
 
                 let html = "";
-
+                let index=0;
                 for (let date in groupedItems) {
                     const items = groupedItems[date];
                     let gridHtml = "";
 
                     items.forEach(item => {
+                        index+=200;
                         const isVideo = /\.(mp4|webm|ogg)$/.test(item.imgUrl);
                         const commonHtml = `
                             <div class="heart-icons" onclick="like(${item.id})" style="${isVideo ? 'top: 1px;align-items: normal;' : ''}">
@@ -472,6 +473,7 @@
                         `;
 
                         if (isVideo) {
+                            index+=100;
                             gridHtml += `
                                     <div class="video-item" style="grid-column: span 3;">
                                         <div class="video-container" onclick="handleVideoClick(${item.id})">
@@ -487,6 +489,7 @@
                                     </div>
                                 `;
                         } else {
+                            index+=100;
                             gridHtml += `
                                 <div class="image-item">
                                     <img src="${item.imgUrl}?imageMogr2/thumbnail/400x"
@@ -499,7 +502,7 @@
                     });
 
                     html += `
-                        <div class="timeline-item">
+                        <div class="timeline-item div-trans-${index}">
                             <div class="timeline-header">
                                 <div class="timeline-date">${date}</div>
                                 <div class="timeline-description">${items[0].description}</div>
