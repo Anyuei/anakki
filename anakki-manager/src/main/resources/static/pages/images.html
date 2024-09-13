@@ -475,7 +475,7 @@
                         if (isVideo) {
                             index+=100;
                             gridHtml += `
-                                    <div class="video-item" style="grid-column: span 3;">
+                                    <div class="video-item div-trans-${index}" style="grid-column: span 3;">
                                         <div class="video-container" onclick="handleVideoClick(${item.id})">
                                             <video id="video${item.id}" class="video-list">
                                                 <source src="${item.imgUrl}" type="video/mp4">
@@ -491,7 +491,7 @@
                         } else {
                             index+=100;
                             gridHtml += `
-                                <div class="image-item">
+                                <div class="image-item div-trans-${index}">
                                     <img src="${item.imgUrl}?imageMogr2/thumbnail/400x"
                                     class="image-spacex-list img-fluid" alt="${item.id}"
                                     onclick="showModal(this.alt)">
@@ -502,7 +502,7 @@
                     });
 
                     html += `
-                        <div class="timeline-item div-trans-${index}">
+                        <div class="timeline-item">
                             <div class="timeline-header">
                                 <div class="timeline-date">${date}</div>
                                 <div class="timeline-description">${items[0].description}</div>

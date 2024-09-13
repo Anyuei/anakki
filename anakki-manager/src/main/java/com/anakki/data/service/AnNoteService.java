@@ -4,6 +4,7 @@ import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.entity.AnNote;
 import com.anakki.data.entity.request.*;
 import com.anakki.data.entity.response.AnNoteDetailResponse;
+import com.anakki.data.entity.response.AnNoteResponse;
 import com.anakki.data.entity.response.AnUserDetailForNoteResponse;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -32,7 +33,7 @@ public interface AnNoteService extends IService<AnNote> {
 
     Set<Long> getAuthorIdList(String ids);
 
-    BasePageResult<AnNote> listNotes(ListNoteRequest listNoteRequest);
+    BasePageResult<AnNoteResponse> listNotes(ListNoteRequest listNoteRequest);
 
     String uploadFiles(UploadNoteMediaRequest uploadNoteMediaRequest) throws IOException;
 

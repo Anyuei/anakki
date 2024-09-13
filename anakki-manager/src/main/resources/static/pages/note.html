@@ -219,6 +219,24 @@
     .color-picker {
         margin: 20px;
     }
+    .note-group {
+        height: 2.5rem;
+        background-color: #6f2020c9;
+        margin-bottom: 0.4rem;
+        border-radius: 0.6rem;
+        box-shadow: 0 4px 15px 10px rgba(0, 0, 0, 0.34);
+        align-content: center;
+        justify-items: center;
+        color: #d9d9d9;
+        font-size: unset;
+        transition: all 0.3s ease;
+    }
+    .note-group:hover {
+        cursor: pointer;
+        background-color: #28282845;
+        box-shadow: 0 1px 8px rgba(0, 0, 0, 0.18);
+        transform: translateY(-5px);
+    }
 </style>
 <body>
 <!--通用顶部导航-->
@@ -233,111 +251,119 @@
             <label for="color" style="font-size: 1.5rem;"><i class="bi bi-paint-bucket"></i></label>
             <input type="color" id="color" name="color" value="#ffffff">
         </div>
+
+
+
         <div class="row">
-            <!--      打开笔记按钮      -->
-            <div class="col-6" style="padding-right: 5px;padding-left: 0px;">
-                <div class="input-group">
-                    <input id="searchInputText" type="text" class="form-control" placeholder="全局搜索"
-                           aria-label="全局搜索" aria-describedby="search-note-button">
-                    <button class="btn search-button" type="button" id="search-note-button" onclick="searchButton()">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search"
-                             viewBox="0 0 16 16">
-                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-                        </svg>
-                        <span id="buttonSpinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none;"></span>
-                    </button>
+            <div class="col-2" id="viewNoteGroup">
 
-                </div>
             </div>
-            <!--      打开笔记按钮      -->
-            <div class="col-2" style="padding-right: 5px;padding-left: 5px;">
-                <button onclick="showNotesButton()" id="listNoteButton" class="btn" style="width: 100%;height: 2.5rem;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                         class="bi bi-files" viewBox="0 0 16 16">
-                        <path d="M13 0H6a2 2 0 0 0-2 2 2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2 2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 13V4a2 2 0 0 0-2-2H5a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1zM3 4a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4z"/>
-                    </svg>
-                </button>
-            </div>
-            <!--      打开草稿列表按钮      -->
-            <div class="col-2" style="padding-right: 5px;padding-left: 5px;">
-                <button onclick="showDraftNotesButton()" id="listDraftButton" class="btn" style="width: 100%;height: 2.5rem;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                         class="bi bi-ui-checks" viewBox="0 0 16 16">
-                        <path d="M7 2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1zM2 1a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2zm0 8a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2H2zm.854-3.646a.5.5 0 0 1-.708 0l-1-1a.5.5 0 1 1 .708-.708l.646.647 1.646-1.647a.5.5 0 1 1 .708.708l-2 2zm0 8a.5.5 0 0 1-.708 0l-1-1a.5.5 0 0 1 .708-.708l.646.647 1.646-1.647a.5.5 0 0 1 .708.708l-2 2zM7 10.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1zm0-5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 8a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
-                    </svg>
-                </button>
-            </div>
-            <!--      编辑新笔记按钮      -->
-            <div class="col-2" style="padding-right: 0px;padding-left: 5px;">
-                <button onclick="showEditDraftNoteButton()" id="editDraftButton" class="btn" style="width: 100%;height: 2.5rem;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                         class="bi bi-plus-circle-dotted" viewBox="0 0 16 16">
-                        <path d="M8 0c-.176 0-.35.006-.523.017l.064.998a7.117 7.117 0 0 1 .918 0l.064-.998A8.113 8.113 0 0 0 8 0zM6.44.152c-.346.069-.684.16-1.012.27l.321.948c.287-.098.582-.177.884-.237L6.44.153zm4.132.271a7.946 7.946 0 0 0-1.011-.27l-.194.98c.302.06.597.14.884.237l.321-.947zm1.873.925a8 8 0 0 0-.906-.524l-.443.896c.275.136.54.29.793.459l.556-.831zM4.46.824c-.314.155-.616.33-.905.524l.556.83a7.07 7.07 0 0 1 .793-.458L4.46.824zM2.725 1.985c-.262.23-.51.478-.74.74l.752.66c.202-.23.418-.446.648-.648l-.66-.752zm11.29.74a8.058 8.058 0 0 0-.74-.74l-.66.752c.23.202.447.418.648.648l.752-.66zm1.161 1.735a7.98 7.98 0 0 0-.524-.905l-.83.556c.169.253.322.518.458.793l.896-.443zM1.348 3.555c-.194.289-.37.591-.524.906l.896.443c.136-.275.29-.54.459-.793l-.831-.556zM.423 5.428a7.945 7.945 0 0 0-.27 1.011l.98.194c.06-.302.14-.597.237-.884l-.947-.321zM15.848 6.44a7.943 7.943 0 0 0-.27-1.012l-.948.321c.098.287.177.582.237.884l.98-.194zM.017 7.477a8.113 8.113 0 0 0 0 1.046l.998-.064a7.117 7.117 0 0 1 0-.918l-.998-.064zM16 8a8.1 8.1 0 0 0-.017-.523l-.998.064a7.11 7.11 0 0 1 0 .918l.998.064A8.1 8.1 0 0 0 16 8zM.152 9.56c.069.346.16.684.27 1.012l.948-.321a6.944 6.944 0 0 1-.237-.884l-.98.194zm15.425 1.012c.112-.328.202-.666.27-1.011l-.98-.194c-.06.302-.14.597-.237.884l.947.321zM.824 11.54a8 8 0 0 0 .524.905l.83-.556a6.999 6.999 0 0 1-.458-.793l-.896.443zm13.828.905c.194-.289.37-.591.524-.906l-.896-.443c-.136.275-.29.54-.459.793l.831.556zm-12.667.83c.23.262.478.51.74.74l.66-.752a7.047 7.047 0 0 1-.648-.648l-.752.66zm11.29.74c.262-.23.51-.478.74-.74l-.752-.66c-.201.23-.418.447-.648.648l.66.752zm-1.735 1.161c.314-.155.616-.33.905-.524l-.556-.83a7.07 7.07 0 0 1-.793.458l.443.896zm-7.985-.524c.289.194.591.37.906.524l.443-.896a6.998 6.998 0 0 1-.793-.459l-.556.831zm1.873.925c.328.112.666.202 1.011.27l.194-.98a6.953 6.953 0 0 1-.884-.237l-.321.947zm4.132.271a7.944 7.944 0 0 0 1.012-.27l-.321-.948a6.954 6.954 0 0 1-.884.237l.194.98zm-2.083.135a8.1 8.1 0 0 0 1.046 0l-.064-.998a7.11 7.11 0 0 1-.918 0l-.064.998zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
-                    </svg>
-                </button>
-            </div>
-        </div>
+            <div class="col-10">
+                <div class="row">
+                    <!--      打开笔记按钮      -->
+                    <div class="col-6" style="padding-right: 5px;padding-left: 0px;">
+                        <div class="input-group">
+                            <input id="searchInputText" type="text" class="form-control" placeholder="全局搜索"
+                                   aria-label="全局搜索" aria-describedby="search-note-button">
+                            <button class="btn search-button" type="button" id="search-note-button" onclick="searchButton()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search"
+                                     viewBox="0 0 16 16">
+                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                                </svg>
+                                <span id="buttonSpinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none;"></span>
+                            </button>
 
-        <!--        笔记列表-->
-        <div class="noteList " id="noteList" style="margin-top: 1rem;display: block;">
-
-        </div>
-        <!--        草稿列表-->
-        <div class="draftList" id="draftList" style="margin-top: 1rem;display: none;">
-
-        </div>
-        <!--        笔记编辑区域-->
-        <div class="bg-light mt-4 rounded" id="createDraft" style="display: none;">
-            <form id="thisForm" class="form-horizontal">
-                <div class="form-group">
-                    <div class="col-xs-12">
-                            <div id="noteId" style="display:none;"></div>
-                            <textarea id="adContent" oninput="scrollToBottom()">
-
-                            </textarea>
+                        </div>
+                    </div>
+                    <!--      打开笔记按钮      -->
+                    <div class="col-2" style="padding-right: 5px;padding-left: 5px;">
+                        <button onclick="showNotesButton()" id="listNoteButton" class="btn" style="width: 100%;height: 2.5rem;">
+                            <i class="bi bi-journals"></i>
+                        </button>
+                    </div>
+                    <!--      打开草稿列表按钮      -->
+                    <div class="col-2" style="padding-right: 5px;padding-left: 5px;">
+                        <button onclick="showDraftNotesButton()" id="listDraftButton" class="btn" style="width: 100%;height: 2.5rem;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-ui-checks" viewBox="0 0 16 16">
+                                <path d="M7 2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1zM2 1a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2zm0 8a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2H2zm.854-3.646a.5.5 0 0 1-.708 0l-1-1a.5.5 0 1 1 .708-.708l.646.647 1.646-1.647a.5.5 0 1 1 .708.708l-2 2zm0 8a.5.5 0 0 1-.708 0l-1-1a.5.5 0 0 1 .708-.708l.646.647 1.646-1.647a.5.5 0 0 1 .708.708l-2 2zM7 10.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1zm0-5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 8a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <!--      编辑新笔记按钮      -->
+                    <div class="col-2" style="padding-right: 0px;padding-left: 5px;">
+                        <button onclick="showEditDraftNoteButton()" id="editDraftButton" class="btn" style="width: 100%;height: 2.5rem;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-plus-circle-dotted" viewBox="0 0 16 16">
+                                <path d="M8 0c-.176 0-.35.006-.523.017l.064.998a7.117 7.117 0 0 1 .918 0l.064-.998A8.113 8.113 0 0 0 8 0zM6.44.152c-.346.069-.684.16-1.012.27l.321.948c.287-.098.582-.177.884-.237L6.44.153zm4.132.271a7.946 7.946 0 0 0-1.011-.27l-.194.98c.302.06.597.14.884.237l.321-.947zm1.873.925a8 8 0 0 0-.906-.524l-.443.896c.275.136.54.29.793.459l.556-.831zM4.46.824c-.314.155-.616.33-.905.524l.556.83a7.07 7.07 0 0 1 .793-.458L4.46.824zM2.725 1.985c-.262.23-.51.478-.74.74l.752.66c.202-.23.418-.446.648-.648l-.66-.752zm11.29.74a8.058 8.058 0 0 0-.74-.74l-.66.752c.23.202.447.418.648.648l.752-.66zm1.161 1.735a7.98 7.98 0 0 0-.524-.905l-.83.556c.169.253.322.518.458.793l.896-.443zM1.348 3.555c-.194.289-.37.591-.524.906l.896.443c.136-.275.29-.54.459-.793l-.831-.556zM.423 5.428a7.945 7.945 0 0 0-.27 1.011l.98.194c.06-.302.14-.597.237-.884l-.947-.321zM15.848 6.44a7.943 7.943 0 0 0-.27-1.012l-.948.321c.098.287.177.582.237.884l.98-.194zM.017 7.477a8.113 8.113 0 0 0 0 1.046l.998-.064a7.117 7.117 0 0 1 0-.918l-.998-.064zM16 8a8.1 8.1 0 0 0-.017-.523l-.998.064a7.11 7.11 0 0 1 0 .918l.998.064A8.1 8.1 0 0 0 16 8zM.152 9.56c.069.346.16.684.27 1.012l.948-.321a6.944 6.944 0 0 1-.237-.884l-.98.194zm15.425 1.012c.112-.328.202-.666.27-1.011l-.98-.194c-.06.302-.14.597-.237.884l.947.321zM.824 11.54a8 8 0 0 0 .524.905l.83-.556a6.999 6.999 0 0 1-.458-.793l-.896.443zm13.828.905c.194-.289.37-.591.524-.906l-.896-.443c-.136.275-.29.54-.459.793l.831.556zm-12.667.83c.23.262.478.51.74.74l.66-.752a7.047 7.047 0 0 1-.648-.648l-.752.66zm11.29.74c.262-.23.51-.478.74-.74l-.752-.66c-.201.23-.418.447-.648.648l.66.752zm-1.735 1.161c.314-.155.616-.33.905-.524l-.556-.83a7.07 7.07 0 0 1-.793.458l.443.896zm-7.985-.524c.289.194.591.37.906.524l.443-.896a6.998 6.998 0 0 1-.793-.459l-.556.831zm1.873.925c.328.112.666.202 1.011.27l.194-.98a6.953 6.953 0 0 1-.884-.237l-.321.947zm4.132.271a7.944 7.944 0 0 0 1.012-.27l-.321-.948a6.954 6.954 0 0 1-.884.237l.194.98zm-2.083.135a8.1 8.1 0 0 0 1.046 0l-.064-.998a7.11 7.11 0 0 1-.918 0l-.064.998zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+                            </svg>
+                        </button>
                     </div>
                 </div>
-            </form>
-            <div class="publish-area" id="publish-area">
-                <!--    编辑者 区域-->
-                <div id="editor-area">
-                    <div style="font-size: 1.2rem;margin-right: 0.5rem;">
+
+                <!--        笔记列表-->
+                <div class="noteList " id="noteList" style="margin-top: 1rem;display: block;">
+
+                </div>
+                <!--        草稿列表-->
+                <div class="draftList" id="draftList" style="margin-top: 1rem;display: none;">
+
+                </div>
+                <!--        笔记编辑区域-->
+                <div class="bg-light mt-4 rounded" id="createDraft" style="display: none;">
+                    <form id="thisForm" class="form-horizontal">
+                        <div class="form-group">
+                            <div class="col-xs-12">
+                                <div id="noteId" style="display:none;"></div>
+                                <textarea id="adContent" oninput="scrollToBottom()">
+
+                            </textarea>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="publish-area" id="publish-area">
+                        <!--    编辑者 区域-->
+                        <div id="editor-area">
+                            <div style="font-size: 1.2rem;margin-right: 0.5rem;">
                         <span>
                             <i class="bi bi-pencil"></i>
                         </span>
-                    </div>
-                    <div id="current-editors">
+                            </div>
+                            <div id="current-editors">
 
 
-                    </div>
-                    <div id="operate-editors">
+                            </div>
+                            <div id="operate-editors">
                         <span id="addUserToNoteArea" style="font-size: 2rem;line-height: 30px;cursor: pointer;" onclick="listUsersForNote()">
                             <i class="bi bi-plus-circle-dotted"></i>
                         </span>
+                            </div>
+                        </div>
+                        <div class="button-container" onclick="saveDraft()">
+                            <button class="btn">
+                                保存草稿
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                     class="bi bi-cloud-arrow-up" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd"
+                                          d="M7.646 5.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 6.707V10.5a.5.5 0 0 1-1 0V6.707L6.354 7.854a.5.5 0 1 1-.708-.708l2-2z"/>
+                                    <path d="M4.406 3.342A5.53 5.53 0 0 1 8 2c2.69 0 4.923 2 5.166 4.579C14.758 6.804 16 8.137 16 9.773 16 11.569 14.502 13 12.687 13H3.781C1.708 13 0 11.366 0 9.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383zm.653.757c-.757.653-1.153 1.44-1.153 2.056v.448l-.445.049C2.064 6.805 1 7.952 1 9.318 1 10.785 2.23 12 3.781 12h8.906C13.98 12 15 10.988 15 9.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 4.825 10.328 3 8 3a4.53 4.53 0 0 0-2.941 1.1z"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="button-container" onclick="publish()">
+                            <button class="btn">
+                                发布
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send"
+                                     viewBox="6 -4 5 17">
+                                    <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z"/>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
-                </div>
-                <div class="button-container" onclick="saveDraft()">
-                    <button class="btn">
-                        保存草稿
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                             class="bi bi-cloud-arrow-up" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd"
-                                  d="M7.646 5.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 6.707V10.5a.5.5 0 0 1-1 0V6.707L6.354 7.854a.5.5 0 1 1-.708-.708l2-2z"/>
-                            <path d="M4.406 3.342A5.53 5.53 0 0 1 8 2c2.69 0 4.923 2 5.166 4.579C14.758 6.804 16 8.137 16 9.773 16 11.569 14.502 13 12.687 13H3.781C1.708 13 0 11.366 0 9.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383zm.653.757c-.757.653-1.153 1.44-1.153 2.056v.448l-.445.049C2.064 6.805 1 7.952 1 9.318 1 10.785 2.23 12 3.781 12h8.906C13.98 12 15 10.988 15 9.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 4.825 10.328 3 8 3a4.53 4.53 0 0 0-2.941 1.1z"/>
-                        </svg>
-                    </button>
-                </div>
-                <div class="button-container" onclick="publish()">
-                    <button class="btn">
-                        发布
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send"
-                             viewBox="6 -4 5 17">
-                            <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z"/>
-                        </svg>
-                    </button>
                 </div>
             </div>
         </div>
+
     </div>
 
 </main>
@@ -455,7 +481,9 @@
     let editNoteId;
     window.onload = function () {
         $('#header').load("../pages/header.html", loadPersonDetail);
+        viewNoteGroup()
         listNotes(1, 10);
+
     }
     window.addEventListener('beforeunload', function (e) {
         if (createDraftDiv.style.display === 'block') {
@@ -625,6 +653,48 @@
             });
     }
 
+    function viewNoteGroup() {
+        fetch('/base/anakki/an-note-group/list-note-group', {
+            method: 'GET'
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json(); // Parse JSON data
+                } else {
+                    // Handle error response
+                    console.error('网络错误，请联系管理员');
+                }
+            })
+            .then(data => {
+                if (data.code === 200) {
+                    // 检查是否有分组
+                    if (data.data && data.data.length > 0) {
+                        // 遍历协作者信息并生成HTML内容
+                        data.data.forEach(data => {
+                            let html = `
+                                <div class="row" onclick="searchByGroupId(${data.id})">
+                                    <div class="col note-group">
+                                        <strong>${data.groupName}</strong>
+                                    </div>
+                                </div>
+                            `;
+                            document.getElementById("viewNoteGroup").insertAdjacentHTML('beforeend', html);
+                        });
+                    }
+                } else {
+                    alert(data.data)
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+    function searchByGroupId(groupId){
+        hasMoreNotes=true;
+        document.getElementById("noteList").innerHTML = "";
+        listNotes(1, 10, null,groupId);
+    }
     function viewNote(id) {
         fetch('/base/anakki/note/note-detail?id=' + id, {
             method: 'GET'
@@ -1023,7 +1093,7 @@
         listNotes(currentViewNotePage, pageSize, document.getElementById('searchInputText').value);
     }
 
-    function listNotes(current, pageSize, searchInput) {
+    function listNotes(current, pageSize, searchInput,groupId) {
         if (!hasMoreNotes) {
             return;
         }
@@ -1032,9 +1102,9 @@
 
         let searchUrl = searchInput ? `&content=${searchInput}` : "";
         const url = window.location.href;
-
+        let groupIdUrl = groupId ? `&noteGroupId=${groupId}` : "";
         // 发送 AJAX 请求
-        fetch(`/base/anakki/note/listNote?current=${current}&size=${pageSize}${searchUrl}`, {
+        fetch(`/base/anakki/note/listNote?current=${current}&size=${pageSize}${searchUrl}${groupIdUrl}`, {
             method: 'GET',
         })
             .then(response => {
@@ -1053,7 +1123,7 @@
                 }
                 // 遍历每个项目
                 itemList.forEach(item => {
-
+                    index+=200;
                     const coverImgHtml = item.coverImage
                         ? `<img class="cover-img" src="${item.coverImage}">`
                         : "";
@@ -1098,7 +1168,7 @@
                 document.getElementById("noteList").insertAdjacentHTML('beforeend', html);
 
                 // 拼接分页参数到地址栏
-                const newUrl = `${url.split("?")[0]}?current=${current}&size=${pageSize}${searchUrl}`;
+                const newUrl = `${url.split("?")[0]}?current=${current}&size=${pageSize}${searchUrl}${groupIdUrl}`;
                 window.history.replaceState(null, null, newUrl);
 
                 isLoading = false;

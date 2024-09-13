@@ -10,6 +10,7 @@ import com.anakki.data.entity.AnNote;
 import com.anakki.data.entity.AnUser;
 import com.anakki.data.entity.request.*;
 import com.anakki.data.entity.response.AnNoteDetailResponse;
+import com.anakki.data.entity.response.AnNoteResponse;
 import com.anakki.data.entity.response.AnUserDetailForNoteResponse;
 import com.anakki.data.mapper.AnNoteMapper;
 import com.anakki.data.service.AnIpAddressService;
@@ -192,28 +193,19 @@ public class AnNoteServiceImpl extends ServiceImpl<AnNoteMapper, AnNote> impleme
     }
 
     @Override
-    public BasePageResult<AnNote> listNotes(ListNoteRequest listNoteRequest) {
-        IPage<AnNote> listNotePage = new Page<>(
-                listNoteRequest.getCurrent(),
-                listNoteRequest.getSize());
-        String type = listNoteRequest.getType();
-        QueryWrapper<AnNote> anFriendsCommentQueryWrapper = new QueryWrapper<>();
-        anFriendsCommentQueryWrapper.eq(null != type, "type", type);
-        if (StringUtils.isEmpty(listNoteRequest.getStatus())) {
-            anFriendsCommentQueryWrapper.eq("status", "COMMON");
-        } else {
-            anFriendsCommentQueryWrapper.eq("status", listNoteRequest.getStatus());
-        }
+    public BasePageResult<AnNoteResponse> listNotes(ListNoteRequest listNoteRequest) {
+        // 创建分页对象，current 表示当前页，size 表示每页大小
+        IPage<AnNoteResponse> page = new Page<>(listNoteRequest.getCurrent(), listNoteRequest.getSize());
 
-        anFriendsCommentQueryWrapper.like(null != listNoteRequest.getContent(), "content", listNoteRequest.getContent());
-        anFriendsCommentQueryWrapper.ge(
-                null != listNoteRequest.getCreateTimeStart(), "create_time", listNoteRequest.getCreateTimeStart());
-        anFriendsCommentQueryWrapper.le(
-                null != listNoteRequest.getCreateTimeEnd(), "create_time", listNoteRequest.getCreateTimeEnd());
-        anFriendsCommentQueryWrapper.orderByDesc("create_time");
-        IPage<AnNote> page = page(listNotePage, anFriendsCommentQueryWrapper);
-        List<AnNote> records = page.getRecords();
-        return new BasePageResult<>(records, page.getTotal());
+        listNoteRequest.setStatus("COMMON");
+        // 调用mapper方法获取分页结果
+        IPage<AnNoteResponse> notePage = anNoteMapper.listNotes(page, listNoteRequest);
+
+        // 获取分页记录和总数
+        List<AnNoteResponse> records = notePage.getRecords();
+        long total = notePage.getTotal();
+
+        return new BasePageResult<>(records, total);
     }
 
     @Override

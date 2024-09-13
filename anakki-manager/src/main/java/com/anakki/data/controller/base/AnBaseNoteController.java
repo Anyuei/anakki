@@ -5,6 +5,7 @@ import com.anakki.data.bean.common.ResponseDTO;
 import com.anakki.data.entity.AnNote;
 import com.anakki.data.entity.request.*;
 import com.anakki.data.entity.response.AnNoteDetailResponse;
+import com.anakki.data.entity.response.AnNoteResponse;
 import com.anakki.data.service.AnNoteService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,8 @@ public class AnBaseNoteController {
 
     @ApiOperation(value = "查看笔记列表")
     @GetMapping("/listNote")
-    public ResponseDTO<BasePageResult<AnNote>> listNote(ListNoteRequest listNoteRequest){
-        BasePageResult<AnNote> anNoteBasePageResult = anNoteService.listNotes(listNoteRequest);
+    public ResponseDTO<BasePageResult<AnNoteResponse>> listNote(ListNoteRequest listNoteRequest){
+        BasePageResult<AnNoteResponse> anNoteBasePageResult = anNoteService.listNotes(listNoteRequest);
         return ResponseDTO.succData(anNoteBasePageResult);
     }
     @ApiOperation(value = "查看笔记详情")

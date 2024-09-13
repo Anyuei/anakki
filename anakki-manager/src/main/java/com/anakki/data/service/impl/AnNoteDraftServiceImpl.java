@@ -61,7 +61,7 @@ public class AnNoteDraftServiceImpl extends ServiceImpl<AnNoteDraftMapper, AnNot
             anNote.setDescription(HtmlUtil.getFirstP(saveNoteDraftRequest.getContent()));
             anNote.setAuthor(user.getNickname());
             anNote.setLocation(ipAddr);
-            anNote.setType(ipAddr);
+            anNote.setType("COMMON");
             anNote.setCreateBy(user.getId());
             anNote.setStatus("DRAFT");
             boolean save = anNoteService.save(anNote);
