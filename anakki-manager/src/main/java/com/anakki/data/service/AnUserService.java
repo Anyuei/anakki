@@ -3,6 +3,7 @@ package com.anakki.data.service;
 import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.entity.AnUser;
 import com.anakki.data.entity.request.*;
+import com.anakki.data.entity.response.ListAuthorUsersForNoteResponse;
 import com.anakki.data.entity.response.ListUserForNoteResponse;
 import com.anakki.data.entity.response.ListUserResponse;
 import com.anakki.data.entity.response.UserDetailResponse;
@@ -55,6 +56,8 @@ public interface AnUserService extends IService<AnUser> {
     Boolean verifyCode(String telephone, String code);
 
     Boolean telephoneChange(String telephone, String code);
+
+    BasePageResult<ListAuthorUsersForNoteResponse> listAuthorUsersForNote(ListAuthorUsersForNoteRequest listUserForNoteRequest);
 
     BasePageResult<ListUserForNoteResponse> listForNote(ListUserForNoteRequest request);
 

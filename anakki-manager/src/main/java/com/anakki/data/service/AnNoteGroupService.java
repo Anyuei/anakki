@@ -29,5 +29,9 @@ public interface AnNoteGroupService extends IService<AnNoteGroup> {
 
     void updateNoteGroup(UpdateNoteGroupRequest request);
 
+    void existAndIncrNoteCount(Long noteGroupId);
+
+    void existAndDecrNoteCount(Long noteGroupId);
+
     BasePageResult<AnNoteGroup> listNoteGroup(ListNoteGroupForManageRequest request);
 }

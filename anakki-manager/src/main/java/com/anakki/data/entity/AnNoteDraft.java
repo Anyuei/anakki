@@ -35,4 +35,9 @@ public class AnNoteDraft extends BaseEntity implements Serializable {
     @ApiModelProperty("内容")
     @TableField("content")
     private String content;
+
+    @ApiModelProperty("创建人")
+    @TableField("create_by")
+    private Long createBy;
+
 }

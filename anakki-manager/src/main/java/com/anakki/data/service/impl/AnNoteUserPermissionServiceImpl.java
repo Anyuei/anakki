@@ -22,12 +22,13 @@ import java.util.List;
 public class AnNoteUserPermissionServiceImpl extends ServiceImpl<AnNoteUserPermissionMapper, AnNoteUserPermission> implements AnNoteUserPermissionService {
 
     @Override
-    public List<AnNoteUserPermission> getUserPermissionsByNoteId(Long noteId) {
+    public List<AnNoteUserPermission> getUserPermissionsByNoteId(Long noteId,List<Long> userIds) {
         if (null==noteId){
             return new ArrayList<>();
         }
         QueryWrapper<AnNoteUserPermission> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("note_id",noteId);
+        queryWrapper.in("user_id",userIds);
         return list(queryWrapper);
     }
 }

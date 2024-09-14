@@ -2,6 +2,9 @@ package com.anakki.data.service;
 
 import com.anakki.data.entity.AnNoteGroupRel;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface AnNoteGroupRelService extends IService<AnNoteGroupRel> {
 
+    void saveNoteToGroup(List<Long> noteGroupIds, Long noteId);
+
+    @Transactional(rollbackFor = Exception.class)
+    void removeNoteFromGroup(List<Long> noteGroupIds, Long noteId);
 }

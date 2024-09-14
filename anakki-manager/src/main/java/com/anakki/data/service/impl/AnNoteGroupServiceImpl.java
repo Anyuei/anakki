@@ -16,8 +16,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -33,6 +33,7 @@ import java.util.List;
 public class AnNoteGroupServiceImpl extends ServiceImpl<AnNoteGroupMapper, AnNoteGroup> implements AnNoteGroupService {
 
     @Autowired
+    @Lazy
     private AnNoteGroupRelService anNoteGroupRelService;
 
     @Override
@@ -62,6 +63,7 @@ public class AnNoteGroupServiceImpl extends ServiceImpl<AnNoteGroupMapper, AnNot
         QueryWrapper<AnNoteGroup> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("status","COMMON");
         List<AnNoteGroup> result = list(queryWrapper);
+
         return com.anakki.data.utils.common.BeanUtils.copyBeanList(result, AnNoteGroupResponse.class);
     }
 
@@ -72,6 +74,29 @@ public class AnNoteGroupServiceImpl extends ServiceImpl<AnNoteGroupMapper, AnNot
         updateById(anNoteGroup);
     }
 
+    @Override
+    public void existAndIncrNoteCount(Long noteGroupId) {
+        if (null!=noteGroupId){
+            AnNoteGroup anNoteGroup = getById(noteGroupId);
+            if (null!=anNoteGroup){
+                Integer noteCount = anNoteGroup.getNoteCount();
+                anNoteGroup.setNoteCount(noteCount+1);
+                updateById(anNoteGroup);
+            }
+        }
+    }
+    @Override
+    public void existAndDecrNoteCount(Long noteGroupId) {
+        if (null!=noteGroupId){
+            AnNoteGroup anNoteGroup = getById(noteGroupId);
+            if (null!=anNoteGroup){
+                Integer noteCount = anNoteGroup.getNoteCount();
+                int i = noteCount - 1;
+                anNoteGroup.setNoteCount(Math.max(i, 0));
+                updateById(anNoteGroup);
+            }
+        }
+    }
     @Override
     public BasePageResult<AnNoteGroup> listNoteGroup(ListNoteGroupForManageRequest request) {
         // 创建查询条件

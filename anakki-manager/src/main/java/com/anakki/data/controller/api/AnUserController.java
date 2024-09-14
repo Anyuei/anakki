@@ -4,6 +4,7 @@ import com.anakki.data.bean.common.BaseContext;
 import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.bean.common.ResponseDTO;
 import com.anakki.data.entity.request.*;
+import com.anakki.data.entity.response.ListAuthorUsersForNoteResponse;
 import com.anakki.data.entity.response.ListUserForNoteResponse;
 import com.anakki.data.entity.response.UserDetailResponse;
 import com.anakki.data.service.AnUserService;
@@ -80,4 +81,13 @@ public class AnUserController {
         BasePageResult<ListUserForNoteResponse> list =  anUserService.listForNote(listUserForNoteRequest);
         return ResponseDTO.succData(list);
     }
+
+    @ApiOperation(value = "获取协作者用户")
+    @GetMapping("/list-authors-for-note")
+    public ResponseDTO<BasePageResult<ListAuthorUsersForNoteResponse>> listAuthorUsersForNote(ListAuthorUsersForNoteRequest request){
+        BasePageResult<ListAuthorUsersForNoteResponse> result = anUserService.listAuthorUsersForNote(request);
+        return ResponseDTO.succData(result);
+    }
+
+
 }

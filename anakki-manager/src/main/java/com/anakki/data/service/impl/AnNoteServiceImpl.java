@@ -7,15 +7,16 @@ import com.anakki.data.bean.constant.CosBucketNameConst;
 import com.anakki.data.bean.constant.CosPathConst;
 import com.anakki.data.bean.constant.RedisKey;
 import com.anakki.data.entity.AnNote;
+import com.anakki.data.entity.AnNoteDraft;
+import com.anakki.data.entity.AnNoteGroupRel;
 import com.anakki.data.entity.AnUser;
 import com.anakki.data.entity.request.*;
 import com.anakki.data.entity.response.AnNoteDetailResponse;
 import com.anakki.data.entity.response.AnNoteResponse;
 import com.anakki.data.entity.response.AnUserDetailForNoteResponse;
+import com.anakki.data.mapper.AnNoteDraftMapper;
 import com.anakki.data.mapper.AnNoteMapper;
-import com.anakki.data.service.AnIpAddressService;
-import com.anakki.data.service.AnNoteService;
-import com.anakki.data.service.AnUserService;
+import com.anakki.data.service.*;
 import com.anakki.data.utils.IPUtils;
 import com.anakki.data.utils.common.COSUtil;
 import com.anakki.data.utils.common.HtmlUtil;
@@ -57,46 +58,64 @@ public class AnNoteServiceImpl extends ServiceImpl<AnNoteMapper, AnNote> impleme
     @Autowired
     private AnNoteMapper anNoteMapper;
 
+    @Autowired
+    private AnNoteGroupService anNoteGroupService;
+    @Autowired
+    private AnNoteGroupRelService anNoteGroupRelService;
+
+    @Autowired
+    private  AnNoteDraftMapper anNoteDraftMapper;
     @Override
-    public Boolean save(CreateNoteRequest createNoteRequest, HttpServletRequest request) {
+    public Long save(CreateNoteRequest createNoteRequest, HttpServletRequest request) {
+        String ipAddr = IPUtils.getIpAddr(request);
+
+        String currentNickname = BaseContext.getCurrentNickname();
+        AnUser user = anUserService.getByNickname(currentNickname);
+        List<Long> authorIds = createNoteRequest.getAuthorIds();
+        Long currentUserId = user.getId();
+        AnNote anNote = new AnNote();
+        BeanUtils.copyProperties(createNoteRequest, anNote);
+        anNote.setAuthor(user.getNickname());
+        anNote.setLocation(ipAddr);
+        anNote.setCreateBy(currentUserId);
+
+        authorIds.add(currentUserId);
+        anNote.setAuthorIds(getAuthorIdListString(authorIds));
+        anNote.setCoverImage(HtmlUtil.getFirstImg(createNoteRequest.getContent()));
+        anNote.setTitle(HtmlUtil.getFirstH1(createNoteRequest.getContent()));
+        anNote.setDescription(HtmlUtil.getFirstP(createNoteRequest.getContent()));
+        anNote.setStatus("COMMON");
+        save(anNote);
+        anNoteGroupRelService.saveNoteToGroup(createNoteRequest.getNoteGroupIds(),anNote.getId());
+        return anNote.getId();
+    }
+
+    @Override
+    public Long update(UpdateNoteRequest updateNoteRequest, HttpServletRequest request) {
         String ipAddr = IPUtils.getIpAddr(request);
 
         String currentNickname = BaseContext.getCurrentNickname();
         AnUser user = anUserService.getByNickname(currentNickname);
         Long currentUserId = user.getId();
-        AnNote anNote=null;
-        Long noteId = createNoteRequest.getId();
-        if (null != noteId) {
-            anNote = getById(noteId);
-            if (!anNote.getCreateBy().equals(currentUserId)) {
-                Set<Long> authorIdSet = getAuthorIdList(anNote.getAuthorIds());
-                if (!authorIdSet.contains(currentUserId)) {
-                    throw new RuntimeException("无权限修改，请申请成为协作人");
-                }
-            }
-            anNote.setContent(createNoteRequest.getContent());
-            anNote.setCoverImage(HtmlUtil.getFirstImg(createNoteRequest.getContent()));
-            anNote.setTitle(HtmlUtil.getFirstH1(createNoteRequest.getContent()));
-            anNote.setDescription(HtmlUtil.getFirstP(createNoteRequest.getContent()));
-            anNote.setStatus("COMMON");
+        String content = updateNoteRequest.getContent();
+        AnNote anNote = new AnNote();
+        BeanUtils.copyProperties(updateNoteRequest, anNote);
+        anNote.setAuthor(user.getNickname());
+        anNote.setLocation(ipAddr);
+        anNote.setCoverImage(HtmlUtil.getFirstImg(content));
+        anNote.setTitle(HtmlUtil.getFirstH1(content));
+        anNote.setDescription(HtmlUtil.getFirstP(content));
+        anNote.setStatus("COMMON");
+        updateById(anNote);
 
-            updateById(anNote);
-        } else {
-            anNote = new AnNote();
-            BeanUtils.copyProperties(createNoteRequest, anNote);
-            anNote.setAuthor(user.getNickname());
-            anNote.setLocation(ipAddr);
-            anNote.setCreateBy(currentUserId);
-            ArrayList<Long> ids = new ArrayList<>();
-            ids.add(currentUserId);
-            anNote.setAuthorIds(getAuthorIdListString(ids));
-            anNote.setCoverImage(HtmlUtil.getFirstImg(createNoteRequest.getContent()));
-            anNote.setTitle(HtmlUtil.getFirstH1(createNoteRequest.getContent()));
-            anNote.setDescription(HtmlUtil.getFirstP(createNoteRequest.getContent()));
-            anNote.setStatus("COMMON");
-            save(anNote);
-        }
-        return true;
+        //每次修改保存版本信息
+        AnNoteDraft anNoteDraft = new AnNoteDraft();
+        anNoteDraft.setNoteId(anNote.getId());
+        anNoteDraft.setContent(content);
+        anNoteDraft.setCreateBy(currentUserId);
+        anNoteDraftMapper.insert(anNoteDraft);
+
+        return anNote.getId();
     }
 
     @Override
@@ -238,6 +257,14 @@ public class AnNoteServiceImpl extends ServiceImpl<AnNoteMapper, AnNote> impleme
         }
         note.setStatus("INVALID");
         updateById(note);
+
+
+        QueryWrapper<AnNoteGroupRel> groupRelQueryWrapper = new QueryWrapper<>();
+        groupRelQueryWrapper.eq("note_id",note.getId());
+        List<AnNoteGroupRel> anNoteGroupRels = anNoteGroupRelService.list(groupRelQueryWrapper);
+        for (AnNoteGroupRel anNoteGroupRel : anNoteGroupRels) {
+            anNoteGroupService.existAndDecrNoteCount(anNoteGroupRel.getNoteGroupId());
+        }
     }
 
     @Override

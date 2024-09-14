@@ -23,7 +23,9 @@ import java.util.Set;
  */
 public interface AnNoteService extends IService<AnNote> {
 
-    Boolean save(CreateNoteRequest createNoteRequest, HttpServletRequest request);
+    Long save(CreateNoteRequest createNoteRequest, HttpServletRequest request);
+
+    Long update(UpdateNoteRequest updateNoteRequest, HttpServletRequest request);
 
     Boolean addAuthorToNotes(AddNoteOtherAuthorRequest createNoteRequest);
 

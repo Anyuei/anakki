@@ -13,10 +13,7 @@ import com.anakki.data.entity.AnUser;
 import com.anakki.data.bean.common.UserToken;
 import com.anakki.data.entity.common.SystemConfigConst;
 import com.anakki.data.entity.request.*;
-import com.anakki.data.entity.response.ListUserForNoteResponse;
-import com.anakki.data.entity.response.ListUserResponse;
-import com.anakki.data.entity.response.NoteUserPermissionResponse;
-import com.anakki.data.entity.response.UserDetailResponse;
+import com.anakki.data.entity.response.*;
 import com.anakki.data.mapper.AnUserMapper;
 import com.anakki.data.service.*;
 import com.anakki.data.utils.common.*;
@@ -320,7 +317,49 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
         }
         return null;
     }
+    @Override
+    public BasePageResult<ListAuthorUsersForNoteResponse> listAuthorUsersForNote(ListAuthorUsersForNoteRequest request) {
+        Long noteId = request.getNoteId();
+        // 查询笔记
+        AnNote note = anNoteService.getById(noteId);
+        if (note == null) {
+            throw new RuntimeException("笔记不存在");
+        }
 
+        String authorIds = note.getAuthorIds();
+        // 查询联合作者
+        Set<Long> oldAuthorIdList = anNoteService.getAuthorIdList(authorIds);
+
+        // 创建查询条件
+        IPage<AnUser> userPage = new Page<>(request.getCurrent(), request.getSize());
+        QueryWrapper<AnUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("state", "COMMON")
+                .eq("searchable", true)
+                .in("id", oldAuthorIdList);
+        // 执行分页查询用户
+        IPage<AnUser> userPageResult = page(userPage, queryWrapper);
+        List<AnUser> users = userPageResult.getRecords();
+        List<Long> userIds = users.stream().map(AnUser::getId).collect(Collectors.toList());
+        // 查询笔记用户权限
+        List<AnNoteUserPermission> userPermissionsByNoteId = anNoteUserPermissionService.getUserPermissionsByNoteId(noteId,userIds);
+        // 按 userId 分组
+        Map<Long, List<AnNoteUserPermission>> permissionsGroupedByUserId = userPermissionsByNoteId.stream()
+                .collect(Collectors.groupingBy(AnNoteUserPermission::getUserId));
+        // 转换用户列表
+        List<ListAuthorUsersForNoteResponse> editUsers = com.anakki.data.utils.common.BeanUtils.copyBeanList(users, ListAuthorUsersForNoteResponse.class);
+        // 处理用户数据
+        editUsers.forEach(editUser -> {
+            Long userID = editUser.getId();
+            // 装配用户权限
+            List<AnNoteUserPermission> permissions = permissionsGroupedByUserId.get(userID);
+            if (!CollectionUtils.isEmpty(permissions)) {
+                List<NoteUserPermissionResponse> permissionResponses =
+                        com.anakki.data.utils.common.BeanUtils.copyBeanList(permissions, NoteUserPermissionResponse.class);
+                editUser.setPermissions(permissionResponses);
+            }
+        });
+        return new BasePageResult<>(editUsers, userPageResult.getTotal());
+    }
     @Override
     public BasePageResult<ListUserForNoteResponse> listForNote(ListUserForNoteRequest listUserForNoteRequest) {
         Long noteId = listUserForNoteRequest.getNoteId();
@@ -341,7 +380,6 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
         QueryWrapper<AnUser> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("state", "COMMON")
                 .eq("searchable", true);
-
         // 如果搜索条件存在，增加搜索条件
         if (StringUtils.isNotBlank(searchParams)) {
             queryWrapper.and(wrapper -> wrapper.like("nickname", searchParams)
@@ -350,15 +388,15 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
                     .or().eq("mail", searchParams));
         }
 
-        // 执行分页查询
-        IPage<AnUser> page = page(userPage, queryWrapper);
-        List<AnUser> records = page.getRecords();
-
+        // 执行分页查询用户
+        IPage<AnUser> userPageResult = page(userPage, queryWrapper);
+        List<AnUser> users = userPageResult.getRecords();
+        List<Long> userIds = users.stream().map(AnUser::getId).collect(Collectors.toList());
         // 转换用户列表
-        List<ListUserForNoteResponse> editUsers = com.anakki.data.utils.common.BeanUtils.copyBeanList(records, ListUserForNoteResponse.class);
+        List<ListUserForNoteResponse> editUsers = com.anakki.data.utils.common.BeanUtils.copyBeanList(users, ListUserForNoteResponse.class);
 
         // 查询笔记用户权限
-        List<AnNoteUserPermission> userPermissionsByNoteId = anNoteUserPermissionService.getUserPermissionsByNoteId(noteId);
+        List<AnNoteUserPermission> userPermissionsByNoteId = anNoteUserPermissionService.getUserPermissionsByNoteId(noteId,userIds);
         // 按 userId 分组
         Map<Long, List<AnNoteUserPermission>> permissionsGroupedByUserId = userPermissionsByNoteId.stream()
                 .collect(Collectors.groupingBy(AnNoteUserPermission::getUserId));
@@ -378,7 +416,7 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
             }
         });
 
-        return new BasePageResult<>(editUsers, page.getTotal());
+        return new BasePageResult<>(editUsers, userPageResult.getTotal());
     }
 
     @Override

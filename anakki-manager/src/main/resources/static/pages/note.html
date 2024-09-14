@@ -237,6 +237,22 @@
         box-shadow: 0 1px 8px rgba(0, 0, 0, 0.18);
         transform: translateY(-5px);
     }
+
+    .editor-select-for-note{
+        justify-content: space-between;
+        display: flex;
+        padding: 0.5rem 0.5rem;
+    }
+    .modal-body {
+        position: relative;
+        flex: 1 1 auto;
+        padding: 0;
+    }
+
+    .userListSearchArea{
+        justify-content: space-between;
+        display: flex;
+    }
 </style>
 <body>
 <!--通用顶部导航-->
@@ -334,7 +350,7 @@
 
                             </div>
                             <div id="operate-editors">
-                        <span id="addUserToNoteArea" style="font-size: 2rem;line-height: 30px;cursor: pointer;" onclick="listUsersForNote()">
+                        <span id="addUserToNoteArea" style="font-size: 2rem;line-height: 30px;cursor: pointer;" onclick="listAuthorsAndUsersForNote()">
                             <i class="bi bi-plus-circle-dotted"></i>
                         </span>
                             </div>
@@ -438,24 +454,40 @@
      aria-hidden="true"
      style="padding-right: 0;">
 
-    <div class="modal-dialog" role="document" style="max-width: 35rem;">
+    <div class="modal-dialog" role="document" style="max-width: 35rem;top: 3rem;">
         <div class="modal-content">
-            <div class="modal-header">
-                <!-- 搜索框和查询按钮 -->
-                <input type="text" id="userSearchInput" class="form-control" placeholder="搜索用户" style="width: 70%;" />
-                <button type="button" class="btn btn-primary" onclick="searchUserButton()" style="margin-left: 10px;">查询</button>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <div class="row" style="justify-content: space-between">
+                <div class="col-6 userListSearchArea">
+                    <!-- 搜索框和查询按钮 -->
+                    <input type="text" id="userSearchInput" class="form-control" placeholder="搜索用户" />
+                    <button type="button" class="btn btn-primary" onclick="searchUserButton()" style="margin-left: 10px;">查询</button>
+                </div>
+                <div class="" style="align-content: center"><strong>协作者</strong></div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-right: 1rem;">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <div id="userListContainer" style="height: 400px; overflow-y: auto;">
-                    <div id="userListForNoteEdit" class="list-group"></div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="modal-body">
+                        <div id="userListContainer" style="height: 400px; overflow-y: auto;">
+                            <div id="userListForNoteEdit" class="list-group"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="modal-body">
+                        <div id="authorListContainer" style="height: 400px; overflow-y: auto;">
+                            <div id="authorListForNoteEdit" class="list-group"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="modal-footer">
+
+            <div class="modal-footer" style="justify-content: space-between">
+                <button type="button" class="btn btn-primary"  onclick="addAuthorToNotes()">加入协作</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary" id="submitButton" onclick="submitSelectedUsers()">确定</button>
+                <button type="button" class="btn btn-primary"  onclick="removeAuthorFromNotes()">移除协作</button>
             </div>
         </div>
     </div>
@@ -675,6 +707,7 @@
                                 <div class="row" onclick="searchByGroupId(${data.id})">
                                     <div class="col note-group">
                                         <strong>${data.groupName}</strong>
+                                         <strong>${data.noteCount}</strong>
                                     </div>
                                 </div>
                             `;
@@ -804,23 +837,104 @@
     let hasMoreData = true; // 是否有更多数据
     let searchKeyword = ''; // 搜索关键词
 
-
+    let currentUserForNotePage = 1; // 当前页码
+    let currentAuthorForNotePage = 1; // 当前页码
     function searchUserButton() {
         searchKeyword = document.getElementById('userSearchInput').value;
         listUsersForNote(false, searchKeyword); // 点击查询时重置数据
     }
-    function listUsersForNote(loadMore = false, keyword = '') {
-        if (!editNoteId) {
-            alert("文章加载失败");
-            return;
+
+    function listAuthorsAndUsersForNote(){
+        listUsersForNote()
+        listAuthorsForNote();
+    }
+
+    function listAuthorsForNote(loadMore = false) {
+            const token = localStorage.getItem('user-token');
+            if (!token) {
+                alert("请登录");
+                return;
+            }
+            if (!editNoteId) {
+                alert("用户加载失败");
+                return;
+            }
+            if (!loadMore) {
+                currentAuthorForNotePage = 1;
+                hasMoreData = true;
+                document.getElementById("authorListForNoteEdit").innerHTML = ''; // 清空旧数据
+            }
+            if (!hasMoreData) {
+                return; // 如果没有更多数据则不再请求
+            }
+
+            fetch(`/api/anakki/user/list-authors-for-note?noteId=${editNoteId}&current=${currentAuthorForNotePage}&size=10`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': token
+                },
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        alert('网络错误，请联系管理员');
+                    }
+                })
+                .then(data => {
+                    if (data.code === 200) {
+                        let userList = data.data.data;
+
+                        // 如果没有更多数据，停止加载
+                        if (userList.length === 0) {
+                            hasMoreData = false;
+                            return;
+                        }
+
+                        let html = '';
+                        userList.forEach(user => {
+                            html += `
+                    <div class="list-group-item editor-select-for-note">
+                        <img src="${user.avatar}" alt="${user.nickname}" style="width: 30px; height: 30px; border-radius: 50%;">
+                        <span class="align-items-center">${user.nickname}</span>
+                        <div class="form-check form-switch form-check-reverse align-items-center" style="display:inline-block;margin-left:15px;">
+                          <input class="form-check-input collaborator-switch" type="checkbox" id="flexSwitch_${user.id}" data-author-id="${user.id}">
+                          <label class="form-check-label" for="flexSwitch_${user.id}"></label>
+                        </div>
+                    </div>`;
+                        });
+                        document.getElementById("authorListForNoteEdit").insertAdjacentHTML('beforeend', html);
+
+                        // 显示模态框
+                        if (!loadMore) {
+                            $('#userModalForNoteEdit').modal('show');
+                        }
+
+                        // 更新页码
+                        currentAuthorForNotePage += 1;
+
+                        // 监听滚动事件
+                        document.getElementById("authorListContainer").addEventListener('scroll', handleAuthorScroll);
+                    } else {
+                        alert(data.data);
+                    }
+                })
+                .catch(error => {
+                    alert('系统错误: ' + error);
+                });
         }
+    function listUsersForNote(loadMore = false, keyword = '') {
         const token = localStorage.getItem('user-token');
         if (!token) {
             alert("请登录");
             return;
         }
+        if (!editNoteId) {
+            alert("用户加载失败");
+            return;
+        }
         if (!loadMore) {
-            currentPage = 1;
+            currentUserForNotePage = 1;
             hasMoreData = true;
             document.getElementById("userListForNoteEdit").innerHTML = ''; // 清空旧数据
         }
@@ -828,7 +942,7 @@
             return; // 如果没有更多数据则不再请求
         }
 
-        fetch(`/api/anakki/user/list-for-note?noteId=${editNoteId}&current=${currentPage}&size=10&keyword=${encodeURIComponent(keyword)}`, {
+        fetch(`/api/anakki/user/list-for-note?noteId=${editNoteId}&current=${currentUserForNotePage}&size=10&keyword=${encodeURIComponent(keyword)}`, {
             method: 'GET',
             headers: {
                 'Authorization': token
@@ -854,17 +968,16 @@
                     let html = '';
                     userList.forEach(user => {
                         html += `
-                    <div class="list-group-item">
+                    <div class="list-group-item editor-select-for-note">
                         <img src="${user.avatar}" alt="${user.nickname}" style="width: 30px; height: 30px; border-radius: 50%;">
-                        <span>${user.nickname}</span>
-                        <div class="form-check form-switch form-check-reverse" style="display:inline-block;margin-left:15px;">
+                        <span class="align-items-center">${user.nickname}</span>
+                        <div class="form-check form-switch form-check-reverse align-items-center" style="display:inline-block;margin-left:15px;">
                           <input class="form-check-input collaborator-switch" type="checkbox" id="flexSwitch_${user.id}" ${user.isCollaborator ? 'checked' : ''} data-user-id="${user.id}">
-                          <label class="form-check-label" for="flexSwitch_${user.id}">协作者</label>
+                          <label class="form-check-label" for="flexSwitch_${user.id}"></label>
                         </div>
                     </div>`;
                     });
-
-                    document.getElementById("userListForNoteEdit").innerHTML += html;
+                    document.getElementById("userListForNoteEdit").insertAdjacentHTML('beforeend', html);
 
                     // 显示模态框
                     if (!loadMore) {
@@ -872,10 +985,11 @@
                     }
 
                     // 更新页码
-                    currentPage += 1;
+                    currentUserForNotePage += 1;
 
                     // 监听滚动事件
                     document.getElementById("userListContainer").addEventListener('scroll', handleScroll);
+
                 } else {
                     alert(data.data);
                 }
@@ -884,6 +998,15 @@
                 alert('系统错误: ' + error);
             });
     }
+    function handleAuthorScroll() {
+        const container = document.getElementById("userListContainer");
+        // 当滚动到底部时加载更多数据
+        if (container.scrollTop + container.clientHeight >= container.scrollHeight - 100) {
+            container.removeEventListener('scroll', handleAuthorScroll);
+            listAuthorsForNote(true);
+        }
+    }
+
     // 处理滚动事件
     function handleScroll() {
         const container = document.getElementById("userListContainer");
@@ -894,8 +1017,7 @@
             listUsersForNote(true, searchKeyword);
         }
     }
-
-    function submitSelectedUsers() {
+    function removeAuthorFromNotes() {
         const token = localStorage.getItem('user-token');
         if (!token){
             alert("请登录")
@@ -903,7 +1025,43 @@
 
         const selectedUsers = Array.from(document.querySelectorAll(".collaborator-switch"))
             .filter(switchElement => switchElement.checked) // 仅选择打开开关的用户
-            .map(switchElement => switchElement.getAttribute('data-user-id')); // 获取用户ID
+            .map(switchElement => switchElement.getAttribute('data-author-id')); // 获取用户ID
+
+        const payload = {
+            authorIds: selectedUsers,  // 已选中的用户ID
+            targetNoteId: editNoteId
+        };
+
+        fetch('/api/anakki/note/removeAuthorToNotes', {
+            method: 'POST',
+            headers: {
+                'Authorization': token,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.code === 200) {
+                    alert('协作者已成功移除');
+                    listAuthorsAndUsersForNote()
+                } else {
+                    alert('添加协作者失败: ' + data.message);
+                }
+            })
+            .catch(error => {
+                alert('系统错误: ' + error);
+            });
+    }
+    function addAuthorToNotes() {
+        const token = localStorage.getItem('user-token');
+        if (!token){
+            alert("请登录")
+        }
+
+        const selectedUsers = Array.from(document.querySelectorAll(".collaborator-switch"))
+            .filter(switchElement => switchElement.checked) // 仅选择打开开关的用户
+            .map(switchElement => switchElement.getAttribute('data-user-id')); // 获取作者ID
 
         const payload = {
             authorIds: selectedUsers,  // 已选中的用户ID
@@ -922,7 +1080,7 @@
             .then(data => {
                 if (data.code === 200) {
                     alert('协作者已成功添加');
-                    $('#userModal').modal('hide');
+                    listAuthorsAndUsersForNote()
                 } else {
                     alert('添加协作者失败: ' + data.message);
                 }

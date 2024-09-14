@@ -14,5 +14,5 @@ import java.util.List;
  * @since 2024-09-05
  */
 public interface AnNoteUserPermissionService extends IService<AnNoteUserPermission> {
-    List<AnNoteUserPermission> getUserPermissionsByNoteId(Long noteId);
+    List<AnNoteUserPermission> getUserPermissionsByNoteId(Long noteId,List<Long> userIds);
 }

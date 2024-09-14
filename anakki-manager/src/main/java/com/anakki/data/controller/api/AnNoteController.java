@@ -30,9 +30,9 @@ public class AnNoteController {
 
     @ApiOperation(value = "发布笔记")
     @PostMapping("/createNote")
-    public ResponseDTO<Boolean> createNote(@RequestBody CreateNoteRequest createNoteRequest, HttpServletRequest request){
-        anNoteService.save(createNoteRequest,request);
-        return ResponseDTO.succData(true);
+    public ResponseDTO<Long> createNote(@RequestBody CreateNoteRequest createNoteRequest, HttpServletRequest request){
+        Long noteId = anNoteService.save(createNoteRequest, request);
+        return ResponseDTO.succData(noteId);
     }
     @ApiOperation(value = "添加协作者到笔记")
     @PostMapping("/addAuthorToNotes")

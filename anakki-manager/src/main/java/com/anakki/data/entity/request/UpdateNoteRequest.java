@@ -1,10 +1,8 @@
 package com.anakki.data.entity.request;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,10 +14,12 @@ import java.util.List;
  * @date 2024/6/6 3:39
  */
 @Data
-public class CreateNoteRequest {
+public class UpdateNoteRequest {
+    @ApiModelProperty("笔记id")
+    private Long id;
 
-    @ApiModelProperty("共同编辑者id")
-    private List<Long> authorIds=new ArrayList<>();
+    @ApiModelProperty("笔记类型")
+    private String uploadFiles;
 
     @ApiModelProperty("内容")
     private String content;

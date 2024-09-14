@@ -1,11 +1,9 @@
 package com.anakki.data.entity.response;
 
-import com.anakki.data.entity.common.BaseEntity;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -18,7 +16,7 @@ import java.util.List;
  */
 @Getter
 @Setter
-public class ListUserForNoteResponse {
+public class ListAuthorUsersForNoteResponse {
     @ApiModelProperty("id")
     private Long id;
 
@@ -27,9 +25,6 @@ public class ListUserForNoteResponse {
 
     @ApiModelProperty("用户昵称")
     private String nickname;
-
-    @ApiModelProperty("是否协作者")
-    private Boolean isCollaborator;
 
     @ApiModelProperty("文章权限")
     private List<NoteUserPermissionResponse> permissions;

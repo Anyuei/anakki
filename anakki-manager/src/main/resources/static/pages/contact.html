@@ -301,7 +301,7 @@
         document.body.appendChild(loadingOverlay);
 
         // 请求评论接口，加入分页参数
-        mainPageImageFlow.open("GET", `/base/anakki/friends-comment/list-comments?page=${page}&size=${pageSize}`, true);
+        mainPageImageFlow.open("GET", `/base/anakki/friends-comment/list-comments?current=${page}&size=${pageSize}`, true);
         mainPageImageFlow.onreadystatechange = function () {
             if (mainPageImageFlow.readyState === 4 && mainPageImageFlow.status === 200) {
                 // 移除加载动画
