@@ -1191,6 +1191,62 @@
      * 发布新作品
      */
     function publish() {
+        if (document.getElementById("noteId").innerHTML===''){
+            createNote();
+        }else{
+            updateNote();
+        }
+    }
+    function updateNote(){
+        const token = localStorage.getItem('user-token');
+        if (!token){
+            alert("请登录")
+        }
+        const data = thisAdEditor.getData()
+        if (!data){
+            alert("请输入内容")
+        }
+        const noteId = document.getElementById("noteId").innerHTML;
+        document.getElementById('loading-overlay').style.display = 'flex';
+        fetch('/api/anakki/note/updateNote', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'authorization': token
+            },
+            body: JSON.stringify(
+                {
+                    id: noteId,
+                    content: data
+                }
+            ),
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json(); // Parse JSON data
+                } else {
+                    throw new Error('Network response was not ok');
+                }
+            })
+            .then(data => {
+                document.getElementById('loading-overlay').style.display = 'none';
+                if (data.code === 200) {
+                    alert("修改成功")
+                    document.getElementById('publish-area').style.display= '';
+                    document.getElementById("noteId").innerHTML='';
+                    //清空编辑区
+                    thisAdEditor.setData('');
+                    showNotesButton()
+                } else {
+                    alert(data.data)
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+    function createNote(){
         const token = localStorage.getItem('user-token');
         if (!token){
             alert("请登录")
@@ -1214,30 +1270,31 @@
                 }
             ),
         })
-        .then(response => {
-            if (response.ok) {
-                return response.json(); // Parse JSON data
-            } else {
-                throw new Error('Network response was not ok');
-            }
-        })
-        .then(data => {
-            document.getElementById('loading-overlay').style.display = 'none';
-            if (data.code === 200) {
-                alert("发布成功")
-                document.getElementById('publish-area').style.display= '';
-                document.getElementById("noteId").innerHTML='';
-                //清空编辑区
-                thisAdEditor.setData('');
-                showNotesButton()
-            } else {
-                alert(data.data)
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
+            .then(response => {
+                if (response.ok) {
+                    return response.json(); // Parse JSON data
+                } else {
+                    throw new Error('Network response was not ok');
+                }
+            })
+            .then(data => {
+                document.getElementById('loading-overlay').style.display = 'none';
+                if (data.code === 200) {
+                    alert("发布成功")
+                    document.getElementById('publish-area').style.display= '';
+                    document.getElementById("noteId").innerHTML='';
+                    //清空编辑区
+                    thisAdEditor.setData('');
+                    showNotesButton()
+                } else {
+                    alert(data.data)
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
     }
+
     // 当前页数和每页数据大小
     let currentViewNotePage = 1;
     const pageSize = 10;
