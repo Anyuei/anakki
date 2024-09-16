@@ -65,6 +65,7 @@ public class AnFriendsCommentServiceImpl extends ServiceImpl<AnFriendsCommentMap
                     Long exp = user.getExp();
                     anFriendsCommentResponse.setExp(exp);
                     anFriendsCommentResponse.setAvatar(user.getAvatar());
+                    anFriendsCommentResponse.setNicknameColor(user.getNicknameColor());
                 }
             }
             responses.add(anFriendsCommentResponse);

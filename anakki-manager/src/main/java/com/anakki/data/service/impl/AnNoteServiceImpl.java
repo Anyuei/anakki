@@ -30,6 +30,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -66,6 +67,7 @@ public class AnNoteServiceImpl extends ServiceImpl<AnNoteMapper, AnNote> impleme
     @Autowired
     private  AnNoteDraftMapper anNoteDraftMapper;
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Long save(CreateNoteRequest createNoteRequest, HttpServletRequest request) {
         String ipAddr = IPUtils.getIpAddr(request);
 
@@ -91,6 +93,7 @@ public class AnNoteServiceImpl extends ServiceImpl<AnNoteMapper, AnNote> impleme
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Long update(UpdateNoteRequest updateNoteRequest, HttpServletRequest request) {
         String ipAddr = IPUtils.getIpAddr(request);
 
@@ -119,6 +122,7 @@ public class AnNoteServiceImpl extends ServiceImpl<AnNoteMapper, AnNote> impleme
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean addAuthorToNotes(AddNoteOtherAuthorRequest addNoteOtherAuthorRequest) {
 
         String currentNickname = BaseContext.getCurrentNickname();
@@ -157,6 +161,7 @@ public class AnNoteServiceImpl extends ServiceImpl<AnNoteMapper, AnNote> impleme
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean removeAuthorToNotes(RemoveNoteOtherAuthorRequest request) {
 
         String currentNickname = BaseContext.getCurrentNickname();
@@ -245,6 +250,7 @@ public class AnNoteServiceImpl extends ServiceImpl<AnNoteMapper, AnNote> impleme
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void remove(IdNotNullRequest createNoteRequest, HttpServletRequest request) {
         String currentNickname = BaseContext.getCurrentNickname();
         AnUser user = anUserService.getByNickname(currentNickname);
@@ -323,6 +329,17 @@ public class AnNoteServiceImpl extends ServiceImpl<AnNoteMapper, AnNote> impleme
         } else {
             throw new RuntimeException("24小时内只能点赞一次(*￣︶￣)");
         }
+    }
+
+    @Override
+    public BasePageResult<AnNote> listNotesForManage(ListNoteForManageRequest request) {
+        // 构建分页对象，传入当前页和每页大小
+        Page<AnNote> page = new Page<>(request.getCurrent(), request.getSize());
+        // 构建查询条件
+        IPage<AnNote> notePage = anNoteMapper.listNotesForManage(page, request);
+
+        // 构建分页结果
+        return new BasePageResult<>(notePage.getRecords(),notePage.getTotal());
     }
 
     @Async

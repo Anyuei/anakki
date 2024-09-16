@@ -49,4 +49,39 @@
         <!-- 按照 create_time 降序排列 -->
         ORDER BY an.create_time DESC
     </select>
+    <select id="listNotesForManage" resultType="com.anakki.data.entity.AnNote">
+        SELECT an.*
+        FROM an_note an
+        LEFT JOIN an_note_group_rel angr on an.id = angr.note_id
+        <where>
+            <!-- 如果type不为空，则添加条件 -->
+            <if test="listNoteRequest.type != null and listNoteRequest.type != ''">
+                AND an.type = #{listNoteRequest.type}
+            </if>
+            <!-- 否则查询指定状态 -->
+            <if test="listNoteRequest.status != null and listNoteRequest.status != ''">
+                AND an.status = #{listNoteRequest.status}
+            </if>
+
+            <!-- 如果content不为空，则进行模糊查询 -->
+            <if test="listNoteRequest.content != null and listNoteRequest.content != ''">
+                AND an.content LIKE CONCAT('%', #{listNoteRequest.content}, '%')
+            </if>
+
+            <!-- 根据 create_time 范围查询 -->
+            <if test="listNoteRequest.createTimeStart != null">
+                AND an.create_time &gt;= #{listNoteRequest.createTimeStart}
+            </if>
+            <!-- 根据 create_time 范围查询 -->
+            <if test="listNoteRequest.createTimeEnd != null">
+                AND an.create_time &lt;= #{listNoteRequest.createTimeEnd}
+            </if>
+
+            <if test="listNoteRequest.noteGroupId != null">
+                AND angr.note_group_id = #{listNoteRequest.noteGroupId}
+            </if>
+        </where>
+        <!-- 按照 create_time 降序排列 -->
+        ORDER BY an.create_time DESC
+    </select>
 </mapper>

@@ -90,4 +90,8 @@ public class AnUser extends BaseEntity  implements Serializable {
     @ApiModelProperty("是否可被站内其他人搜索")
     @TableField("searchable")
     private Boolean searchable;
+
+    @ApiModelProperty("用户昵称颜色")
+    @TableField("nickname_color")
+    private String nicknameColor;
 }

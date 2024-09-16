@@ -1,6 +1,8 @@
 package com.anakki.data.service;
 
 import com.anakki.data.entity.AnNoteGroupRel;
+import com.anakki.data.entity.request.AddNoteToGroupManageRequest;
+import com.anakki.data.entity.request.RemoveNoteFromGroupManageRequest;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,4 +22,8 @@ public interface AnNoteGroupRelService extends IService<AnNoteGroupRel> {
 
     @Transactional(rollbackFor = Exception.class)
     void removeNoteFromGroup(List<Long> noteGroupIds, Long noteId);
+
+    void removeNoteFromGroup(RemoveNoteFromGroupManageRequest request);
+
+    void addNoteToGroup(AddNoteToGroupManageRequest request);
 }

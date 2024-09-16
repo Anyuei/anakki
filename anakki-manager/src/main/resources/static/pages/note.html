@@ -246,12 +246,19 @@
     .modal-body {
         position: relative;
         flex: 1 1 auto;
-        padding: 0;
+        padding: 1rem;
     }
 
     .userListSearchArea{
         justify-content: space-between;
         display: flex;
+    }
+
+    .note-group.active{
+        cursor: pointer;
+        background-color: #28282845;
+        box-shadow: 0 1px 8px rgba(0, 0, 0, 0.18);
+        transform: translateY(-5px);
     }
 </style>
 <body>
@@ -469,14 +476,14 @@
             </div>
             <div class="row">
                 <div class="col-6">
-                    <div class="modal-body">
+                    <div class="modal-body" style="padding: 0;">
                         <div id="userListContainer" style="height: 400px; overflow-y: auto;">
                             <div id="userListForNoteEdit" class="list-group"></div>
                         </div>
                     </div>
                 </div>
                 <div class="col-6">
-                    <div class="modal-body">
+                    <div class="modal-body" style="padding: 0;">
                         <div id="authorListContainer" style="height: 400px; overflow-y: auto;">
                             <div id="authorListForNoteEdit" class="list-group"></div>
                         </div>
@@ -515,7 +522,6 @@
         $('#header').load("../pages/header.html", loadPersonDetail);
         viewNoteGroup()
         listNotes(1, 10);
-
     }
     window.addEventListener('beforeunload', function (e) {
         if (createDraftDiv.style.display === 'block') {
@@ -641,7 +647,8 @@
             document.getElementById('loading-overlay').style.display = 'none';
             if (data.code === 200) {
                 document.getElementById("noteList").innerHTML='';
-                listNotes(1, 10)
+                currentViewNotePage=1
+                listNotes(currentViewNotePage++, 10)
             } else {
                 alert(data.data)
             }
@@ -704,8 +711,8 @@
                         // 遍历协作者信息并生成HTML内容
                         data.data.forEach(data => {
                             let html = `
-                                <div class="row" onclick="searchByGroupId(${data.id})">
-                                    <div class="col note-group">
+                                <div class="row note-group" onclick="searchByGroupId(this, ${data.id})">
+                                    <div class="col">
                                         <strong>${data.groupName}</strong>
                                          <strong>${data.noteCount}</strong>
                                     </div>
@@ -723,10 +730,30 @@
             });
     }
 
-    function searchByGroupId(groupId){
+    function searchByGroupId(e,groupId){
+        const noteGroups = document.querySelectorAll('.note-group');
+
         hasMoreNotes=true;
         document.getElementById("noteList").innerHTML = "";
-        listNotes(1, 10, null,groupId);
+        currentViewNotePage=1;
+        // 为当前点击的 .note-group-onclick 添加 active 类
+        // 判断当前元素是否已经有 active 类
+        if (e.classList.contains('active')) {
+            // 如果有 active 类，移除它并触发事件
+            document.getElementById("searchInputText").placeholder = '全局搜索';
+            e.classList.remove('active');
+            groupUrl="";
+            listNotes(currentViewNotePage++, 10);
+        } else {
+            document.getElementById("searchInputText").placeholder = '组内搜索';
+            // 为每个 .note-group-onclick 添加点击事件
+            noteGroups.forEach(noteGroup => {
+                noteGroup.classList.remove('active');
+            });
+            // 如果没有 active 类，则添加 active 类
+            e.classList.add('active');
+            listNotes(currentViewNotePage++, 10, groupId);
+        }
     }
     function viewNote(id) {
         fetch('/base/anakki/note/note-detail?id=' + id, {
@@ -1200,6 +1227,8 @@
                 alert("发布成功")
                 document.getElementById('publish-area').style.display= '';
                 document.getElementById("noteId").innerHTML='';
+                //清空编辑区
+                thisAdEditor.setData('');
                 showNotesButton()
             } else {
                 alert(data.data)
@@ -1214,18 +1243,17 @@
     const pageSize = 10;
     let isLoading = false; // 防止重复加载
     let hasMoreNotes = true; // 判断是否还有更多数据
-
     let loadingOverlay;
     function searchButton() {
-        const input = document.getElementById("searchInputText").value;
+        currentViewNotePage=1
         if (draftListDiv.style.display === 'block') {
             document.getElementById("draftList").innerHTML = "";
-            listDrafts(1, 10, input);
+            listDrafts(currentViewNotePage++, 10);
         }else if (noteListDiv.style.display === 'block') {
             hasMoreNotes=true;
             currentViewNotePage = 1;
             document.getElementById("noteList").innerHTML = "";
-            listNotes(1, 10, input);
+            listNotes(currentViewNotePage++, 10);
         }
 
     }
@@ -1247,22 +1275,24 @@
     function loadMoreNotes() {
         if (isLoading) return; // 防止重复加载
         isLoading = true;
-        currentViewNotePage++; // 页数递增
-        listNotes(currentViewNotePage, pageSize, document.getElementById('searchInputText').value);
+         // 页数递增
+        listNotes(currentViewNotePage++, pageSize);
     }
 
-    function listNotes(current, pageSize, searchInput,groupId) {
+    let groupUrl="";
+    function listNotes(current, pageSize,groupId) {
         if (!hasMoreNotes) {
             return;
         }
 
         document.getElementById('loading-overlay').style.display = 'flex';
 
+        let searchInput = document.getElementById("searchInputText").value;
         let searchUrl = searchInput ? `&content=${searchInput}` : "";
         const url = window.location.href;
-        let groupIdUrl = groupId ? `&noteGroupId=${groupId}` : "";
+        groupUrl = groupId ? `&noteGroupId=${groupId}` : groupUrl;
         // 发送 AJAX 请求
-        fetch(`/base/anakki/note/listNote?current=${current}&size=${pageSize}${searchUrl}${groupIdUrl}`, {
+        fetch(`/base/anakki/note/listNote?current=${current}&size=${pageSize}${searchUrl}${groupUrl}`, {
             method: 'GET',
         })
             .then(response => {
@@ -1326,7 +1356,7 @@
                 document.getElementById("noteList").insertAdjacentHTML('beforeend', html);
 
                 // 拼接分页参数到地址栏
-                const newUrl = `${url.split("?")[0]}?current=${current}&size=${pageSize}${searchUrl}${groupIdUrl}`;
+                const newUrl = `${url.split("?")[0]}?current=${current}&size=${pageSize}${searchUrl}${groupUrl}`;
                 window.history.replaceState(null, null, newUrl);
 
                 isLoading = false;
@@ -1535,7 +1565,8 @@
             document.getElementById('publish-area').style.display= 'none';
             document.getElementById("noteList").innerHTML = "";
             hasMoreNotes=true;
-            listNotes(1, 10,document.getElementById("searchInputText").value);
+            currentViewNotePage=1
+            listNotes(currentViewNotePage++, 10,document.getElementById("searchInputText").value);
         }
     }
     function showDraftNotesButton() {

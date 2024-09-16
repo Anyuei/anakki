@@ -55,4 +55,7 @@ public class AnFriendsCommentResponse extends BaseEntity implements Serializable
 
     @ApiModelProperty("状态（IN_REVIEW,NORMAL，CLOSED）")
     private String status;
+
+    @ApiModelProperty("昵称颜色")
+    private String nicknameColor;
 }

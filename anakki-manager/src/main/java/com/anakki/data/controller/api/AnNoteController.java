@@ -36,13 +36,13 @@ public class AnNoteController {
     }
     @ApiOperation(value = "添加协作者到笔记")
     @PostMapping("/addAuthorToNotes")
-    public ResponseDTO<Boolean> addAuthorToNotes(@RequestBody AddNoteOtherAuthorRequest createNoteRequest){
+    public ResponseDTO<Boolean> addAuthorToNotes(@Valid @RequestBody AddNoteOtherAuthorRequest createNoteRequest){
         anNoteService.addAuthorToNotes(createNoteRequest);
         return ResponseDTO.succData(true);
     }
     @ApiOperation(value = "移除协作者到笔记")
     @PostMapping("/removeAuthorToNotes")
-    public ResponseDTO<Boolean> removeAuthorToNotes(@RequestBody RemoveNoteOtherAuthorRequest request){
+    public ResponseDTO<Boolean> removeAuthorToNotes(@Valid @RequestBody RemoveNoteOtherAuthorRequest request){
         anNoteService.removeAuthorToNotes(request);
         return ResponseDTO.succData(true);
     }

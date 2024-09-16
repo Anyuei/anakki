@@ -50,4 +50,6 @@ public interface AnNoteService extends IService<AnNote> {
     List<AnUserDetailForNoteResponse> getUserDetailForNote(Set<Long> authorIdList);
 
     void likeNote(Long id, HttpServletRequest request);
+
+    BasePageResult<AnNote> listNotesForManage(ListNoteForManageRequest request);
 }

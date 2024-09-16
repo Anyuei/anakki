@@ -73,6 +73,7 @@ public class AnNoteDraftServiceImpl extends ServiceImpl<AnNoteDraftMapper, AnNot
         AnNoteDraft anNoteDraft = new AnNoteDraft();
         anNoteDraft.setContent(saveNoteDraftRequest.getContent());
         anNoteDraft.setNoteId(noteId);
+        anNoteDraft.setCreateBy(user.getId());
          save(anNoteDraft);
         return noteId;
     }

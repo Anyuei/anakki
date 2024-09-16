@@ -318,6 +318,10 @@
                     index+=200;
                     const item = itemList[i];
                     let time = item.createTime;
+                    let nicknameColor = item.nicknameColor;
+                    if (!nicknameColor){
+                        nicknameColor= "aqua";
+                    }
                     const formattedDateTime = time.replace("T", " ");
                     const targetDate = new Date(time);
                     const currentDate = new Date();
@@ -337,7 +341,7 @@
                                 <img src="${item.avatar ? item.avatar : '../assets/images/default-avatar.jpg'}" class="rounded-circle avatar-size" alt="avatar">
                                 <div class="ms-3 w-100" style="margin: 0.5rem;">
                                     <div class="d-flex justify-content-between">
-                                        <h5 class="card-title mb-1">${item.nickname}</h5>
+                                        <h5 class="card-title mb-1" style="color: ${nicknameColor}">${item.nickname}</h5>
                                         <p class="card-time text-muted mb-0">${daysBefore}-${formattedDateTime}</p>
                                     </div>
                                     <p class="card-text">${truncatedComment}</p>
