@@ -8,7 +8,7 @@
     <meta name="author" content="Anakki">
     <title>Anakki-World</title>
     <!-- Fonts -->
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <!-- Theme CSS -->
     <link type="text/css" href="../assets/css/theme.css" rel="stylesheet">
     <!-- Demo CSS - No need to use these in your project -->
@@ -19,13 +19,29 @@
             content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"
             name="viewport"
     />
-
+    <link rel="stylesheet" href="../assets/js/view/viewer.min.css">
 </head>
 <style>
     .card {
-        border-radius: 0.5rem;
+        border-radius: 0.6rem;
     }
-
+    .card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #fff0;
+        background-clip: border-box;
+        border: 0 solid rgba(0, 0, 0, 0.05);
+        border-radius: 0.8rem;
+        box-shadow: 0 0 24px #00000054;
+    }
+    .card-img-top {
+        width: 100%;
+        border-top-left-radius: calc(0.8rem - .0625rem);
+        border-top-right-radius: calc(0.8rem - .0625rem);
+    }
     .icon {
         width: 1.5rem;
         height: 1rem;
@@ -50,7 +66,7 @@
 
     body {
         color: #353535;
-        background-color: #003e0fad;
+        background-color: #437550;
     }
 
     .btn {
@@ -80,6 +96,7 @@
     .btn:focus {
         box-shadow: 0 0 10px #333;
     }
+
     .text-center {
         text-align: justify;
         position: -webkit-sticky;
@@ -89,108 +106,208 @@
         border-left: 2px solid #ddd;
         width: auto;
         white-space: nowrap;
-        background: #527c5c;
     }
-    .resource-row{
+
+    .resource-row {
         transition: all 0.3s ease; /* 添加平滑过渡效果 */
     }
 
-    .resource-row:hover{
+    .resource-row:hover {
         background-color: #0a362263;
-        transform: translateY(-5px);
+        transform: translateY(-2px);
+    }
+
+    .header-tab {
+    }
+
+    .header-tab-button {
+        color: whitesmoke;
+        height: 3rem;
+        align-items: center;
+        justify-content: center;
+        display: flex;
+        cursor: pointer;
+        border-radius: 8px;
+        background-color: #24422bc9;
+    }
+
+    .header-tab-button:hover {
+        transform: translateY(-2px);
+        background-color: rgba(36, 66, 43, 0.63);
+    }
+
+    #searchPublicInputText {
+        height: 2.5rem;
+        border-radius: 0.5rem 0 0 0.5rem;
+    }
+
+    .image-float-info{
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        position: absolute;
+    }
+
+    .img-avatar-icon {
+        width: 2.5rem;
+        height: 2rem;
+        justify-content: center;
+        display: flex;
+    }
+
+    .avatar-card-body {
+        flex: 1 1 auto;
+        padding: 0.5rem;
+    }
+    .load-more-avatar{
+        justify-content: center;
+        display: flex;
+        align-content: center;
+        width: 100%;
+        font-size: 2rem;
+    }
+    .avatar-card:hover{
+        transition: all 0.3s ease; /* 添加平滑过渡效果 */
+    }
+
+
+    .avatar-card:hover{
+        transform: translateY(-4px);
+        box-shadow: 0 0 24px rgba(0, 0, 0, 0.32);
     }
 </style>
 <body>
 <!--通用顶部导航-->
 <div id="header"></div>
 <main class="main">
-    <div class="container" style="height: 48rem;">
-        <div class="card" style="margin-top: 4rem">
-            <div class="card-header d-flex justify-content-between align-items-center" style="padding: 0.3rem 0.8rem;">
-                <div class="d-flex justify-content-between align-items-center" id="searchArea"></div>
-                <span style="display: flex;">
-                     <button type="button" class="btn" onclick="listAllResource(1,10)" style="display: flex;">
-                         <span class="d-none d-sm-block">
-                          公共资源
-                         </span>
-                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="22" fill="currentColor"
-                          class="bi bi-people-fill" viewBox="0 0 16 16">
-                          <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-                          <path fill-rule="evenodd"
-                                d="M5.216 14A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216z"/>
-                          <path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
-                     </svg>
+    <div class="container" style="margin-top: 4rem;">
+        <div class="header-tab">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="home-tab" data-toggle="tab" data-target="#home" type="button"
+                            role="tab" aria-controls="home" aria-selected="true">
+                        <div class="active" id="avatar-tab-button-text">头像资源(0)</div>
                     </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="profile-tab" data-toggle="tab" data-target="#profile" type="button"
+                            role="tab" aria-controls="profile" aria-selected="false">
+                        <div class="">云文件</div>
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
 
-                    <button type="button" class="btn" onclick="list(1,10)" style="display: flex;">
-                          <span class="d-none d-sm-block">
-                          我的资源
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <div class="container" style="height: 48rem;">
+                <div class="row">
+                    <!-- 动态生成的头像卡片会插入到这里 -->
+                </div>
+                <div class="row">
+                    <div class="load-more-avatar" >
+                        <div style="margin-bottom: 2rem" onclick="listAvatar()">
+                            <i class="bi bi-plus-lg" style="cursor: pointer"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+            <div class="container" style="height: 48rem;">
+                <div class="">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex justify-content-between align-items-center" id="searchArea">
+
+                        </div>
+                        <span style="display: flex;">
+                             <button type="button" class="btn" onclick="listAllResource(1,10)" style="display: flex;">
+                                 <span class="d-none d-sm-block">
+                                  公共资源
+                                 </span>
+                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="22" fill="currentColor"
+                                      class="bi bi-people-fill" viewBox="0 0 16 16">
+                                      <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                                      <path fill-rule="evenodd"
+                                            d="M5.216 14A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216z"/>
+                                      <path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
+                                 </svg>
+                            </button>
+
+                            <button type="button" class="btn" onclick="list(1,10)" style="display: flex;">
+                                  <span class="d-none d-sm-block">
+                                  我的资源
+                                 </span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="22" fill="currentColor"
+                                     class="bi bi-person-up" viewBox="0 0 16 16">
+                                  <path fill-rule="evenodd"
+                                        d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.354-5.854a.5.5 0 0 0-.708 0l-1.5 1.5a.5.5 0 0 0 .708.708l.646-.647V14.5a.5.5 0 0 0 1 0v-2.793l.646.647a.5.5 0 0 0 .708-.708l-1.5-1.5ZM11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/>
+                                  <path d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1h5.256Z"/>
+                                </svg>
+                            </button>
+                             <button type="button" class="btn" data-toggle="modal"
+                                     data-target="#uploadModal">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="22"
+                                     fill="currentColor" class="bi bi-upload" viewBox="0 0 16 16" style="width: 3rem;">
+                                  <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                                  <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
+                                </svg>
+                            </button>
                          </span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="22" fill="currentColor"
-                             class="bi bi-person-up" viewBox="0 0 16 16">
-                          <path fill-rule="evenodd"
-                                d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.354-5.854a.5.5 0 0 0-.708 0l-1.5 1.5a.5.5 0 0 0 .708.708l.646-.647V14.5a.5.5 0 0 0 1 0v-2.793l.646.647a.5.5 0 0 0 .708-.708l-1.5-1.5ZM11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/>
-                          <path d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1h5.256Z"/>
-                        </svg>
-                    </button>
-                     <button type="button" class="btn" data-toggle="modal"
-                             data-target="#uploadModal">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="22"
-                             fill="currentColor" class="bi bi-upload" viewBox="0 0 16 16" style="width: 3rem;">
-                          <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-                          <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
-                        </svg>
-                    </button>
-                </span>
-            </div>
-            <div class="card-table table-responsive">
-                <table class="table table-vcenter" style="margin-left: 0.4rem;">
-                    <thead>
-                    <tr>
-                        <!--                        <th>标题</th>-->
-                        <th style="white-space:nowrap">文件名称</th>
-                        <th style="white-space:nowrap">描述</th>
-                        <th style="white-space:nowrap">下载量</th>
-                        <th style="white-space:nowrap">文件大小</th>
-                        <th style="white-space:nowrap">上传用户</th>
-                        <th style="min-width: 151px;">上传时间</th>
-                        <th style="min-width: 133px;" class="text-center"></th>
-                    </tr>
-                    </thead>
-                    <tbody id="list">
-                    </tbody>
-                </table>
-            </div>
-            <hr style="margin-top: 0.5rem;margin-bottom: 0.5rem;">
-            <div class="container">
-                <div class="justify-content-end" style="display: flex;">
-                    <ul class="pagination m-0 ms-auto" id="page-module">
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
-                                     viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                     stroke-linecap="round" stroke-linejoin="round">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                    <polyline points="15 6 9 12 15 18"></polyline>
-                                </svg>
-                            </a>
-                        </li>
-                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
-                                     viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                     stroke-linecap="round" stroke-linejoin="round">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                    <polyline points="9 6 15 12 9 18"></polyline>
-                                </svg>
-                            </a>
-                        </li>
-                    </ul>
+                    </div>
+                    <div class="card-table table-responsive">
+                        <table class="table table-vcenter">
+                            <thead>
+                            <tr>
+                                <!--                        <th>标题</th>-->
+                                <th style="white-space:nowrap">文件名称</th>
+                                <th style="white-space:nowrap">描述</th>
+                                <th style="white-space:nowrap">下载量</th>
+                                <th style="white-space:nowrap">文件大小</th>
+                                <th style="white-space:nowrap">上传用户</th>
+                                <th style="min-width: 151px;">上传时间</th>
+                                <th style="min-width: 133px;" class="text-center"></th>
+                            </tr>
+                            </thead>
+                            <tbody id="list">
+                            </tbody>
+                        </table>
+                    </div>
+                    <hr style="margin-top: 0.5rem;margin-bottom: 0.5rem;">
+                    <div class="container">
+                        <div class="justify-content-end" style="display: flex;">
+                            <ul class="pagination m-0 ms-auto" id="page-module">
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+                                             viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                             stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                            <polyline points="15 6 9 12 15 18"></polyline>
+                                        </svg>
+                                    </a>
+                                </li>
+                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+                                             viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                             stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                            <polyline points="9 6 15 12 9 18"></polyline>
+                                        </svg>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+
     <!-- Modal -->
     <div class="modal" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -220,7 +337,8 @@
                             </div>
                         </div>
                         <div class="row justify-content-between">
-                            <label class="col-sm-6 col-form-label" style="padding-left: 0px;">是否临时文件(保存7天)</label>
+                            <label class="col-sm-6 col-form-label"
+                                   style="padding-left: 0px;">是否临时文件(保存7天)</label>
                             <div class="col-sm-2 d-flex align-items-center" style="padding-right: 0px;">
                                 <label class="toggle-switch">
                                     <input type="checkbox" id="isTemporary">
@@ -251,7 +369,8 @@
                                          class="bi bi-check-lg" viewBox="0 0 16 16">
                                         <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
                                     </svg>
-                                    <div id="progress" class="progress" style="margin-bottom: 0;display: none" role="progressbar" aria-label="Example with label"
+                                    <div id="progress" class="progress" style="margin-bottom: 0;display: none"
+                                         role="progressbar" aria-label="Example with label"
                                          aria-valuenow="0"
                                          aria-valuemin="0" aria-valuemax="100">
                                         <div class="progress-bar" style="width: 0%" id="progressBar">0%</div>
@@ -259,7 +378,6 @@
                                 </button>
                             </div>
                         </div>
-
 
 
                     </div>
@@ -286,11 +404,13 @@
 
 <!-- Theme JS -->
 <script src="../assets/js/theme.js"></script>
+<script src="../assets/js/view/viewer.js"></script>
 <script>
     window.onload = function () {
         $('#header').load("../pages/header.html", loadPersonDetail);
         $('#footer').load("../pages/footer.html", insertCreateTime);
         listAllResource(1, 10)
+        listAvatar()
     }
 
     // 进度条更新
@@ -300,6 +420,7 @@
         progress.style.width = percent + "%";
         progress.innerHTML = percent + "%";
     }
+
 
     function submitForm() {
 
@@ -350,7 +471,7 @@
         get.setRequestHeader('authorization', localStorage.getItem('user-token'));
         if (get.upload) {
             const progress = document.getElementById("progress");
-            progress.style.display="block";
+            progress.style.display = "block";
             //处理进度条的事件
             get.upload.addEventListener("progress", progressHandle,
                 false);
@@ -364,7 +485,7 @@
         var progressBar = document.getElementById("progressBar");
         progressBar.value = 0;
         const progress = document.getElementById("progress");
-        progress.style.display="none";
+        progress.style.display = "none";
     }
 
     function searchPublicButton() {
@@ -419,13 +540,13 @@
                                 "<div class=\"input-group mb-1  mt-1\">\n" +
                                 "<input id=\"searchPublicInputText\" type=\"text\" class=\"form-control\" placeholder=\"全站搜索\"\n" +
                                 "                           aria-label=\"全站资源搜索\" aria-describedby=\"button-addon2\">\n" +
-                                "                    <button class=\"btn search-button\" type=\"button\" id=\"button-addon2\" onclick=\"searchPublicButton()\">\n" +
+                                "                    <button class=\"btn search-button\" type=\"button\" id=\"button-addon2\" onclick=\"searchPublicButton()\" style='height: 2.5rem;'>\n" +
                                 "                        <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-search\"\n" +
                                 "                             viewBox=\"0 0 16 16\">\n" +
                                 "                            <path d=\"M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z\"/>\n" +
                                 "                        </svg>\n" +
-                                "                    </button>"+
-                                 "</div>\n"
+                                "                    </button>" +
+                                "</div>\n"
                         }
                     } else {
                         personSearchHtml =
@@ -437,7 +558,7 @@
                             "                             viewBox=\"0 0 16 16\">\n" +
                             "                            <path d=\"M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z\"/>\n" +
                             "                        </svg>\n" +
-                            "                    </button>"+
+                            "                    </button>" +
                             "</div>\n"
                     }
                     document.getElementById("searchArea").innerHTML = personSearchHtml;
@@ -518,6 +639,164 @@
         get.send();
     }
 
+    let avatarResourceCurrent=1;
+    let avatarResourcePageSize=18;
+
+    function listAvatar(searchInput) {
+        let searchInputUrl = "";
+        if (searchInput !== null) {
+            searchInputUrl = "&searchKey=" + searchInput;
+        }
+
+        const get = new XMLHttpRequest();
+        let base = localStorage.getItem('user-token') ? "/api" : "/base";
+
+        get.open("GET", base + "/anakki/record/avatar-resource?current=" + avatarResourceCurrent + "&size=" + avatarResourcePageSize + searchInputUrl, true);
+        get.setRequestHeader('authorization', localStorage.getItem('user-token'));
+
+        get.onreadystatechange = function () {
+            if (get.readyState === 4 && get.status === 200) {
+                const response = JSON.parse(get.responseText);
+                if (response.code === 200) {
+                    const itemList = response.data.data;
+
+                    document.getElementById("avatar-tab-button-text").innerText = "头像(" + response.data.totalNum + ")";
+
+                    // 找到 .row 容器
+                    const rowContainer = document.querySelector('.container .row');
+                    let interval = 100;
+
+                    // 遍历 itemList，将每个头像生成相应的 HTML
+                    itemList.forEach(item => {
+                        interval += 100;
+                        const cardHTML = `
+                        <div class="col-sm-6 col-md-3 col-lg-2 mb-4 div-trans-${interval}">
+                            <div class="card avatar-card" id="img-container-${item.id}">
+                                <img id="img${item.id}" onclick="showModal(this.alt)" src="${item.imgUrl}" class="card-img-top" alt="${item.id}">
+                                <div class="image-float-info">
+                                    <div class="img-avatar-icon">
+                                        <i class="bi bi-eye" style="font-size: 1rem;">${item.viewCount}</i>
+                                    </div>
+                                    <div class="img-avatar-icon">
+                                        <i class="bi bi-suit-heart" style="font-size: 1rem;">${item.likeCount}</i>
+                                    </div>
+                                </div>
+                                <div class="avatar-card-body" style="font-size: 0.7rem;">
+                                    <div class="card-text">尺寸: ${item.imageSize}</div>
+                                    <div class="card-text">大小: ${item.fileSize} KB</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                        // 将生成的卡片 HTML 插入到 .row 容器的末尾
+                        rowContainer.insertAdjacentHTML('beforeend', cardHTML);
+                    });
+
+                    // 判断是否为最后一页
+                    if (itemList.length < avatarResourcePageSize) {
+                        // 如果当前页的数据量少于每页的大小，说明是最后一页
+                        alert("催催站长更新更多៷>ᴗ<៷")
+                    } else {
+                        // 不是最后一页，增加当前页码以请求下一页
+                        avatarResourceCurrent += 1;
+                    }
+                } else {
+                    alert(response.data);
+                }
+            }
+        };
+
+        get.send();
+    }
+
+    let viewerInstance = null;
+    function showModal(imgId) {
+        // 创建加载动画元素
+        const loadingOverlay = document.createElement("div");
+        loadingOverlay.className = "loading-overlay";
+        loadingOverlay.innerHTML = `<div class="loading-spinner"></div>`;
+        document.body.appendChild(loadingOverlay);
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", "/base/anakki/record/flowById?id=" + imgId, true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    // 移除加载动画
+                    document.body.removeChild(loadingOverlay);
+
+                    const item = JSON.parse(xhr.responseText).data;
+                    const imgUrl = item.imgUrl; // 确保你的接口返回数据中包含图片的URL
+                    if (item.tag === "video") {
+                        const modal = document.createElement("div");
+                        modal.className = "modal-spacex";
+                        modal.innerHTML = `
+                                    <div class="modal-content-my">
+                                        <div class="modal-header-my" onclick="this.parentElement.parentElement.remove()">
+                                            <i class="bi bi-x-lg"></i>
+                                        </div>
+                                        <video controls>
+                                            <source src="${item.imgUrl}" type="video/mp4">
+                                            您的浏览器不支持播放该视频。
+                                        </video>
+                                        <div class="heart-icons">
+                                            <div class="heart-icon" onclick="like(${item.id})">
+                                                <div class="justify-content-lg-between" style="display: flex">
+                                                 <i class="bi bi-suit-heart"></i>
+                                                <div class="likeCount_${item.id}">${item.likeCount}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                        document.body.appendChild(modal);
+                    }else{
+                        // 获取图片元素
+                        const imgElement = document.getElementById("img"+imgId);
+
+                        // 设置图片 src 属性
+                        imgElement.src = imgUrl;
+
+                        // 如果已有 Viewer 实例，则销毁
+                        if (viewerInstance){
+                            viewerInstance.destroy();
+                        }
+                        // 获取现有图片容器元素
+                        const existingContainer = document.getElementById("img-container-"+imgId);
+                        if (existingContainer) {
+                            // 初始化 Viewer.js
+                            viewerInstance = new Viewer(existingContainer, {
+                                zoomable: true,
+                                rotatable: true,
+                                scalable: true,
+                                transition: false,
+                                toolbar: {
+                                    zoomIn: true,
+                                    zoomOut: true,
+                                    oneToOne: true,
+                                    reset: true,
+                                    rotateLeft: true,
+                                    rotateRight: true,
+                                    flipHorizontal: false,
+                                    flipVertical: false,
+                                    close: true
+                                }
+                            });
+                        }
+                        viewerInstance.view(0)
+                    }
+
+                } else {
+                    // 移除加载动画
+                    document.body.removeChild(loadingOverlay);
+
+                    // 处理错误
+                    alert('加载失败，请稍后再试。');
+                }
+            }
+        };
+        xhr.send();
+    }
 
     function initPage(currentPage, pageSize, totalPages, searchInputUrl) {
         const paginationContainer = document.getElementById("page-module");

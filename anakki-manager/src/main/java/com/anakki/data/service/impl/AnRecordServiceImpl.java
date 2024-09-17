@@ -7,6 +7,7 @@ import com.anakki.data.entity.AnRecord;
 import com.anakki.data.entity.AnUser;
 import com.anakki.data.entity.request.*;
 import com.anakki.data.entity.request.AvatarImgListRequest;
+import com.anakki.data.entity.response.AnAvatarResourceResponse;
 import com.anakki.data.entity.response.AvatarImgListResponse;
 import com.anakki.data.mapper.AnRecordMapper;
 import com.anakki.data.service.*;
@@ -25,6 +26,7 @@ import org.springframework.util.ObjectUtils;
 import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -88,6 +90,31 @@ public class AnRecordServiceImpl extends ServiceImpl<AnRecordMapper, AnRecord> i
     }
 
     @Override
+    public BasePageResult<AnAvatarResourceResponse> listAvatarResource(ListAvatarResourceRequest request, String ipAddr) {
+        IPage<AnRecord> anRecordIPage = new Page<>(
+                request.getCurrent(),
+                request.getSize());
+
+        String tag = request.getTag();
+        QueryWrapper<AnRecord> anRecordQueryWrapper = new QueryWrapper<>();
+
+        ArrayList<String> types = new ArrayList<>();
+        types.add("AI_MAN");
+        types.add("AI_CUTE_GIRL");
+        types.add("AI_CUTE_BOY");
+        anRecordQueryWrapper.in("type",types);
+        anRecordQueryWrapper.eq(!StringUtils.isBlank(tag),"tag",tag);
+        anRecordQueryWrapper.eq("status","COMMON");
+        anRecordQueryWrapper.orderByDesc("photo_time","id");
+        IPage<AnRecord> page = page(anRecordIPage, anRecordQueryWrapper);
+        List<AnRecord> records = page.getRecords();
+        //统计模块访问数
+        anStatisticService.increaseByName("RESOURCE_MODULE",ipAddr);
+        List<AnAvatarResourceResponse> anAvatarResourceResponses = com.anakki.data.utils.common.BeanUtils.copyBeanList(records, AnAvatarResourceResponse.class);
+        return new BasePageResult<>(anAvatarResourceResponses, page.getTotal());
+    }
+
+    @Override
     public boolean removeById(Serializable id) {
         AnRecord byId = getById(id);
         if (null==byId){
@@ -129,7 +156,7 @@ public class AnRecordServiceImpl extends ServiceImpl<AnRecordMapper, AnRecord> i
         anRecordQueryWrapper.le(null != createTimeEnd, "create_time", createTimeEnd);
         anRecordQueryWrapper.ge(null != photoTimeStart, "photo_time", photoTimeStart);
         anRecordQueryWrapper.le(null != photoTimeEnd, "photo_time", photoTimeEnd);
-        anRecordQueryWrapper.orderByDesc("create_time");
+        anRecordQueryWrapper.orderByDesc("create_time","id");
         IPage<AnRecord> page = page(anRecordIPage, anRecordQueryWrapper);
         return new BasePageResult<>(page.getRecords(), page.getTotal());
 

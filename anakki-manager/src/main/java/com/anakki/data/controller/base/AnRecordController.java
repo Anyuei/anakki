@@ -8,6 +8,8 @@ import com.anakki.data.entity.AnIpAddress;
 import com.anakki.data.entity.AnRecord;
 import com.anakki.data.entity.request.GetContentRequest;
 import com.anakki.data.entity.request.GetMediaRequest;
+import com.anakki.data.entity.request.ListAvatarResourceRequest;
+import com.anakki.data.entity.response.AnAvatarResourceResponse;
 import com.anakki.data.service.AnIpAddressService;
 import com.anakki.data.service.AnRecordService;
 import com.anakki.data.utils.IPUtils;
@@ -54,6 +56,14 @@ public class AnRecordController {
 
         return ResponseDTO.succData(anRecordService.flowMedia(getMediaRequest,ipAddr));
     }
+
+    @ApiOperation(value = "获取头像资源-资源模块")
+    @GetMapping("/avatar-resource")
+    public ResponseDTO<BasePageResult<AnAvatarResourceResponse>> avatarResource(ListAvatarResourceRequest listAvatarResourceRequest, HttpServletRequest request) {
+        String ipAddr = IPUtils.getIpAddr(request);
+        return ResponseDTO.succData(anRecordService.listAvatarResource(listAvatarResourceRequest, ipAddr));
+    }
+
     @ApiOperation(value = "根据id获取图文")
     @GetMapping("/flowById")
     public ResponseDTO<AnRecord> flowById(Long id) {
