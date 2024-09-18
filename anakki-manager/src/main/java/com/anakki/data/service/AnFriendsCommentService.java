@@ -5,6 +5,7 @@ import com.anakki.data.entity.AnFriendsComment;
 import com.anakki.data.entity.request.*;
 import com.anakki.data.entity.response.AnFriendsCommentResponse;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -28,4 +29,9 @@ public interface AnFriendsCommentService extends IService<AnFriendsComment> {
     void updateCommentState(UpdateCommentStateRequest updateCommentStateRequest);
 
     void operateBatch(List<Long> idList,String status);
+
+    @Transactional(rollbackFor = Exception.class)
+    void likeComment(Long commentId);
+
+    Boolean replyComment(ReplyCommentRequest request);
 }

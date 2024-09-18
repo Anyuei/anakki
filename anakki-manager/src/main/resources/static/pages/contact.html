@@ -210,6 +210,7 @@
             <div class="modal-content">
                 <div class="modal-header d-flex justify-content-between align-items-center">
                     <h5 class="modal-title" id="commentModalLabel">留言板(审核后展示)</h5>
+                    <h6 class="modal-title">用户等级3级后免审核</h6>
                     <div class="form-check form-switch" style="margin-right: 1.5rem;">
                         <input class="form-check-input" type="checkbox" id="anonymousSwitch"
                                onclick="toggleAnonymousFields()">
@@ -227,6 +228,34 @@
                             <button type="submit" class="btn" style="font-size: 2rem;background-color: #f0f8ff00;padding:0">
                                 <i class="bi bi-send-check"></i>
                             </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 模态框结构 -->
+    <div class="modal fade" id="commentReplyModal" tabindex="-1" role="dialog" aria-labelledby="commentReplyModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header d-flex justify-content-between align-items-center">
+                    <h5 class="modal-title" id="commentReplyModalLabel">回复: <span id="replyUsername"></span>(审核后展示)</h5>
+                    <h6 class="modal-title">用户等级3级后免审核</h6>
+                </div>
+                <div class="modal-body">
+                    <!-- 原始表单内容 -->
+                    <form>
+                        <div class="form-group">
+                                    <textarea id="replyText" class="form-control" rows="5" placeholder="留言内容" name="comment"
+                                              required></textarea>
+                        </div>
+                        <div class="commentSendBtn">
+                            <div onclick="replayComment()" class="btn" style="font-size: 2rem;background-color: #f0f8ff00;padding:0">
+                                <i class="bi bi-send-check"></i>
+                            </div>
                         </div>
                     </form>
 
@@ -273,7 +302,7 @@
     // 初始页面与页面大小
     let currentPage = 1;
     const pageSize = 5; // 每页显示5条评论
-
+    let currentReplyCommentId;
     window.onload = function () {
         $('#header').load("../pages/header.html", loadPersonDetail);
         $('#footer').load("../pages/footer.html", insertCreateTime);
@@ -347,8 +376,10 @@
                                     <p class="card-text">${truncatedComment}</p>
                                     ${item.comment.length > maxCommentLength ? `<a href="javascript:void(0);" onclick="showCommentDetails('${encodeURIComponent(item.comment)}')">查看更多</a>` : ''}
                                     <div class="d-flex justify-content-between align-items-center mt-2">
-                                        <a href="#"><i class="bi bi-suit-heart"></i></a>
-                                        <a href="#"><i class="bi bi-chat-right-dots"></i></a>
+                                        <a href="#" onclick="likeComment(${item.id})"><i class="bi bi-suit-heart">${item.likeCount}</i></a>
+                                        <a type="button" data-toggle="modal" data-target="#commentReplyModal" onclick="openReplyModel(${item.id},'${item.nickname}')">
+                                            <i class="bi bi-chat-right-dots" style="color: cyan;"></i>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -442,6 +473,78 @@
         });
     });
 
+    function openReplyModel(id,nickname){
+        currentReplyCommentId=id;
+        document.getElementById('replyUsername').innerText=nickname;
+    }
+    function replayComment(){
+        let token = localStorage.getItem('user-token');
+        if (!token){
+            alert("请登录");
+            return
+        }
+        // 获取 textarea 的内容
+        const replyText = document.getElementById('replyText').value;
+        if (!replyText){
+            return;
+        }
+        $.ajax({
+            url:  '/api/anakki/friends-comment/reply-comment',
+            type: 'POST',
+            contentType: 'application/json', // 设置请求类型为 JSON
+            data: JSON.stringify({ // 将数据转换为 JSON 字符串
+                commentId: currentReplyCommentId,
+                comment: replyText,
+            }),
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('authorization',token); // Include the token in the Authorization header
+            },
+            success: function (response) {
+                if (response.code === 200) {
+                    alert("回复成功~！",()=>{location.reload()})
+                } else {
+                    alert(response.data)
+                }
+            },
+            error: function (xhr, status, error) {
+                // Handle error response
+                console.log(error);
+                alert(error.data)
+            }
+        });
+    }
+
+    function likeComment(id){
+        let token = localStorage.getItem('user-token');
+
+        let baseUrl="/base";
+        if (token){
+            baseUrl="/api"
+        }
+
+        $.ajax({
+            url:  baseUrl+'/anakki/friends-comment/like',
+            type: 'POST',
+            contentType: 'application/json', // 设置请求类型为 JSON
+            data: JSON.stringify({ // 将数据转换为 JSON 字符串
+                commentId: id,
+            }),
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('authorization', ); // Include the token in the Authorization header
+            },
+            success: function (response) {
+                if (response.code === 200) {
+                } else {
+                    alert("系统错误，请联系管理员！")
+                }
+            },
+            error: function (xhr, status, error) {
+                // Handle error response
+                console.log(error);
+                alert("系统错误，请联系管理员！")
+            }
+        });
+    }
     function toggleAnonymousFields() {
         const nicknameInput = document.getElementById('nicknameInput');
         const emailInput = document.getElementById('emailInput');

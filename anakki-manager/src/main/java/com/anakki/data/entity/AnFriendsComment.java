@@ -26,6 +26,9 @@ import lombok.Setter;
 public class AnFriendsComment extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    @ApiModelProperty("回复评论id")
+    @TableField("parent_id")
+    private Long parentId;
 
     @ApiModelProperty("评论类型")
     @TableField("type")

@@ -8,6 +8,7 @@ import com.anakki.data.entity.AnUser;
 import com.anakki.data.entity.request.*;
 import com.anakki.data.entity.response.AnFriendsCommentResponse;
 import com.anakki.data.mapper.AnFriendsCommentMapper;
+import com.anakki.data.service.AnFriendsCommentLikeLogService;
 import com.anakki.data.service.AnFriendsCommentService;
 import com.anakki.data.service.AnUserService;
 import com.anakki.data.utils.common.EmailUtil;
@@ -37,6 +38,8 @@ public class AnFriendsCommentServiceImpl extends ServiceImpl<AnFriendsCommentMap
     @Autowired
     private AnUserService anUserService;
 
+    @Autowired
+    private AnFriendsCommentLikeLogService anFriendsCommentLikeLogService;
 
     @Autowired
     private EmailUtil emailUtil;
@@ -110,7 +113,7 @@ public class AnFriendsCommentServiceImpl extends ServiceImpl<AnFriendsCommentMap
             anFriendsComment.setNickname(currentNickname);
             anFriendsComment.setUserId(user.getId());
             anFriendsComment.setUserName(user.getUserName());
-            if (user.getLevel()>=3){
+            if (user.getLevel()>=3||user.getId().equals(6L)){
                 anUserService.addExpForUser(user.getId(), ExpAddEnum.COMMENT.getExp());
                 anFriendsComment.setStatus("NORMAL");
             }else{
@@ -151,5 +154,43 @@ public class AnFriendsCommentServiceImpl extends ServiceImpl<AnFriendsCommentMap
         });
         updateBatchById(anFriendsComments);
     }
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public synchronized void likeComment(Long commentId) {
 
+        AnFriendsComment comment = getById(commentId);
+        if (null==comment){
+            throw new RuntimeException("评论不存在");
+        }
+        anFriendsCommentLikeLogService.insertCommentLikeLog(commentId);
+        comment.setLikeCount(comment.getLikeCount()+1);
+        updateById(comment);
+    }
+
+    @Override
+    public Boolean replyComment(ReplyCommentRequest request) {
+        String currentNickname = BaseContext.getCurrentNickname();
+        AnUser user = anUserService.getByNickname(currentNickname);
+
+        Long commentId = request.getCommentId();
+        AnFriendsComment parentComment = getById(commentId);
+        if (null==parentComment){
+            throw new RuntimeException("评论不存在");
+        }
+        String comment = request.getComment();
+        AnFriendsComment anFriendsComment = new AnFriendsComment();
+        if (user.getLevel()>=3||user.getId().equals(6L)){
+            anUserService.addExpForUser(user.getId(), ExpAddEnum.COMMENT.getExp());
+            anFriendsComment.setStatus("NORMAL");
+        }else{
+            anFriendsComment.setStatus("IN_REVIEW");
+        }
+        anFriendsComment.setAvatar(user.getAvatar());
+        anFriendsComment.setUserName(user.getUserName());
+        anFriendsComment.setUserId(user.getId());
+        anFriendsComment.setComment(comment);
+        anFriendsComment.setParentId(commentId);
+        anFriendsComment.setNickname(user.getNickname());
+        return save(anFriendsComment);
+    }
 }
