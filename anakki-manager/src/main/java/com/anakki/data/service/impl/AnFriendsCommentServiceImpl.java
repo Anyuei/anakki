@@ -185,6 +185,7 @@ public class AnFriendsCommentServiceImpl extends ServiceImpl<AnFriendsCommentMap
         }else{
             anFriendsComment.setStatus("IN_REVIEW");
         }
+        anFriendsComment.setParentNickname(parentComment.getNickname());
         anFriendsComment.setAvatar(user.getAvatar());
         anFriendsComment.setUserName(user.getUserName());
         anFriendsComment.setUserId(user.getId());

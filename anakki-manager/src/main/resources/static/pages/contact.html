@@ -159,6 +159,9 @@
                 opacity: 1;
             }
         }
+        .reply-header{
+            color: #a2a2a2;
+        }
     </style>
 </head>
 <body>
@@ -348,9 +351,17 @@
                     const item = itemList[i];
                     let time = item.createTime;
                     let nicknameColor = item.nicknameColor;
+                    let parentNickname = item.parentNickname;
+                    let replyHeader="";
+                    if (parentNickname){
+                        replyHeader="回复"+parentNickname+": "
+                    }
+
                     if (!nicknameColor){
                         nicknameColor= "aqua";
                     }
+
+
                     const formattedDateTime = time.replace("T", " ");
                     const targetDate = new Date(time);
                     const currentDate = new Date();
@@ -373,6 +384,7 @@
                                         <h5 class="card-title mb-1" style="color: ${nicknameColor}">${item.nickname}</h5>
                                         <p class="card-time text-muted mb-0">${daysBefore}-${formattedDateTime}</p>
                                     </div>
+                                    <div class="reply-header">${replyHeader}</div>
                                     <p class="card-text">${truncatedComment}</p>
                                     ${item.comment.length > maxCommentLength ? `<a href="javascript:void(0);" onclick="showCommentDetails('${encodeURIComponent(item.comment)}')">查看更多</a>` : ''}
                                     <div class="d-flex justify-content-between align-items-center mt-2">
@@ -530,18 +542,19 @@
                 commentId: id,
             }),
             beforeSend: function (xhr) {
-                xhr.setRequestHeader('authorization', ); // Include the token in the Authorization header
+                xhr.setRequestHeader('authorization', token); // Include the token in the Authorization header
             },
             success: function (response) {
                 if (response.code === 200) {
+
                 } else {
-                    alert("系统错误，请联系管理员！")
+                    alert(response.data)
                 }
             },
             error: function (xhr, status, error) {
                 // Handle error response
                 console.log(error);
-                alert("系统错误，请联系管理员！")
+                alert(error.data)
             }
         });
     }

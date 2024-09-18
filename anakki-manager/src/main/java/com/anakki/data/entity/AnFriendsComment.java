@@ -30,6 +30,10 @@ public class AnFriendsComment extends BaseEntity implements Serializable {
     @TableField("parent_id")
     private Long parentId;
 
+    @ApiModelProperty("回复人昵称")
+    @TableField("parent_nickname")
+    private String parentNickname;
+
     @ApiModelProperty("评论类型")
     @TableField("type")
     private String type;

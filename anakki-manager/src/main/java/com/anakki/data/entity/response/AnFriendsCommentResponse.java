@@ -25,6 +25,8 @@ import java.io.Serializable;
 public class AnFriendsCommentResponse extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    @ApiModelProperty("回复人昵称")
+    private String parentNickname;
 
     @ApiModelProperty("评论类型")
     private String type;
