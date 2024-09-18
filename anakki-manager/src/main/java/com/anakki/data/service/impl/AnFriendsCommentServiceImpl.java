@@ -2,6 +2,7 @@ package com.anakki.data.service.impl;
 
 import com.anakki.data.bean.common.BaseContext;
 import com.anakki.data.bean.common.BasePageResult;
+import com.anakki.data.bean.common.enums.ExpAddEnum;
 import com.anakki.data.entity.AnFriendsComment;
 import com.anakki.data.entity.AnUser;
 import com.anakki.data.entity.request.*;
@@ -17,6 +18,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,6 +95,7 @@ public class AnFriendsCommentServiceImpl extends ServiceImpl<AnFriendsCommentMap
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean createComment(CreateCommentsRequest createCommentsRequest) {
         AnFriendsComment anFriendsComment = new AnFriendsComment();
         if (createCommentsRequest.getIsAnonymous()) {
@@ -101,13 +104,19 @@ public class AnFriendsCommentServiceImpl extends ServiceImpl<AnFriendsCommentMap
             anFriendsComment.setStatus("IN_REVIEW");
         } else {
             String currentNickname = BaseContext.getCurrentNickname();
-            AnUser byNickname = anUserService.getByNickname(currentNickname);
+            AnUser user = anUserService.getByNickname(currentNickname);
             BeanUtils.copyProperties(createCommentsRequest, anFriendsComment);
-            anFriendsComment.setAvatar(byNickname.getAvatar());
+            anFriendsComment.setAvatar(user.getAvatar());
             anFriendsComment.setNickname(currentNickname);
-            anFriendsComment.setUserId(byNickname.getId());
-            anFriendsComment.setUserName(byNickname.getUserName());
-            anFriendsComment.setStatus("IN_REVIEW");
+            anFriendsComment.setUserId(user.getId());
+            anFriendsComment.setUserName(user.getUserName());
+            if (user.getLevel()>=3){
+                anUserService.addExpForUser(user.getId(), ExpAddEnum.COMMENT.getExp());
+                anFriendsComment.setStatus("NORMAL");
+            }else{
+                anFriendsComment.setStatus("IN_REVIEW");
+            }
+
         }
         emailUtil.sendMessage("ayp199645aabb@qq.com","您收到一条留言!",
                 "内容:"+createCommentsRequest.getComment()
@@ -118,6 +127,7 @@ public class AnFriendsCommentServiceImpl extends ServiceImpl<AnFriendsCommentMap
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void updateCommentState(UpdateCommentStateRequest updateCommentStateRequest) {
         String state = updateCommentStateRequest.getStatus();
 
@@ -130,11 +140,14 @@ public class AnFriendsCommentServiceImpl extends ServiceImpl<AnFriendsCommentMap
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void operateBatch(List<Long> ids,String status) {
         List<AnFriendsComment> anFriendsComments = listByIds(ids);
 
         anFriendsComments.forEach(anFriendsComment -> {
             anFriendsComment.setStatus(status);
+            Long userId = anFriendsComment.getUserId();
+            anUserService.addExpForUser(userId, ExpAddEnum.COMMENT.getExp());
         });
         updateBatchById(anFriendsComments);
     }

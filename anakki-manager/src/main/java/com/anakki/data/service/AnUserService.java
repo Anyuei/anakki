@@ -71,4 +71,6 @@ public interface AnUserService extends IService<AnUser> {
     Boolean resetEmailSend(UserResetPasswordEmailVerifyRequest request);
 
     Boolean resetPassword(UserResetPasswordRequest request) throws UnsupportedEncodingException, NoSuchAlgorithmException;
+
+    Boolean addExpForUser(Long userId, Integer exp);
 }

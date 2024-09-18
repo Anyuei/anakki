@@ -3,6 +3,7 @@ package com.anakki.data.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.anakki.data.bean.common.BaseContext;
 import com.anakki.data.bean.common.BasePageResult;
+import com.anakki.data.bean.common.enums.ExpAddEnum;
 import com.anakki.data.bean.constant.CosBucketNameConst;
 import com.anakki.data.bean.constant.CosPathConst;
 import com.anakki.data.bean.constant.RedisKey;
@@ -89,6 +90,7 @@ public class AnNoteServiceImpl extends ServiceImpl<AnNoteMapper, AnNote> impleme
         anNote.setStatus("COMMON");
         save(anNote);
         anNoteGroupRelService.saveNoteToGroup(createNoteRequest.getNoteGroupIds(),anNote.getId());
+        anUserService.addExpForUser(user.getId(), ExpAddEnum.PUBLISH_NOTE.getExp());
         return anNote.getId();
     }
 
@@ -271,6 +273,7 @@ public class AnNoteServiceImpl extends ServiceImpl<AnNoteMapper, AnNote> impleme
         for (AnNoteGroupRel anNoteGroupRel : anNoteGroupRels) {
             anNoteGroupService.existAndDecrNoteCount(anNoteGroupRel.getNoteGroupId());
         }
+        anUserService.addExpForUser(user.getId(), -ExpAddEnum.PUBLISH_NOTE.getExp());
     }
 
     @Override
@@ -298,6 +301,7 @@ public class AnNoteServiceImpl extends ServiceImpl<AnNoteMapper, AnNote> impleme
     }
 
     @Override
+    @Transactional(rollbackFor = RuntimeException.class)
     public AnNoteDetailResponse getNoteDetail(Long id) {
         AnNote anNote = getById(id);
         if (null == anNote) {
@@ -321,11 +325,14 @@ public class AnNoteServiceImpl extends ServiceImpl<AnNoteMapper, AnNote> impleme
         return com.anakki.data.utils.common.BeanUtils.copyBeanList(users, AnUserDetailForNoteResponse.class);
     }
     @Override
+    @Transactional(rollbackFor = RuntimeException.class)
     public void likeNote(Long id, HttpServletRequest request) {
         String ipAddr = IPUtils.getIpAddr(request);
         boolean success = RedisUtil.StringOps.setIfAbsent(RedisKey.USER_NOTE_LIKE_REPEAT_CACHE_KEY + ipAddr + id, "1", 1, TimeUnit.DAYS);
         if (success) {
+            AnNote anNote = anNoteMapper.selectById(id);
             anNoteMapper.likeNote(id);
+            anUserService.addExpForUser(anNote.getCreateBy(), ExpAddEnum.PUBLISH_NOTE_BE_LIKE.getExp());
         } else {
             throw new RuntimeException("24小时内只能点赞一次(*￣︶￣)");
         }

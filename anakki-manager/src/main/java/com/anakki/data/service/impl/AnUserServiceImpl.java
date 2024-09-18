@@ -483,6 +483,22 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
         return true;
     }
 
+
+    @Override
+    public synchronized Boolean addExpForUser(Long userId, Integer exp) {
+        AnUser user = getById(userId);
+        if (null==user){
+            throw new RuntimeException("未知用户");
+        }
+        Long resultExp = user.getExp() + exp;
+
+        Integer level = getLevel(resultExp);
+        user.setLevel(level);
+        user.setExp(resultExp);
+        updateById(user);
+        return true;
+    }
+
     public static String getVerificationEmailContent(String userName, String verificationCode,Long emailSendInterval) {
         return "<html>" +
                 "<body>" +
@@ -507,5 +523,27 @@ public class AnUserServiceImpl extends ServiceImpl<AnUserMapper, AnUser> impleme
                 "<p>如有问题，请联系我们：https://anakkix.cn</p>" +
                 "</body>" +
                 "</html>";
+    }
+
+    // 静态方法，根据经验值返回会员等级
+    public static Integer getLevel(Long experience) {
+        if (experience < 0) {
+            throw new IllegalArgumentException("经验值不能为负数");
+        }
+
+        // 定义各级别的上限
+        Long[] thresholds = {100L, 1000L, 10000L, 100000L,1000000L,10000000L,100000000L,1000000000L,10000000000L};
+        Integer level = 1; // 默认从1级开始
+
+        // 计算等级
+        for (Long threshold : thresholds) {
+            if (experience > threshold) {
+                level++;
+            } else {
+                break;
+            }
+        }
+
+        return level;
     }
 }

@@ -3,6 +3,7 @@ package com.anakki.data.service.impl;
 import com.anakki.data.bean.common.BaseContext;
 import com.anakki.data.bean.common.BaseContextForManage;
 import com.anakki.data.bean.common.BasePageResult;
+import com.anakki.data.bean.common.enums.ExpAddEnum;
 import com.anakki.data.bean.common.request.IdListRequest;
 import com.anakki.data.bean.constant.CosBucketNameConst;
 import com.anakki.data.bean.constant.CosPathConst;
@@ -72,7 +73,7 @@ public class AnResourceServiceImpl extends ServiceImpl<AnResourceMapper, AnResou
     @Override
     public void upload(UploadResourceRequest uploadResourceRequest) throws IOException {
         String currentNickname = BaseContext.getCurrentNickname(false);
-        AnUser byNickname = anUserService.getByNickname(currentNickname);
+        AnUser user = anUserService.getByNickname(currentNickname);
         if (null == uploadResourceRequest.getFiles()) {
             throw new RuntimeException("未选择文件");
         }
@@ -107,10 +108,11 @@ public class AnResourceServiceImpl extends ServiceImpl<AnResourceMapper, AnResou
             anResource.setFileSize(multipartFile.getSize() / 1024);
             anResource.setUploadUser(currentNickname);
             anResource.setResourceName(multipartFile.getOriginalFilename());
-            anResource.setUploadUserId(byNickname.getId());
+            anResource.setUploadUserId(user.getId());
             anResource.setType(multipartFile.getContentType());
             anResource.setIsPublic(uploadResourceRequest.getIsPublic());
             save(anResource);
+            anUserService.addExpForUser(user.getId(), ExpAddEnum.UPLOAD_RESOURCE.getExp());
         }
     }
     @Override
@@ -206,6 +208,7 @@ public class AnResourceServiceImpl extends ServiceImpl<AnResourceMapper, AnResou
             throw new RuntimeException("没有权限！用户只能删除自己上传的文件");
         }
         COSUtil.deleteObject(CosBucketNameConst.BUCKET_NAME_IMAGES, resource.getFileUrl());
+        anUserService.addExpForUser(user.getId(), -ExpAddEnum.UPLOAD_RESOURCE.getExp());
         return removeById(id);
     }
     @Override

@@ -649,9 +649,9 @@
         }
 
         const get = new XMLHttpRequest();
-        let base = localStorage.getItem('user-token') ? "/api" : "/base";
+        // let base = localStorage.getItem('user-token') ? "/api" : "/base";
 
-        get.open("GET", base + "/anakki/record/avatar-resource?current=" + avatarResourceCurrent + "&size=" + avatarResourcePageSize + searchInputUrl, true);
+        get.open("GET", "/base/anakki/record/avatar-resource?current=" + avatarResourceCurrent + "&size=" + avatarResourcePageSize + searchInputUrl, true);
         get.setRequestHeader('authorization', localStorage.getItem('user-token'));
 
         get.onreadystatechange = function () {
