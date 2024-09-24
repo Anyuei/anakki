@@ -159,7 +159,7 @@
         flex: 1 1 auto;
         padding: 0.5rem;
     }
-    .load-more-avatar{
+    .load-more-img{
         justify-content: center;
         display: flex;
         align-content: center;
@@ -190,6 +190,12 @@
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="bg-tab" data-toggle="tab" data-target="#bg" type="button"
+                            role="tab" aria-controls="bg" aria-selected="false">
+                        <div class="" id="bg-tab-button-text">桌面背景(0)</div>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
                     <button class="nav-link" id="profile-tab" data-toggle="tab" data-target="#profile" type="button"
                             role="tab" aria-controls="profile" aria-selected="false">
                         <div class="">云文件</div>
@@ -202,12 +208,26 @@
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
             <div class="container" style="height: 48rem;">
-                <div class="row">
+                <div class="row" id="avatar-area">
                     <!-- 动态生成的头像卡片会插入到这里 -->
                 </div>
                 <div class="row">
-                    <div class="load-more-avatar" >
+                    <div class="load-more-img" >
                         <div style="margin-bottom: 2rem" onclick="listAvatar()">
+                            <i class="bi bi-plus-lg" style="cursor: pointer"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade show" id="bg" role="tabpanel" aria-labelledby="bg-tab">
+            <div class="container" style="height: 48rem;">
+                <div class="row" id="bg-area">
+                    <!-- 动态生成的头像卡片会插入到这里 -->
+                </div>
+                <div class="row">
+                    <div class="load-more-img" >
+                        <div style="margin-bottom: 2rem" onclick="listBg()">
                             <i class="bi bi-plus-lg" style="cursor: pointer"></i>
                         </div>
                     </div>
@@ -410,6 +430,7 @@
         $('#header').load("../pages/header.html", loadPersonDetail);
         $('#footer').load("../pages/footer.html", insertCreateTime);
         listAllResource(1, 10)
+        listBg()
         listAvatar()
     }
 
@@ -663,7 +684,7 @@
                     document.getElementById("avatar-tab-button-text").innerText = "头像(" + response.data.totalNum + ")";
 
                     // 找到 .row 容器
-                    const rowContainer = document.querySelector('.container .row');
+                    const rowContainer = document.getElementById('avatar-area');
                     let interval = 100;
 
                     // 遍历 itemList，将每个头像生成相应的 HTML
@@ -700,6 +721,75 @@
                     } else {
                         // 不是最后一页，增加当前页码以请求下一页
                         avatarResourceCurrent += 1;
+                    }
+                } else {
+                    alert(response.data);
+                }
+            }
+        };
+
+        get.send();
+    }
+    let bgResourceCurrent=1;
+    let bgResourcePageSize=18;
+
+    function listBg(searchInput) {
+        let searchInputUrl = "";
+        if (searchInput !== null) {
+            searchInputUrl = "&searchKey=" + searchInput;
+        }
+
+        const get = new XMLHttpRequest();
+
+        get.open("GET", "/base/anakki/record/bg-resource?current=" + bgResourceCurrent + "&size=" + bgResourcePageSize + searchInputUrl, true);
+        get.setRequestHeader('authorization', localStorage.getItem('user-token'));
+
+        get.onreadystatechange = function () {
+            if (get.readyState === 4 && get.status === 200) {
+                const response = JSON.parse(get.responseText);
+                if (response.code === 200) {
+                    const itemList = response.data.data;
+
+                    document.getElementById("bg-tab-button-text").innerText = "桌面背景(" + response.data.totalNum + ")";
+
+                    // 找到 .row 容器
+                    const rowContainer = document.getElementById('bg-area');
+                    let interval = 100;
+
+                    // 遍历 itemList，将每个头像生成相应的 HTML
+                    itemList.forEach(item => {
+                        interval += 100;
+                        const cardHTML = `
+                        <div class="col-sm-6 col-md-3 col-lg-2 mb-4 div-trans-${interval}">
+                            <div class="card avatar-card" id="img-container-${item.id}">
+                                <img id="img${item.id}" onclick="showModal(this.alt)" src="${item.imgUrl}" class="card-img-top" alt="${item.id}">
+                                <div class="image-float-info">
+                                    <div class="img-avatar-icon">
+                                        <i class="bi bi-eye" style="font-size: 1rem;">${item.viewCount}</i>
+                                    </div>
+                                    <div class="img-avatar-icon">
+                                        <i class="bi bi-suit-heart" style="font-size: 1rem;">${item.likeCount}</i>
+                                    </div>
+                                </div>
+                                <div class="avatar-card-body" style="font-size: 0.7rem;">
+                                    <div class="card-text">尺寸: ${item.imageSize}</div>
+                                    <div class="card-text">大小: ${item.fileSize} KB</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                        // 将生成的卡片 HTML 插入到 .row 容器的末尾
+                        rowContainer.insertAdjacentHTML('beforeend', cardHTML);
+                    });
+
+                    // 判断是否为最后一页
+                    if (itemList.length < bgResourcePageSize) {
+                        // 如果当前页的数据量少于每页的大小，说明是最后一页
+                        alert("催催站长更新更多៷>ᴗ<៷")
+                    } else {
+                        // 不是最后一页，增加当前页码以请求下一页
+                        bgResourceCurrent += 1;
                     }
                 } else {
                     alert(response.data);

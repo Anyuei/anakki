@@ -4,6 +4,7 @@ import com.anakki.data.bean.common.BasePageResult;
 import com.anakki.data.entity.AnRecord;
 import com.anakki.data.entity.request.*;
 import com.anakki.data.entity.response.AnAvatarResourceResponse;
+import com.anakki.data.entity.response.AnBgResourceResponse;
 import com.anakki.data.entity.response.AvatarImgListResponse;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.drew.imaging.ImageProcessingException;
@@ -27,7 +28,7 @@ public interface AnRecordService extends IService<AnRecord> {
     BasePageResult<AnRecord> flowMedia(GetMediaRequest getMediaRequest, String ipAddr);
 
     BasePageResult<AnAvatarResourceResponse> listAvatarResource(ListAvatarResourceRequest request, String ipAddr);
-
+    BasePageResult<AnBgResourceResponse> listBgResource(ListBgResourceRequest request, String ipAddr);
     boolean removeById(Serializable id);
     List<String> getRecordTypes();
 

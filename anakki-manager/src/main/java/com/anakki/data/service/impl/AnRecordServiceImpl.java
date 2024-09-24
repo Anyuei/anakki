@@ -8,6 +8,7 @@ import com.anakki.data.entity.AnUser;
 import com.anakki.data.entity.request.*;
 import com.anakki.data.entity.request.AvatarImgListRequest;
 import com.anakki.data.entity.response.AnAvatarResourceResponse;
+import com.anakki.data.entity.response.AnBgResourceResponse;
 import com.anakki.data.entity.response.AvatarImgListResponse;
 import com.anakki.data.mapper.AnRecordMapper;
 import com.anakki.data.service.*;
@@ -113,7 +114,30 @@ public class AnRecordServiceImpl extends ServiceImpl<AnRecordMapper, AnRecord> i
         List<AnAvatarResourceResponse> anAvatarResourceResponses = com.anakki.data.utils.common.BeanUtils.copyBeanList(records, AnAvatarResourceResponse.class);
         return new BasePageResult<>(anAvatarResourceResponses, page.getTotal());
     }
+    @Override
+    public BasePageResult<AnBgResourceResponse> listBgResource(ListBgResourceRequest request, String ipAddr) {
+        IPage<AnRecord> anRecordIPage = new Page<>(
+                request.getCurrent(),
+                request.getSize());
 
+        String tag = request.getTag();
+        QueryWrapper<AnRecord> anRecordQueryWrapper = new QueryWrapper<>();
+
+        ArrayList<String> types = new ArrayList<>();
+        types.add("AI_STAR_SKY_BGIMG");
+        types.add("AI_AC_GIRL");
+
+        anRecordQueryWrapper.in("type",types);
+        anRecordQueryWrapper.eq(!StringUtils.isBlank(tag),"tag",tag);
+        anRecordQueryWrapper.eq("status","COMMON");
+        anRecordQueryWrapper.orderByDesc("photo_time","id");
+        IPage<AnRecord> page = page(anRecordIPage, anRecordQueryWrapper);
+        List<AnRecord> records = page.getRecords();
+        //统计模块访问数
+        anStatisticService.increaseByName("RESOURCE_MODULE",ipAddr);
+        List<AnBgResourceResponse> anAvatarResourceResponses = com.anakki.data.utils.common.BeanUtils.copyBeanList(records, AnBgResourceResponse.class);
+        return new BasePageResult<>(anAvatarResourceResponses, page.getTotal());
+    }
     @Override
     public boolean removeById(Serializable id) {
         AnRecord byId = getById(id);
